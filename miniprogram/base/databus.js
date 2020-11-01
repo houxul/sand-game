@@ -49,6 +49,7 @@ export default class DataBus {
   }
 
   resetPickerLinearGradient() {
+    this.sandFrame = 0
     const colors = this.pickerRgbs.concat([this.pickerRgbs[0]]);
     const step = this.pickerLinearGradient.length/this.pickerRgbs.length
     for (let i=0; i < this.pickerLinearGradient.length; i++) {

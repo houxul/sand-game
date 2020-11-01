@@ -21,4 +21,9 @@ export default class Roundbutton {
 	updateCentre(centre) {
 		this.centre = centre
 	}
+
+	inside(x, y) {
+		const{x: centrePntX, y:centrePntY} = this.centre
+		return (x-centrePntX)*(x-centrePntX) + (y-centrePntY)*(y-centrePntY) < this.radius*this.radius;
+	}
 }

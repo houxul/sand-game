@@ -2,6 +2,6 @@
 	bind:touchstart="touchStartHandler" 
 	bind:touchmove="touchMoveHandler" 
 	bind:touchend="touchEndHandler"
-	bindtap="onclrPickBtnClick"
+	bindtap="tapHandler"
 	style="width:100%; height:100%">
 </canvas>

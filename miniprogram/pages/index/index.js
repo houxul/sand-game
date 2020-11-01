@@ -2,6 +2,7 @@
 import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
+import ImageButton from '../../rendering/imagebutton'
 
 let databus = new DataBus()
 
@@ -13,7 +14,7 @@ Page({
 	data: {
 		clrPickBtnRadius: 25,
 		clrPickBtnPnts: [{x: databus.screenWidth - 50, y: 100}, {x: databus.screenWidth - 50, y: databus.screenHeight - 100}],
-		clrPickBtnPntIndex: 0
+		clrPickBtnPntIndex: 0,
 	},
 
 	/**
@@ -83,6 +84,7 @@ Page({
 		this.ctx.clearRect(0, 0, databus.screenWidth, databus.screenHeight)
 		this.sandTable.drawToCanvas(this.ctx);
 		this.colorPickerBtn.drawToCanvas(this.ctx);
+		this.menuBtn.drawToCanvas(this.ctx);
 	},
 	
 	initCanvasSize: function(canvas) {
@@ -104,6 +106,15 @@ Page({
 			rgbs: databus.pickerRgbs,
 			centre: this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex],
 		})
+
+		this.menuBtn = new ImageButton({
+			x: 40,
+			y: 79,
+			width: 40,
+			height: 40,
+			canvas: canvas,
+			imgSrc: `../../images/menu${Math.floor(Math.random()*6)}.png`
+		})
 		
 		this.bindLoop = (() => {
 			this.updateCanvas()
@@ -116,15 +127,16 @@ Page({
 
 	touchStartHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.inClrPickBtn(x, y)) {
+		if (this.isButtonInside(x, y)) {
 			return;
 		}
+
 		this.sandTable.touchStartHandler(x, y);
 	},
 
 	touchMoveHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.inClrPickBtn(x, y)) {
+		if (this.isButtonInside(x, y)) {
 			this.setData({clrPickBtnPntIndex: (this.data.clrPickBtnPntIndex+1)%2})
 			this.colorPickerBtn.updateCentre(this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex]);
 			return;
@@ -134,26 +146,26 @@ Page({
 
 	touchEndHandler: function(event) {
 		const {clientX:x, clientY:y} = event.changedTouches[0];
-		if (this.inClrPickBtn(x, y)) {
+		if (this.isButtonInside(x, y)) {
+			this.sandTable.resetSandSourcePnt();
 			return;
 		}
 		this.sandTable.touchEndHandler(x, y);
 	},
 
-	onclrPickBtnClick: function(event) {
+	tapHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.inClrPickBtn(x, y)) {
+		if (this.menuBtn.inside(x, y)) {
+			this.sandTable.resetSandSourcePnt();
+		}
+		if (this.colorPickerBtn.inside(x, y)) {
 			wx.navigateTo({
 				url: '/pages/colorpicker/colorpicker',
 			})
 		}
 	},
 
-	inClrPickBtn: function(x, y) {
-		const{x: centrePntX, y:centrePntY} = this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex]
-		if ((x-centrePntX)*(x-centrePntX) + (y-centrePntY)*(y-centrePntY) > this.data.clrPickBtnRadius*this.data.clrPickBtnRadius) {
-			return false
-		}
-		return true
-	}
+	isButtonInside: function(x, y) {
+		return this.menuBtn.inside(x, y) || this.colorPickerBtn.inside(x, y);
+	},
 })

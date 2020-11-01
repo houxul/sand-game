@@ -107,10 +107,10 @@ export default class SandTable {
   }
 
   genSand() {    
-    if (!this.touchPoint) {
+    if (!this.sandSourcePnt) {
       return
     }
-    let {x, y} = this.touchPoint;
+    let {x, y} = this.sandSourcePnt;
     x = Math.floor(x)
     y = Math.floor(y)
     const cross = this.isCrossSandPileSideline(x, y)
@@ -125,13 +125,13 @@ export default class SandTable {
   }
 
   update() {    
-    if (this.touchPoint && this.autoGenSand) {
-      this.touchPoint.x += this.autoMoveSpeed;
-      if (this.touchPoint.x > this.img.width) {
-        this.touchPoint.x = 3
+    if (this.sandSourcePnt && this.autoGenSand) {
+      this.sandSourcePnt.x += this.autoMoveSpeed;
+      if (this.sandSourcePnt.x > this.img.width) {
+        this.sandSourcePnt.x = 5
       } 
-      if (this.touchPoint.x < 0) {
-        this.touchPoint.x = this.img.width - 3
+      if (this.sandSourcePnt.x < 0) {
+        this.sandSourcePnt.x = this.img.width - 5
       }
     } 
 
@@ -162,7 +162,7 @@ export default class SandTable {
     if (this.autoGenSand) {
       return true
     }
-    this.touchPoint = {x, y}
+    this.sandSourcePnt = {x, y}
     tryRun(this.genSandStartCallback)
     return true
   }
@@ -176,7 +176,7 @@ export default class SandTable {
       return true
     }
 
-    this.touchPoint = {x, y}
+    this.sandSourcePnt = {x, y}
     return true
   }
 
@@ -212,7 +212,7 @@ export default class SandTable {
 
     tryRun(this.genSandEndCallback)
     this.touchTime = new Date().getTime();
-    this.touchPoint = null
+    this.sandSourcePnt = null
     this.autoGenSand = false
     return true
   }
@@ -258,5 +258,9 @@ export default class SandTable {
       return xDirection > 0 ? 2 : 4
     }
     return yDirection > 0 ? 3 : 1
+  }
+
+  resetSandSourcePnt() {
+    this.sandSourcePnt = null;
   }
 }
