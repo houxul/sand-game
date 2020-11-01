@@ -1,4 +1,4 @@
-import DataBus from '../base/databus'
+import DataBus from './databus'
 
 let databus = new DataBus()
 
@@ -17,7 +17,8 @@ export default class Sand {
     this.vy = (down ? 7 : -7) * Math.random();
     this.acceleration = 0.65
 
-    this.update();
+    this.crossBorder = false
+    // this.update();
   }
 
   get curX() {
@@ -32,15 +33,17 @@ export default class Sand {
     this.preX = this.curX;
     this.preY = this.curY;
 
-    if ( this.x + this.vx > databus.screenWidth -1 ){
-      this.x = databus.screenWidth -1
+    this.vy = this.vy + this.acceleration
+    this.y += this.vy;
+
+    if ( this.x + this.vx > databus.screenWidth ){
+      this.x = databus.screenWidth
+      this.crossBorder = true
     } else if (this.x + this.vx < 0) {
       this.x = 0
+      this.crossBorder = true
     } else {
       this.x += this.vx;
     }
-
-    this.vy = this.vy + this.acceleration
-    this.y += this.vy;
   }
 }

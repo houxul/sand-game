@@ -1,5 +1,5 @@
 
-import { rgbaString } from '../base/utils'
+import { rgbToStr } from '../base/utils'
 
 export default class Roundbutton {
 	constructor(options) {
@@ -12,7 +12,7 @@ export default class Roundbutton {
 		for (let i = this.rgbs.length - 1; i>=0; i--) {
 			ctx.beginPath();
 			ctx.arc(this.centre.x, this.centre.y, (i+1)*this.radius/this.rgbs.length, 0, 2*Math.PI, false);
-			ctx.fillStyle= rgbaString(this.rgbs[i]);
+			ctx.fillStyle= rgbToStr(this.rgbs[i]);
 			ctx.closePath();
 			ctx.fill();
 		}

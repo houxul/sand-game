@@ -1,5 +1,5 @@
 // miniprogram/pages/index/index.js
-import SandTable from '../../sands/sandtable'
+import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 
@@ -12,7 +12,6 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 30,
-		clrPickBtnRgbs:[[0,0,0], [255,0,0]],
 		clrPickBtnPnts: [{x: databus.screenWidth - 80, y: 50}, {x: databus.screenWidth - 80, y: databus.screenHeight - 120}],
 		clrPickBtnPntIndex: 0
 	},
@@ -76,14 +75,12 @@ Page({
 	},
 
 	updateCanvas: function() {
-		this.sandTable.genSand([255, 0, 0]);
+		this.sandTable.genSand();
 		this.sandTable.update();
 	},
 
 	randerCanvas: function() {
 		this.ctx.clearRect(0, 0, databus.screenWidth, databus.screenHeight)
-		// this.ctx.fillStyle = rgbaString(databus.backGroundRgba);
-		// this.ctx.fillRect(0,0,databus.screenWidth,databus.screenHeight);
 		this.sandTable.drawToCanvas(this.ctx);
 		this.colorPickerBtn.drawToCanvas(this.ctx);
 	},
@@ -95,7 +92,6 @@ Page({
 
 	initCanvas: function(res) {
 		const canvas = res.node;
-		this.canvas = canvas;
 		this.ctx = canvas.getContext('2d');
 
 		this.initCanvasSize(canvas);
@@ -105,7 +101,7 @@ Page({
 
 		this.colorPickerBtn = new RoundButton({
 			radius: this.data.clrPickBtnRadius,
-			rgbs: this.data.clrPickBtnRgbs,
+			rgbs: databus.pickerRgbs,
 			centre: this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex],
 		})
 		
@@ -145,11 +141,12 @@ Page({
 	},
 
 	onclrPickBtnClick: function(event) {
-		console.log('onclrPickBtnClick');
-		// const {clientX:x, clientY:y} = event.touches[0];
-		// if (this.inClrPickBtn(x, y)) {
-		// 	this.setData({clrPickBtnPntIndex: (this.data.clrPickBtnPntIndex+1)%2})
-		// }
+		const {clientX:x, clientY:y} = event.touches[0];
+		if (this.inClrPickBtn(x, y)) {
+			wx.navigateTo({
+				url: '/pages/colorpicker/colorpicker',
+			})
+		}
 	},
 
 	inClrPickBtn: function(x, y) {

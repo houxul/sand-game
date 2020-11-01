@@ -1,5 +1,9 @@
 
-export function rgbaString(rgb) {
+export function genRgb() {
+    return [Math.random()*255, Math.random()*255, Math.random()*255];
+}
+
+export function rgbToStr(rgb) {
 	return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
 }
 
