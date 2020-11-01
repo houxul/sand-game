@@ -55,9 +55,9 @@ export default class SandTable {
       this.setImgData(sand.preX, sand.preY, [214, 214, 214, 214]);
     }
 
-    if (sand.crossBorder) {
-      return
-    }
+    // if (sand.crossBorder) {
+    //   return
+    // }
 
     const sandX = sand.curX;
     const sandY = sand.curY;
@@ -128,10 +128,10 @@ export default class SandTable {
     if (this.touchPoint && this.autoGenSand) {
       this.touchPoint.x += this.autoMoveSpeed;
       if (this.touchPoint.x > this.img.width) {
-        this.touchPoint.x = 0
+        this.touchPoint.x = 3
       } 
       if (this.touchPoint.x < 0) {
-        this.touchPoint.x = this.img.width
+        this.touchPoint.x = this.img.width - 3
       }
     } 
 

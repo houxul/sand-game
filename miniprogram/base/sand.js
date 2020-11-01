@@ -17,8 +17,9 @@ export default class Sand {
     this.vy = (down ? 7 : -7) * Math.random();
     this.acceleration = 0.65
 
+    this.update();
+
     this.crossBorder = false
-    // this.update();
   }
 
   get curX() {
@@ -36,8 +37,8 @@ export default class Sand {
     this.vy = this.vy + this.acceleration
     this.y += this.vy;
 
-    if ( this.x + this.vx > databus.screenWidth ){
-      this.x = databus.screenWidth
+    if ( this.x + this.vx > databus.screenWidth - 1){
+      this.x = databus.screenWidth - 1
       this.crossBorder = true
     } else if (this.x + this.vx < 0) {
       this.x = 0

@@ -11,7 +11,7 @@ export default class ColorPicker {
       this.switchCircle = {
         x: 50,
         y: (databus.screenHeight + this.btnAreaY)/2,
-        radius: 15,
+        radius: 20,
         colors: [[0,0,0], [255,255,255],[0,0,0],[255,255,255],[0,0,0]]
 	  }
 	  
