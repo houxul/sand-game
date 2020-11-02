@@ -262,5 +262,6 @@ export default class SandTable {
 
   resetSandSourcePnt() {
     this.sandSourcePnt = null;
+    this.autoGenSand = false;
   }
 }

@@ -1,7 +1,25 @@
-<canvas type="2d" id="sandtable" 
-	bind:touchstart="touchStartHandler" 
-	bind:touchmove="touchMoveHandler" 
-	bind:touchend="touchEndHandler"
-	bindtap="tapHandler"
-	style="width:100%; height:100%">
-</canvas>
+<view class="page-view">
+	<canvas type="2d" id="sandtable" class="canvas" 
+		bind:touchstart="touchStartHandler" 
+		bind:touchmove="touchMoveHandler" 
+		bind:touchend="touchEndHandler"
+		bindtap="tapHandler">
+	</canvas>
+	<cover-view wx:if="{{showMenu}}" class="menu-view">
+		<cover-view class="menu-area">
+			<cover-view class="menu-userinfo">
+				<open-data class="userinfo-avatar" type="userAvatarUrl"></open-data>
+			</cover-view>
+			<cover-view class="menu-actions">
+				<cover-view class="menu-action-item" 
+					wx:for="{{menuActions}}" 
+					data-index="{{index}}"
+					bindtap="onMenuAction">
+					<cover-image class="menu-action-item-icon" src="{{item.icon}}"/>
+					<cover-view class="menu-action-item-key">{{item.key}}</cover-view>
+				</cover-view>
+			</cover-view>
+		</cover-view>
+		<cover-view class="menu-shadow" bindtap="onClickMenuShadow"></cover-view>
+	</cover-view >
+</view>
