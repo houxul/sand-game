@@ -3,27 +3,25 @@ import { rgbToStr } from '../base/utils'
 
 export default class Roundbutton {
 	constructor(options) {
-		this.rgbs = options.rgbs
-		this.radius = options.radius
-		this.centre = options.centre
+		options.canvas.width = 2 * options.radius;
+		options.canvas.height = 2 * options.radius;
+		this.ctx = options.canvas.getContext('2d');
+		this.rgbs = options.rgbs;
+		this.radius = options.radius;
+		this.draw();
 	}
 
-	drawToCanvas(ctx) {
+	draw() {
 		for (let i = this.rgbs.length - 1; i>=0; i--) {
-			ctx.beginPath();
-			ctx.arc(this.centre.x, this.centre.y, (i+1)*this.radius/this.rgbs.length, 0, 2*Math.PI, false);
-			ctx.fillStyle= rgbToStr(this.rgbs[i]);
-			ctx.closePath();
-			ctx.fill();
+			this.ctx.beginPath();
+			this.ctx.arc(this.radius, this.radius, (i+1)*this.radius/this.rgbs.length, 0, 2*Math.PI, false);
+			this.ctx.fillStyle= rgbToStr(this.rgbs[i]);
+			this.ctx.closePath();
+			this.ctx.fill();
 		}
 	}
 
-	updateCentre(centre) {
-		this.centre = centre
-	}
-
-	inside(x, y) {
-		const{x: centrePntX, y:centrePntY} = this.centre
-		return (x-centrePntX)*(x-centrePntX) + (y-centrePntY)*(y-centrePntY) < this.radius*this.radius;
+	update() {
+		this.draw();
 	}
 }

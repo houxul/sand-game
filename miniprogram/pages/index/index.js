@@ -2,7 +2,6 @@
 import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
-import ImageButton from '../../rendering/imagebutton'
 
 let databus = new DataBus()
 
@@ -13,7 +12,7 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth - 50, y: 100}, {x: databus.screenWidth - 50, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenu: false,
 		menuActions: [
@@ -41,7 +40,11 @@ Page({
 	onReady: function () {
 		wx.createSelectorQuery()
 		.select('#sandtable')
-		.node(this.initCanvas.bind(this)).exec();
+		.node(this.initSandTable.bind(this)).exec();
+
+		wx.createSelectorQuery()
+		.select('#colorpickerbutton')
+		.node(this.initColorPickerButton.bind(this)).exec();
 	},
 
 	/**
@@ -86,99 +89,54 @@ Page({
 
 	},
 
-	updateCanvas: function() {
-		this.sandTable.genSand();
-		this.sandTable.update();
-	},
-
-	randerCanvas: function() {
-		this.ctx.clearRect(0, 0, databus.screenWidth, databus.screenHeight)
-		this.sandTable.drawToCanvas(this.ctx);
-		this.colorPickerBtn.drawToCanvas(this.ctx);
-		this.menuBtn.drawToCanvas(this.ctx);
-	},
-	
-	initCanvasSize: function(canvas) {
-		canvas.width = databus.screenWidth
-		canvas.height = databus.screenHeight
-	},
-
-	initCanvas: function(res) {
+	initSandTable: function(res) {
 		const canvas = res.node;
-		this.ctx = canvas.getContext('2d');
+		this.sandTable = new SandTable({canvas});
+	},
 
-		this.initCanvasSize(canvas);
-		
-		const img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight)
-		this.sandTable = new SandTable(img);
-
+	initColorPickerButton: function(res) {
+		const canvas = res.node;
 		this.colorPickerBtn = new RoundButton({
+			canvas,
 			radius: this.data.clrPickBtnRadius,
-			rgbs: databus.pickerRgbs,
-			centre: this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex],
+			rgbs: databus.pickerRgbs
 		})
-
-		this.menuBtn = new ImageButton({
-			x: 40,
-			y: 79,
-			width: 40,
-			height: 40,
-			canvas: canvas,
-			imgSrc: `../../images/menu${Math.floor(Math.random()*6)}.png`
-		})
-		
-		this.bindLoop = (() => {
-			this.updateCanvas()
-			this.randerCanvas()
-		
-			canvas.requestAnimationFrame(this.bindLoop);
-		}).bind(this);
-		canvas.requestAnimationFrame(this.bindLoop);
 	},
 
 	touchStartHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.isButtonInside(x, y)) {
-			return;
-		}
-
 		this.sandTable.touchStartHandler(x, y);
 	},
 
 	touchMoveHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.isButtonInside(x, y)) {
-			this.setData({clrPickBtnPntIndex: (this.data.clrPickBtnPntIndex+1)%2})
-			this.colorPickerBtn.updateCentre(this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex]);
-			return;
+		if (this.inColorPickerButton(x, y)) {
+			this.setData({clrPickBtnPntIndex: (this.data.clrPickBtnPntIndex+1)%2});
 		}
 		this.sandTable.touchMoveHandler(x, y);
 	},
 
 	touchEndHandler: function(event) {
 		const {clientX:x, clientY:y} = event.changedTouches[0];
-		if (this.isButtonInside(x, y)) {
-			this.sandTable.resetSandSourcePnt();
-			return;
-		}
 		this.sandTable.touchEndHandler(x, y);
 	},
 
-	tapHandler: function(event) {
-		const {clientX:x, clientY:y} = event.touches[0];
-		if (this.menuBtn.inside(x, y)) {
-			this.sandTable.resetSandSourcePnt();
-			this.setData({showMenu: true});
-		}
-		if (this.colorPickerBtn.inside(x, y)) {
-			wx.navigateTo({
-				url: '/pages/colorpicker/colorpicker',
-			})
-		}
+	inColorPickerButton: function(x, y) {
+		const pnt = this.data.clrPickBtnPnts[this.data.clrPickBtnPntIndex];
+		return (x > pnt.x) && (x < pnt.x + 2 * this.data.clrPickBtnRadius)
+		&& (y > pnt.y) && (y < pnt.y + 2 * this.data.clrPickBtnRadius);
 	},
 
-	isButtonInside: function(x, y) {
-		return this.menuBtn.inside(x, y) || this.colorPickerBtn.inside(x, y);
+	onClickColorPicker: function(event) {
+		this.sandTable.resetSandSourcePnt();
+		wx.navigateTo({
+			url: '/pages/colorpicker/colorpicker',
+		})
+	},
+
+	onClickMenu: function(event) {
+		this.sandTable.resetSandSourcePnt();
+		this.setData({showMenu: true});
 	},
 
 	onClickMenuShadow: function(event) {

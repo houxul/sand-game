@@ -5,8 +5,13 @@ import { abToStr, strToAb, tryRun, rgbToStr } from '../base/utils'
 let databus = new DataBus()
 
 export default class SandTable {
-  constructor(img) {
-    this.img = img
+  constructor(options) {
+    this.canvas = options.canvas;
+    this.canvas.width = databus.screenWidth
+		this.canvas.height = databus.screenHeight
+    this.ctx = options.canvas.getContext('2d');
+    
+    this.img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight);
     this.imgData = this.img.data.fill(214)
 
     this.sands = []
@@ -15,9 +20,17 @@ export default class SandTable {
     this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
     this.genSandNum = (databus.genSandNumInterval[1] - databus.genSandNumInterval[0])/2
     this.autoMoveSpeed = 0
-    this.touchMovePnts = [] 
-  }
+    this.touchMovePnts = []
 
+    this.bindLoop = (() => {
+      this.genSand();
+      this.update();
+      this.draw();
+		
+			this.canvas.requestAnimationFrame(this.bindLoop);
+		}).bind(this);
+    this.canvas.requestAnimationFrame(this.bindLoop);
+  }
 
   reset() {
     this.sandPileSideline.fill(this.img.height)
@@ -145,8 +158,8 @@ export default class SandTable {
     }
   }
 
-  drawToCanvas(ctx) {
-    ctx.putImageData(this.img, 0, 0);
+  draw() {
+    this.ctx.putImageData(this.img, 0, 0);
   }
 
   rgbOverlay(c1, c2, a1, a2) {
