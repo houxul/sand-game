@@ -12,9 +12,10 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [{x: databus.screenWidth + 100, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenu: false,
+		avatarUrl: "../../images/default-avatar.png",
 		menuActions: [
 			{icon: "../../images/finish.png", key:"完成绘制"},
 			{icon: "../../images/restart.png", key:"重新开始"},
@@ -24,14 +25,17 @@ Page({
 			{icon: "../../images/fire.png", key:"热门沙绘"},
 			{icon: "../../images/setting.png", key:"设置"},
 			{icon: "../../images/help.png", key:"帮助"},
-		]
+		],
 	},
 
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-
+		const userInfo = wx.getStorageSync('userInfo');
+		if (userInfo) {
+			this.setData({avatarUrl: userInfo.avatarUrl});
+		}
 	},
 
 	/**
@@ -143,6 +147,18 @@ Page({
 		this.setData({showMenu: false});
 	},
 
+	onClickAvatar: function(event) {
+		wx.getUserInfo({
+			success(res) {
+				const userInfo = res.userInfo;
+				const nickName = userInfo.nickName;
+				const avatarUrl = userInfo.avatarUrl;
+				
+				WSHwx.setStorageSync('userInfo', { nickName, avatarUrl});
+			},
+		})
+	},
+
 	onMenuAction: function(event) {
 		const index = event.currentTarget.dataset.index;
 		switch(index) {
@@ -174,18 +190,45 @@ Page({
 	},
 
 	finishActionHandler: function() {
-		wx.getUserInfo({
-			success: function(res) {
-			  const userInfo = res.userInfo;
-			  const nickName = userInfo.nickName;
-			  const avatarUrl = userInfo.avatarUrl;
-			  
-			  console.log(nickName, avatarUrl)
+		const finishCallback = (function() {
+			databus.reset()
+			this.sandTable.reset();
+			this.data.menuActions[3].tip = '../../images/new-msg.png';
+			this.setData({menuActions: this.data.menuActions});
+		}).bind(this);
+	
+		wx.canvasToTempFilePath({
+			canvas: this.sandTable.canvas,
+			success(res) {
+				const tempFilePath = res.tempFilePath;
+				const fs = wx.getFileSystemManager()
+				fs.saveFile({
+					tempFilePath: tempFilePath,
+					success(res) {
+						const savedFilePath = res.savedFilePath;
+						const db = wx.cloud.database()
+						db.collection('sandpaintings').add({
+							data: {
+								localPath: savedFilePath,
+								createdAt: new Date().getTime(),
+							},
+							success: (res) => {
+								finishCallback();
+							},
+							fail: (err) => {
+								wx.showToast({title: `保存数据失败`, icon: 'none'})
+							}
+						});
+					},
+					fail(res) {
+						wx.showToast({title:'保存本地失败，请重试', icon: 'none'})		
+					}
+				});
 			},
-			fail: function(res) {
-				// TODO 保存到本地
+			fail(res) {
+				wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
 			}
-		  })
+		}, this)
 	},
 
     restartActionHandler: function() {
@@ -197,8 +240,13 @@ Page({
       console.log('------横批开始')
     },
 
-    mySandPaintingActionHandler: function() {
-      console.log('------我的沙绘')
+	mySandPaintingActionHandler: function() {
+		this.data.menuActions[3].tip = null;
+		this.setData({menuActions: this.data.menuActions});
+
+		wx.navigateTo({
+			url: '/pages/mysandpaintings/mysandpaintings',
+		})
     },
 
     photoSandPaintingActionHandler: function() {

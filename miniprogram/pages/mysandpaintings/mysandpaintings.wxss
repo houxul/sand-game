@@ -1,0 +1,33 @@
+/* miniprogram/pages/mysandpaintings/mysandpaintings.wxss */
+
+::-webkit-scrollbar{
+	width: 0;
+	height: 0;
+	color: transparent;
+}
+
+/* page{
+	height: 100%;
+	overflow:hidden;
+} */
+
+.sandpaintings {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.sandpainting-item {
+	padding: 40rpx 0rpx 40rpx 0rpx;
+}
+
+.sandpainting-item-img {
+	width: 100%;
+	height: 600rpx;
+}
+
+.sandpainting-item-horizontal-img {
+	width: 100%;
+	height: 400rpx;
+}

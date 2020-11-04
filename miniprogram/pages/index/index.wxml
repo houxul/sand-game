@@ -13,7 +13,9 @@
 	<cover-view wx:if="{{showMenu}}" class="menu-view">
 		<cover-view class="menu-area">
 			<cover-view class="menu-userinfo">
-				<open-data class="userinfo-avatar" type="userAvatarUrl"></open-data>
+				<cover-image src="{{avatarUrl}}" 
+				class="userinfo-avatar" bindtap="onClickAvatar">
+			</cover-image>
 			</cover-view>
 			<cover-view class="menu-actions">
 				<cover-view class="menu-action-item" 
@@ -22,6 +24,7 @@
 					bindtap="onMenuAction">
 					<cover-image class="menu-action-item-icon" src="{{item.icon}}"/>
 					<cover-view class="menu-action-item-key">{{item.key}}</cover-view>
+					<cover-image wx:if="{{!!item.tip}}" class="menu-action-item-tip" src="{{item.tip}}"/>
 				</cover-view>
 			</cover-view>
 		</cover-view>

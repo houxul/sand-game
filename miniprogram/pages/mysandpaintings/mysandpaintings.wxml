@@ -1,0 +1,17 @@
+<!--miniprogram/pages/mysandpaintings/mysandpaintings.wxml-->
+
+<scroll-view class="sandpaintings">
+	<view class="sandpainting-item"
+	wx:for="{{sandpaintings}}" 
+	data-index="{{index}}" 
+	bindtap="onClickImage"  
+	wx:key="index">
+		<view wx:if="{{item.horizontal}}">
+			<image class="sandpainting-item-horizontal-img" src="{{item.localPath}}"/>
+		</view>
+		<view wx:else>
+			<image class="sandpainting-item-img" src="{{item.localPath}}"/>
+		</view>
+		<view>时间:</view>
+	</view>
+</scroll-view>

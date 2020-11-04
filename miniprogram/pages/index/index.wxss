@@ -83,3 +83,9 @@ page{
 
 .menu-action-item-key {
 }
+
+.menu-action-item-tip {
+	width: 40rpx;
+	height: 40rpx;
+	margin-left: 10rpx;
+}
