@@ -31,6 +31,7 @@ export default class DataBus {
     this.pickerRgbs = [genRgb(), genRgb(), genRgb(), genRgb()]
     this.pickerLinearGradient = new Array(1500)
     this.resetPickerLinearGradient()
+    this.horizontal = false;
   }
 
   reset(){

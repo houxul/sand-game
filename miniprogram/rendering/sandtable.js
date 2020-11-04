@@ -15,11 +15,16 @@ export default class SandTable {
     this.imgData = this.img.data.fill(214)
 
     this.sands = []
-    this.sandPileSideline = new Array(this.img.width).fill(this.img.height);
+    this.sandPileSideline = new Array(this.img.height);
+    if (databus.horizontal) {
+      this.sandPileSideline.fill(this.img.width)
+    } else {
+      this.sandPileSideline.fill(this.img.height)
+    }
 
     this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
     this.genSandNum = (databus.genSandNumInterval[1] - databus.genSandNumInterval[0])/2
-    this.autoMoveSpeed = 0
+    this.autoMoveSpeed = [0, 0]
     this.touchMovePnts = []
 
     this.bindLoop = (() => {
@@ -33,11 +38,15 @@ export default class SandTable {
   }
 
   reset() {
-    this.sandPileSideline.fill(this.img.height)
+    if (databus.horizontal) {
+      this.sandPileSideline.fill(this.img.width)
+    } else {
+      this.sandPileSideline.fill(this.img.height)
+    }
     this.imgData.fill(214)
 
     this.genSandNum = (databus.genSandNumInterval[1] + databus.genSandNumInterval[0])/2
-    this.autoMoveSpeed = 0
+    this.autoMoveSpeed = [0, 0]
   }
 
   saveProgress() {
@@ -60,6 +69,9 @@ export default class SandTable {
   }
 
   isCrossSandPileSideline(x,y) {
+    if (databus.horizontal) {
+      return this.sandPileSideline[y] <= x
+    }
     return this.sandPileSideline[x] <= y
   }
 
@@ -84,32 +96,57 @@ export default class SandTable {
   }
 
   addSandToSandPile(x,y, rgb) {
-    const xLeft = x-1 >= 0 && this.sandPileSideline[x-1] > this.sandPileSideline[x];
-    const xRight = x+1 < this.img.width && this.sandPileSideline[x+1] > this.sandPileSideline[x];
-    if (xLeft && xRight) {
-      const rdm = Math.random();
-      const xDir = rdm > 0.5 ? 1 : -1;
-      this.addSandToSandPile(x+xDir, y, rgb)
-      return;
-    } else if (xLeft) {
-      this.addSandToSandPile(x-1, y, rgb)
-      return
-    } else if (xRight) {
-      this.addSandToSandPile(x+1, y, rgb)
-      return
+    if (databus.horizontal) {
+      const yLeft = y-1 >= 0 && this.sandPileSideline[y-1] > this.sandPileSideline[y];
+      const yRight = y+1 < this.img.height && this.sandPileSideline[y+1] > this.sandPileSideline[y];
+      if (yLeft && yRight) {
+        const rdm = Math.random();
+        const yDir = rdm > 0.5 ? 1 : -1;
+        this.addSandToSandPile(x, y+yDir, rgb)
+        return;
+      } else if (yLeft) {
+        this.addSandToSandPile(x, y-1, rgb)
+        return
+      } else if (yRight) {
+        this.addSandToSandPile(x, y+1, rgb)
+        return
+      }
+  
+      x = this.sandPileSideline[y] -1
+      const overlayRgb = Math.floor( Math.random() * 256 );
+      const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha), 
+      this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha), 
+      this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
+      this.setImgData(x, y, rgba)
+      this.sandPileSideline[y] -= 1
+    } else {
+      const xLeft = x-1 >= 0 && this.sandPileSideline[x-1] > this.sandPileSideline[x];
+      const xRight = x+1 < this.img.width && this.sandPileSideline[x+1] > this.sandPileSideline[x];
+      if (xLeft && xRight) {
+        const rdm = Math.random();
+        const xDir = rdm > 0.5 ? 1 : -1;
+        this.addSandToSandPile(x+xDir, y, rgb)
+        return;
+      } else if (xLeft) {
+        this.addSandToSandPile(x-1, y, rgb)
+        return
+      } else if (xRight) {
+        this.addSandToSandPile(x+1, y, rgb)
+        return
+      }
+  
+      y = this.sandPileSideline[x] -1
+      const overlayRgb = Math.floor( Math.random() * 256 );
+      const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha), 
+      this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha), 
+      this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
+      this.setImgData(x, y, rgba)
+      this.sandPileSideline[x] -= 1
     }
-
-    y = this.sandPileSideline[x] -1
-    const overlayRgb = Math.floor( Math.random() * 256 );
-    const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha), 
-    this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha), 
-    this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
-    this.setImgData(x, y, rgba)
-    this.sandPileSideline[x] -= 1
   }
 
   setImgData(x, y, rgba) {
-    if (y < 0) {
+    if (x<0 || y < 0) {
       return
     }
     const dataIndex = 4 * (y * this.img.width  + x)
@@ -126,8 +163,14 @@ export default class SandTable {
     let {x, y} = this.sandSourcePnt;
     x = Math.floor(x)
     y = Math.floor(y)
-    const cross = this.isCrossSandPileSideline(x, y)
-    y = cross ? this.sandPileSideline[x] -1 : y
+    let cross = false;
+    if (databus.horizontal) {
+      cross = this.sandPileSideline[y] <= x
+      x = cross ? this.sandPileSideline[y] -1 : x
+    } else {
+      cross = this.sandPileSideline[x] <= y
+      y = cross ? this.sandPileSideline[x] -1 : y
+    }
     const genSandNum = this.genSandNum + Math.floor(Math.random()*20)
     const rgb = databus.sandFrameColor
     for (let i=0; i<genSandNum; i++) {
@@ -137,14 +180,24 @@ export default class SandTable {
     }
   }
 
-  update() {    
+  update() {
     if (this.sandSourcePnt && this.autoGenSand) {
-      this.sandSourcePnt.x += this.autoMoveSpeed;
-      if (this.sandSourcePnt.x > this.img.width) {
-        this.sandSourcePnt.x = 5
-      } 
-      if (this.sandSourcePnt.x < 0) {
-        this.sandSourcePnt.x = this.img.width - 5
+      if (databus.horizontal) {
+        this.sandSourcePnt.y += this.autoMoveSpeed[1];
+        if (this.sandSourcePnt.y > this.img.height - 3) {
+          this.sandSourcePnt.y = 3
+        } 
+        if (this.sandSourcePnt.y < 3) {
+          this.sandSourcePnt.y = this.img.height - 3
+        }
+      } else {
+        this.sandSourcePnt.x += this.autoMoveSpeed[0];
+        if (this.sandSourcePnt.x > this.img.width - 3) {
+          this.sandSourcePnt.x = 3
+        } 
+        if (this.sandSourcePnt.x < 3) {
+          this.sandSourcePnt.x = this.img.width - 3
+        }
       }
     } 
 
@@ -197,28 +250,25 @@ export default class SandTable {
     if (new Date().getTime() - this.touchTime < 500) {
       this.touchTime = new Date().getTime();
       this.autoGenSand = true
-      this.autoMoveSpeed = 0
+      this.autoMoveSpeed = [0, 0]
       return true
     }
 
     const touchDir = this.touchDirection()
     if (this.autoGenSand) {
       if (touchDir == 2 || touchDir == 4) {
-        if ((this.autoMoveSpeed > 0 && touchDir == 4) || (this.autoMoveSpeed < 0 && touchDir == 2)) {
-          this.autoMoveSpeed = 0
+        if ((this.autoMoveSpeed[0] > 0 && touchDir == 4) || (this.autoMoveSpeed[0] < 0 && touchDir == 2)) {
+          this.autoMoveSpeed[0] = 0
         }
-        this.autoMoveSpeed += (this.touchMovePnts[this.touchMovePnts.length-1].x - this.touchMovePnts[0].x)*5/this.img.width
+        this.autoMoveSpeed[0] += (this.touchMovePnts[this.touchMovePnts.length-1].x - this.touchMovePnts[0].x)*5/this.img.width
         return true
       }
 
       if (touchDir == 1 || touchDir == 3) {
-        this.genSandNum += (this.touchMovePnts[this.touchMovePnts.length-1].y - this.touchMovePnts[0].x)*15/(databus.genSandNumInterval[1]-databus.genSandNumInterval[0])
-        if (this.genSandNum > databus.genSandNumInterval[1]) {
-          this.genSandNum = databus.genSandNumInterval[1]
+        if ((this.autoMoveSpeed[1] > 0 && touchDir == 1) || (this.autoMoveSpeed[1] < 0 && touchDir == 3)) {
+          this.autoMoveSpeed[1] = 0
         }
-        if (this.genSandNum < databus.genSandNumInterval[0]) {
-          this.genSandNum = databus.genSandNumInterval[0]
-        }
+        this.autoMoveSpeed[1] += (this.touchMovePnts[this.touchMovePnts.length-1].y - this.touchMovePnts[0].y)*5/this.img.height
         return true
       }
     }

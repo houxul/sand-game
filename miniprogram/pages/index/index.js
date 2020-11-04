@@ -234,10 +234,16 @@ Page({
     restartActionHandler: function() {
 		databus.reset()
 		this.sandTable.reset();
+		this.setData({showMenu: false});
     },
 
     horizontalScreenRestartActionHandler: function() {
-      console.log('------横批开始')
+		databus.horizontal = !databus.horizontal;
+		databus.reset()
+		this.sandTable.reset();
+
+		this.data.menuActions[2].key = databus.horizontal ? '竖屏开始' : '横屏开始';
+		this.setData({showMenu: false, menuActions: this.data.menuActions});
     },
 
 	mySandPaintingActionHandler: function() {
