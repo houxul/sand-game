@@ -74,7 +74,7 @@ Page({
 
 	loadSandpaintings: function() {
 		const db = wx.cloud.database();
-		db.collection('sandpaintings')
+		db.collection('sandpaintings').orderBy('createdAt', 'desc')
 		.skip(this.offset) 
 		.limit(this.limit)
 		.get()
@@ -92,7 +92,23 @@ Page({
 		})
 	},
 
-	onClickImage: function(event) {
+	onImageClick: function(event) {
+		const picture = event.target.dataset.item;
+		let width = picture.width;
+		let height = picture.height;
+		if (picture.horizontal) {
+			width = databus.screenWidth
+			height = databus.screenWidth * picture.height/picture.width;
+		}
+		this.setData({
+			showPreview: true, 
+			previewPicture: picture.localPath,
+			previewPictureWidth: width,
+			previewPictureHeight: height,
+		});
+	},
 
+	onPreviewViewClick: function(event) {
+		this.setData({showPreview: false});
 	}
 })
