@@ -44,8 +44,8 @@ Page({
 	 */
 	onReady: function () {
 		wx.createSelectorQuery()
-		.select('#offscreen-canvas')
-		.node(this.initOffscreenCanvas.bind(this)).exec();
+		.select('#rotateimage')
+		.node(this.initRotateImage.bind(this)).exec();
 
 		wx.createSelectorQuery()
 		.select('#sandtable')
@@ -98,7 +98,7 @@ Page({
 
 	},
 
-	initOffscreenCanvas: function(res) {
+	initRotateImage: function(res) {
 		const canvas = res.node;
 		this.rotateImage = new RotateImage({canvas});
 	},
