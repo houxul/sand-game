@@ -20,6 +20,7 @@ Page({
 	onLoad: function (options) {
 		this.offset = 0;
 		this.limit = 4;
+		this.sandPaintingSource = wx.getStorageSync('sandpaintings') || [];
 		this.loadSandpaintings();
 	},
 
@@ -73,42 +74,41 @@ Page({
 	},
 
 	loadSandpaintings: function() {
-		const db = wx.cloud.database();
-		db.collection('sandpaintings').orderBy('createdAt', 'desc')
-		.skip(this.offset) 
-		.limit(this.limit)
-		.get()
-		.then((res => {
-			if (res.data.length == 0) {
-				return
-			}
-			this.offset += res.data.length;
-			const sandpaintings = this.data.sandpaintings;
-			sandpaintings.push(...res.data);
-			this.setData({sandpaintings: sandpaintings})
-		}).bind(this))
-		.catch(err => {
-			wx.showToast({title: '获取数据失败', icon:"none"});
-		})
+		const sandpaintings = this.data.sandpaintings;
+		let count = 0
+		for (let i=this.sandPaintingSource.length -1 - this.offset; i >= 0 && count < this.limit; i--) {
+			count += 1
+			sandpaintings.push(this.sandPaintingSource[i]);
+		}
+		this.offset += count;
+		this.setData({sandpaintings: sandpaintings})
+		// const db = wx.cloud.database();
+		// db.collection('sandpaintings').orderBy('createdAt', 'desc')
+		// .skip(this.offset) 
+		// .limit(this.limit)
+		// .get()
+		// .then((res => {
+		// 	if (res.data.length == 0) {
+		// 		return
+		// 	}
+		// 	this.offset += res.data.length;
+		// 	const sandpaintings = this.data.sandpaintings;
+		// 	sandpaintings.push(...res.data);
+		// 	this.setData({sandpaintings: sandpaintings})
+		// }).bind(this))
+		// .catch(err => {
+		// 	wx.showToast({title: '获取数据失败', icon:"none"});
+		// })
 	},
 
 	onImageClick: function(event) {
-		const picture = event.target.dataset.item;
-		let width = picture.width;
-		let height = picture.height;
-		if (picture.horizontal) {
-			width = databus.screenWidth
-			height = databus.screenWidth * picture.height/picture.width;
-		}
-		this.setData({
-			showPreview: true, 
-			previewPicture: picture.localPath,
-			previewPictureWidth: width,
-			previewPictureHeight: height,
-		});
+		const urls = this.data.sandpaintings.map(item=> item.localPath);
+		wx.previewImage({
+		  urls: urls,
+		  current: urls[event.target.dataset.index],
+		  fail: function(res) {
+			  wx.showToast({title: '预览失败',})
+		  }
+		}, true);
 	},
-
-	onPreviewViewClick: function(event) {
-		this.setData({showPreview: false});
-	}
 })

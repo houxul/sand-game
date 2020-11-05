@@ -1,6 +1,6 @@
+<canvas type="2d" id="offscreen-canvas" canvas-id="offscreen-canvas" class="offscreen-canvas" >
+</canvas>
 <view class="page-view">
-	<canvas type="2d" id="offscreen-canvas" canvas-id="offscreen-canvas" class="offscreen-canvas" >
-	</canvas>
 	<canvas type="2d" id="sandtable" class="canvas" 
 		bind:touchstart="touchStartHandler" 
 		bind:touchmove="touchMoveHandler" 
@@ -15,9 +15,10 @@
 	<cover-view wx:if="{{showMenu}}" class="menu-view">
 		<cover-view class="menu-area">
 			<cover-view class="menu-userinfo">
-				<cover-image src="{{avatarUrl}}" 
-				class="userinfo-avatar" bindtap="onClickAvatar">
-			</cover-image>
+				<button open-type="getUserInfo" class="get-userinfo-button" bindgetuserinfo="onClickAvatar">
+					<cover-image src="{{avatarUrl}}" class="userinfo-avatar">
+					</cover-image>
+				</button>
 			</cover-view>
 			<cover-view class="menu-actions">
 				<cover-view class="menu-action-item" 

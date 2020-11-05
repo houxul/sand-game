@@ -157,16 +157,15 @@ Page({
 		this.setData({showMenu: false});
 	},
 
-	onClickAvatar: function(event) {
-		wx.getUserInfo({
-			success(res) {
-				const userInfo = res.userInfo;
-				const nickName = userInfo.nickName;
-				const avatarUrl = userInfo.avatarUrl;
-				
-				WSHwx.setStorageSync('userInfo', { nickName, avatarUrl});
-			},
-		})
+
+	onClickAvatar: function(res) {
+		if (res.detail.userInfo) {
+			const userInfo = res.detail.userInfo;
+			const nickName = userInfo.nickName;
+			const avatarUrl = userInfo.avatarUrl;
+			wx.setStorageSync('userInfo', { nickName, avatarUrl});
+			this.setData({avatarUrl});
+		}
 	},
 
 	onMenuAction: function(event) {
@@ -222,22 +221,33 @@ Page({
 					tempFilePath: tempFilePath,
 					success(res) {
 						const savedFilePath = res.savedFilePath;
-						const db = wx.cloud.database()
-						db.collection('sandpaintings').add({
-							data: {
-								localPath: savedFilePath,
-								horizontal: databus.horizontal,
-								width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
-								height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
-								createdAt: new Date().getTime(),
-							},
-							success: (res) => {
-								finishCallback();
-							},
-							fail: (err) => {
-								wx.showToast({title: `保存数据失败`, icon: 'none'})
-							}
-						});
+						const sandpaintings = wx.getStorageSync('sandpaintings') || [];
+						sandpaintings.push({
+							localPath: savedFilePath,
+							horizontal: databus.horizontal,
+							width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
+							height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
+							createdAt: new Date().getTime(),
+						})
+						wx.setStorageSync('sandpaintings', sandpaintings);
+						finishCallback();
+
+						// const db = wx.cloud.database()
+						// db.collection('sandpaintings').add({
+						// 	data: {
+						// 		localPath: savedFilePath,
+						// 		horizontal: databus.horizontal,
+						// 		width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
+						// 		height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
+						// 		createdAt: new Date().getTime(),
+						// 	},
+						// 	success: (res) => {
+						// 		finishCallback();
+						// 	},
+						// 	fail: (err) => {
+						// 		wx.showToast({title: `保存数据失败`, icon: 'none'})
+						// 	}
+						// });
 					},
 					fail(res) {
 						wx.showToast({title:'保存本地失败，请重试', icon: 'none'})		

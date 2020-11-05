@@ -13,7 +13,7 @@
 		<view wx:else class="sandpainting-item-vertical">
 			<image class="sandpainting-item-vertical-img" src="{{item.localPath}}" 
 				style="width: {{320*item.width/item.height}}px; height: 320px"
-				data-item="{{item}}" bindtap="onImageClick"/>
+				data-item="{{item}}" data-index="{{index}}" bindtap="onImageClick"/>
 		</view>
 		<!-- <view class="sandpainting-item-bottom">
 			<view class="sandpainting-item-bottom-left">{{item.createdAt}}</view>
@@ -23,7 +23,3 @@
 		</view> -->
 	</view>
 </scroll-view>
-<view wx:if="{{showPreview}}" class="preview-view" bindtap="onPreviewViewClick">
-	<image src="{{previewPicture}}" 
-	style="width: {{previewPictureWidth}}px; height: {{previewPictureHeight}}px"></image>
-</view>
