@@ -1,4 +1,6 @@
 <view class="page-view">
+	<canvas type="2d" id="offscreen-canvas" canvas-id="offscreen-canvas" class="offscreen-canvas" >
+	</canvas>
 	<canvas type="2d" id="sandtable" class="canvas" 
 		bind:touchstart="touchStartHandler" 
 		bind:touchmove="touchMoveHandler" 

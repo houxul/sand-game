@@ -6,12 +6,12 @@
 	data-index="{{index}}" 
 	bindtap="onClickImage"  
 	wx:key="index">
-		<view wx:if="{{item.horizontal}}">
+		<view wx:if="{{item.horizontal}}" class="sandpainting-item-horizontal">
 			<image class="sandpainting-item-horizontal-img" src="{{item.localPath}}"/>
 		</view>
-		<view wx:else>
+		<view wx:else class="sandpainting-item-vertical">
 			<image class="sandpainting-item-img" src="{{item.localPath}}"/>
 		</view>
-		<view>时间:</view>
+		<!-- <view>时间:</view> -->
 	</view>
 </scroll-view>

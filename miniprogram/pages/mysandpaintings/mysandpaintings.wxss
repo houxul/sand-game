@@ -22,12 +22,26 @@
 	padding: 40rpx 0rpx 40rpx 0rpx;
 }
 
-.sandpainting-item-img {
+.sandpainting-item-vertical {
 	width: 100%;
+}
+
+.sandpainting-item-horizontal {
+	width: 100%;
+}
+
+.sandpainting-item-img {
+	width: 55%;
 	height: 600rpx;
+    margin-left: auto; 
+    margin-right:auto; 
+	display:block;
 }
 
 .sandpainting-item-horizontal-img {
 	width: 100%;
-	height: 400rpx;
+	height: 350rpx;
+	margin-left: auto; 
+    margin-right:auto; 
+	display:block;
 }

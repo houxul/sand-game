@@ -2,6 +2,7 @@
 import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
+import RotateImage from '../../rendering/rotateimage'
 
 let databus = new DataBus()
 
@@ -42,6 +43,10 @@ Page({
 	 * 生命周期函数--监听页面初次渲染完成
 	 */
 	onReady: function () {
+		wx.createSelectorQuery()
+		.select('#offscreen-canvas')
+		.node(this.initOffscreenCanvas.bind(this)).exec();
+
 		wx.createSelectorQuery()
 		.select('#sandtable')
 		.node(this.initSandTable.bind(this)).exec();
@@ -91,6 +96,11 @@ Page({
 	 */
 	onShareAppMessage: function () {
 
+	},
+
+	initOffscreenCanvas: function(res) {
+		const canvas = res.node;
+		this.rotateImage = new RotateImage({canvas});
 	},
 
 	initSandTable: function(res) {
@@ -197,8 +207,14 @@ Page({
 			this.setData({menuActions: this.data.menuActions});
 		}).bind(this);
 	
+		let canvas = this.sandTable.canvas;
+		if (databus.horizontal) {
+			this.rotateImage.draw(this.sandTable.img);
+			canvas = this.rotateImage.canvas;
+		}
+
 		wx.canvasToTempFilePath({
-			canvas: this.sandTable.canvas,
+			canvas,
 			success(res) {
 				const tempFilePath = res.tempFilePath;
 				const fs = wx.getFileSystemManager()
@@ -210,6 +226,7 @@ Page({
 						db.collection('sandpaintings').add({
 							data: {
 								localPath: savedFilePath,
+								horizontal: databus.horizontal,
 								createdAt: new Date().getTime(),
 							},
 							success: (res) => {
