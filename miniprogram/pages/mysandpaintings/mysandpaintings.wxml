@@ -7,10 +7,12 @@
 	bindtap="onClickImage"  
 	wx:key="index">
 		<view wx:if="{{item.horizontal}}" class="sandpainting-item-horizontal">
-			<image class="sandpainting-item-horizontal-img" src="{{item.localPath}}"/>
+			<image class="sandpainting-item-horizontal-img" src="{{item.localPath}}"
+			style="width: {{screenWidth-40}}px; height: {{(screenWidth -40) * item.height/item.width}}px"/>
 		</view>
 		<view wx:else class="sandpainting-item-vertical">
-			<image class="sandpainting-item-img" src="{{item.localPath}}"/>
+			<image class="sandpainting-item-vertical-img" src="{{item.localPath}}" 
+				style="width: {{320*item.width/item.height}}px; height: 270px"/>
 		</view>
 		<!-- <view>时间:</view> -->
 	</view>

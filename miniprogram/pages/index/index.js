@@ -227,6 +227,8 @@ Page({
 							data: {
 								localPath: savedFilePath,
 								horizontal: databus.horizontal,
+								width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
+								height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
 								createdAt: new Date().getTime(),
 							},
 							success: (res) => {

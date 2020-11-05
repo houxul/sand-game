@@ -171,7 +171,7 @@ export default class SandTable {
       cross = this.sandPileSideline[x] <= y
       y = cross ? this.sandPileSideline[x] -1 : y
     }
-    const genSandNum = this.genSandNum + Math.floor(Math.random()*20)
+    const genSandNum = this.genSandNum + Math.floor(Math.random()*20)+40
     const rgb = databus.sandFrameColor
     for (let i=0; i<genSandNum; i++) {
       const sand = databus.pool.getItemByClass('sand', Sand)
@@ -184,19 +184,19 @@ export default class SandTable {
     if (this.sandSourcePnt && this.autoGenSand) {
       if (databus.horizontal) {
         this.sandSourcePnt.y += this.autoMoveSpeed[1];
-        if (this.sandSourcePnt.y > this.img.height - 3) {
-          this.sandSourcePnt.y = 3
+        if (this.sandSourcePnt.y > this.img.height - 8) {
+          this.sandSourcePnt.y = 8
         } 
-        if (this.sandSourcePnt.y < 3) {
-          this.sandSourcePnt.y = this.img.height - 3
+        if (this.sandSourcePnt.y < 8) {
+          this.sandSourcePnt.y = this.img.height - 8
         }
       } else {
         this.sandSourcePnt.x += this.autoMoveSpeed[0];
-        if (this.sandSourcePnt.x > this.img.width - 3) {
-          this.sandSourcePnt.x = 3
+        if (this.sandSourcePnt.x > this.img.width - 8) {
+          this.sandSourcePnt.x = 8
         } 
-        if (this.sandSourcePnt.x < 3) {
-          this.sandSourcePnt.x = this.img.width - 3
+        if (this.sandSourcePnt.x < 8) {
+          this.sandSourcePnt.x = this.img.width - 8
         }
       }
     } 
