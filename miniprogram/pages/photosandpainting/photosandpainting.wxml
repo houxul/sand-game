@@ -1,0 +1,6 @@
+<!--miniprogram/pages/photosandpainting/photosandpainting.wxml-->
+<canvas type="2d" id="canvas" class="canvas"> </canvas>
+<view class="img-view">
+	<image src="{{img}}" style="width: {{imgWidth}}px; height: {{imgHeight}}px" 
+	bindtap="onClickImg"/>
+</view>

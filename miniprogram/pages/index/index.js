@@ -285,7 +285,15 @@ Page({
     },
 
     photoSandPaintingActionHandler: function() {
-      console.log('------照片沙绘')
+		wx.chooseImage({
+			count: 1,
+			sizeType: ['original', 'compressed'],
+			sourceType: ['album', 'camera'],
+			success (res) {
+				const tempFilePath = res.tempFilePaths[0];
+				wx.navigateTo({url: '/pages/photosandpainting/photosandpainting?file='+tempFilePath})
+			}
+		})
 	},
 	
     hotActionHandler: function() {
