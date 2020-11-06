@@ -4,7 +4,8 @@
 		"pages/colorpicker/colorpicker",
 		"pages/mysandpaintings/mysandpaintings",
 		"pages/picturepreview/picturepreview",
-		"pages/photosandpainting/photosandpainting"
+		"pages/photosandpainting/photosandpainting",
+		"pages/setting/setting"
 	],
 	"window": {
 		"backgroundColor": "#F6F6F6",

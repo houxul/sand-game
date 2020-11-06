@@ -26,12 +26,14 @@ export default class DataBus {
 
     this.gameOver   = false
     this.sandFrame  = 0
-    this.genSandNumInterval = [10, 50]
+    this.genSandNum = 30;
     this.overlayAlpha = 0.08;
     this.pickerRgbs = [genRgb(), genRgb(), genRgb(), genRgb()]
-    this.pickerLinearGradient = new Array(1500)
+    this.pickerLinearGradient = new Array(2000)
     this.resetPickerLinearGradient()
     this.horizontal = false;
+    this.voice = true;
+    this.colorChangeSpeed = 50;
   }
 
   reset(){
@@ -67,6 +69,6 @@ export default class DataBus {
 
   get sandFrameColor() {
     this.sandFrame++
-    return this.pickerLinearGradient[this.sandFrame % (this.pickerLinearGradient.length)]
+    return this.pickerLinearGradient[Math.floor(this.sandFrame * this.colorChangeSpeed/1600) % (this.pickerLinearGradient.length)]
   }
 }

@@ -1,0 +1,17 @@
+<!--miniprogram/pages/setting/setting.wxml-->
+<view class="page-view">
+	<view class="switch-line-item">
+		<view>声音</view>
+		<switch checked="{{voice}}" bindchange="changeVoice"></switch>
+	</view>
+	<view class="slider-line-item">
+		<view>沙子数量</view>
+		<slider bindchange="sandNumChange" value="{{sandNum}}" 
+		min="{{sandNumInterval[0]}}" max="{{sandNumInterval[1]}}"></slider>
+	</view>
+	<view class="slider-line-item">
+		<view>颜色改变速度</view>
+		<slider bindchange="colorChangeSpeedChange" value="{{colorChangeSpeed}}" 
+		min="{{colorChangeSpeedInterval[0]}}" max="{{colorChangeSpeedInterval[1]}}"></slider>
+	</view>
+</view>

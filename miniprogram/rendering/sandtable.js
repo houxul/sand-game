@@ -23,7 +23,6 @@ export default class SandTable {
     }
 
     this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
-    this.genSandNum = (databus.genSandNumInterval[1] - databus.genSandNumInterval[0])/2
     this.autoMoveSpeed = [0, 0]
     this.touchMovePnts = []
 
@@ -44,8 +43,6 @@ export default class SandTable {
       this.sandPileSideline.fill(this.img.height)
     }
     this.imgData.fill(214)
-
-    this.genSandNum = (databus.genSandNumInterval[1] + databus.genSandNumInterval[0])/2
     this.autoMoveSpeed = [0, 0]
   }
 
@@ -171,11 +168,10 @@ export default class SandTable {
       cross = this.sandPileSideline[x] <= y
       y = cross ? this.sandPileSideline[x] -1 : y
     }
-    const genSandNum = this.genSandNum + Math.floor(Math.random()*20)+40
-    const rgb = databus.sandFrameColor
+    const genSandNum = databus.genSandNum + Math.floor(Math.random()*20)
     for (let i=0; i<genSandNum; i++) {
       const sand = databus.pool.getItemByClass('sand', Sand)
-      sand.init(x, y, rgb, !cross)
+      sand.init(x, y, databus.sandFrameColor, !cross)
       this.sands.push(sand)
     }
   }

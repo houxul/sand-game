@@ -13,7 +13,7 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth + 100, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenu: false,
 		avatarUrl: "../../images/default-avatar.png",
@@ -301,7 +301,7 @@ Page({
 	},
 
     settingActionHandler: function() {
-		console.log('------设置')
+		wx.navigateTo({url: '/pages/setting/setting'})
 	},
 
     helpActionHandler: function() {

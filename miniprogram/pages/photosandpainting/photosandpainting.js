@@ -16,8 +16,9 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		console.log('---------');
 		this.overlayAlpha = 0.2
-		this.file = options.file; //'../../images/default-avatar.png';
+		this.file = '../../images/default-avatar.png';
 		wx.getImageInfo({
 			src: this.file,
 			success: ((res) => {
