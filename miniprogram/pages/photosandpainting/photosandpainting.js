@@ -9,7 +9,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-
+		showMask: true,
 	},
 
 	/**
@@ -17,7 +17,7 @@ Page({
 	 */
 	onLoad: function (options) {
 		this.overlayAlpha = 0.2
-		this.file = options.file;
+		this.file = options.file; //'../../images/default-avatar.png';
 		wx.getImageInfo({
 			src: this.file,
 			success: ((res) => {
@@ -41,6 +41,21 @@ Page({
 	 */
 	onReady: function () {
 		this.imgAlpha = this.alphaOverlay(1, this.overlayAlpha) * 255;
+
+		wx.createSelectorQuery()
+		.select('#img').fields({
+			rect: true,
+			size: true,
+		}, (res) => {
+			this.setData({
+				imgTop: res.top,
+				imgLeft: res.left,
+				imgWidth: res.width,
+				imgHeight: res.height,
+			})
+		}).exec();
+
+
 		wx.createSelectorQuery()
 		.select('#canvas')
 		.node(((res) => {
@@ -63,18 +78,18 @@ Page({
 										  this.rgbOverlay(rgb[2], overlayRgb, 1, this.overlayAlpha), this.imgAlpha]
 						this.setImgData(imgData, x, y, newRgba);
 					}
+
+					this.setData({progressPercent: x*100/this.oriImgWidth});
 				}
+
 				ctx.clearRect(0, 0, this.oriImgWidth, this.oriImgHeight);
 				ctx.putImageData(imgData, 0, 0);
-	
 				wx.canvasToTempFilePath({
 					canvas,
 					success: ((res) => {
 						const tempFilePath = res.tempFilePath;
-						this.setData({img: tempFilePath});
-						wx.showToast({
-						  title: '成功',
-						})
+						this.setData({img: tempFilePath, showMask:false});
+						wx.showToast({title: '成功'})
 					}).bind(this),
 					fail(res) {
 						wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
