@@ -102,10 +102,9 @@ Page({
 	},
 
 	onImageClick: function(event) {
-		const urls = this.data.sandpaintings.map(item=> item.localPath);
 		wx.previewImage({
-		  urls: urls,
-		  current: urls[event.target.dataset.index],
+		  urls: this.data.sandpaintings.map(item=> item.localPath),
+		  current: event.target.dataset.url,
 		  fail: function(res) {
 			  wx.showToast({title: '预览失败',})
 		  }
