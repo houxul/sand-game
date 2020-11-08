@@ -15,7 +15,7 @@ Page({
 	 */
 	onLoad: function (options) {
 		this.overlayAlpha = 0.1
-		this.file = '../../images/unnamed.jpg';
+		this.file = options.file;//'../../images/unnamed.jpg';
 		wx.getImageInfo({
 			src: this.file,
 			success: ((res) => {
