@@ -8,17 +8,14 @@ Page({
 	/**
 	 * 页面的初始数据
 	 */
-	data: {
-		showMask: true,
-	},
+	data: {},
 
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		console.log('---------');
-		this.overlayAlpha = 0.2
-		this.file = '../../images/default-avatar.png';
+		this.overlayAlpha = 0.1
+		this.file = '../../images/unnamed.jpg';
 		wx.getImageInfo({
 			src: this.file,
 			success: ((res) => {
@@ -34,7 +31,7 @@ Page({
 			}
 		})
 
-		this.setData({img: this.file});
+		this.setData({img: this.file, showMask: true});
 	},
 
 	/**
@@ -69,22 +66,29 @@ Page({
 			const img = canvas.createImage();
 			img.onload = (res) => {
 				ctx.drawImage(img, 0, 0);
-				const imgData = ctx.createImageData(this.oriImgWidth, this.oriImgHeight);
-				for (let x=0; x<this.oriImgWidth; x++) {
-					for (let y=0; y<this.oriImgHeight; y++) {
+				const oldImgData = ctx.getImageData(0, 0, this.oriImgWidth, this.oriImgHeight).data;
+				const newImg = ctx.createImageData(this.oriImgWidth, this.oriImgHeight);
+				// const newImgData = newImg.data;
+				const radius = 3;
+				for (let x=radius; x<this.oriImgWidth-radius; x++) {
+					for (let y=radius; y<this.oriImgHeight-radius; y++) {
+						let randomX = x - Math.floor( Math.random() * 2 * radius) - radius
+						let randomY = y - Math.floor( Math.random() * 2 * radius) - radius
+						
+						const dataIndex = 4 * (randomY * newImg.width  + randomX)
+						const rgb = [oldImgData[dataIndex], oldImgData[dataIndex+1], oldImgData[dataIndex+2]]
 						const overlayRgb = Math.floor( Math.random() * 256 );
-						const rgb = ctx.getImageData(x, y, 1, 1).data;
 						const newRgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, this.overlayAlpha), 
-						  				this.rgbOverlay(rgb[1], overlayRgb, 1, this.overlayAlpha), 
-										  this.rgbOverlay(rgb[2], overlayRgb, 1, this.overlayAlpha), this.imgAlpha]
-						this.setImgData(imgData, x, y, newRgba);
+							this.rgbOverlay(rgb[1], overlayRgb, 1, this.overlayAlpha), 
+							this.rgbOverlay(rgb[2], overlayRgb, 1, this.overlayAlpha), this.imgAlpha]
+						  this.setImgData(newImg, x, y, newRgba);
 					}
 
 					this.setData({progressPercent: x*100/this.oriImgWidth});
 				}
 
 				ctx.clearRect(0, 0, this.oriImgWidth, this.oriImgHeight);
-				ctx.putImageData(imgData, 0, 0);
+				ctx.putImageData(newImg, 0, 0);
 				wx.canvasToTempFilePath({
 					canvas,
 					success: ((res) => {
