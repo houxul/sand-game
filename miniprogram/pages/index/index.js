@@ -3,6 +3,7 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
+import { guid } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -225,31 +226,16 @@ Page({
 						const savedFilePath = res.savedFilePath;
 						const sandpaintings = wx.getStorageSync('sandpaintings') || [];
 						sandpaintings.push({
+							id: guid(),
 							localPath: savedFilePath,
 							horizontal: databus.horizontal,
+							share: false,
 							width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
 							height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
 							createdAt: new Date().getTime(),
 						})
 						wx.setStorageSync('sandpaintings', sandpaintings);
 						finishCallback();
-
-						// const db = wx.cloud.database()
-						// db.collection('sandpaintings').add({
-						// 	data: {
-						// 		localPath: savedFilePath,
-						// 		horizontal: databus.horizontal,
-						// 		width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
-						// 		height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
-						// 		createdAt: new Date().getTime(),
-						// 	},
-						// 	success: (res) => {
-						// 		finishCallback();
-						// 	},
-						// 	fail: (err) => {
-						// 		wx.showToast({title: `保存数据失败`, icon: 'none'})
-						// 	}
-						// });
 					},
 					fail(res) {
 						wx.showToast({title:'保存本地失败，请重试', icon: 'none'})		

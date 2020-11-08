@@ -110,4 +110,105 @@ Page({
 		  }
 		}, true);
 	},
+
+	onShareClick: function(event) {
+		wx.showModal({
+			title: '提示',
+			content: '分享后其他人可以看到',
+			success: ((res) => {
+				if (!res.confirm) {
+					return
+				}
+				const userInfo = wx.getStorageSync('userInfo');
+				if (!userInfo) {
+					wx.showToast({icon: 'none',title: '需要回到首页，点击 菜单-头像 获取头像做展示用'})
+					return
+				}
+
+				const item = event.target.dataset.item;
+				wx.cloud.uploadFile({
+					cloudPath: item.id + '.png',
+					filePath: item.localPath,
+					success: (res) => {
+						const db = wx.cloud.database()
+						db.collection('sandpaintings').add({
+							data: {
+								_id: item.id,
+								fileId: res.fileID,
+								userAvatarUrl: userInfo.avatarUrl,
+								userNickName: userInfo.nickName,
+								horizontal: item.horizontal,
+								width: item.width,
+								height: item.height,
+								createdAt: new Date().getTime(),
+							},
+							success: (res) => {
+								const sandpaintings = wx.getStorageSync('sandpaintings');
+								for (let i=0; i<sandpaintings.length; i++) {
+									if (sandpaintings[i].id == event.target.dataset.item.id) {
+										sandpaintings[i].share = true;
+										break;
+									}
+								}
+								wx.setStorageSync('sandpaintings', sandpaintings);
+
+								for (let i=0; i<this.data.sandpaintings.length; i++) {
+									if (this.data.sandpaintings[i].id == event.target.dataset.item.id) {
+										this.data.sandpaintings[i].share = true;
+										break;
+									}
+								}
+								this.setData({sandpaintings: this.data.sandpaintings});
+
+								wx.showToast({title: '成功'})
+							},
+							fail: (err) => {
+								wx.showToast({icon: 'none',title: '新增记录失败，请重试'})
+							}
+						})
+					},
+					fail: (err) => {
+					  wx.showToast({icon: 'none',title: '上传文件失败，请重试'})
+					}
+				})
+			}).bind(this),
+		})
+	},
+
+	onShareToClick: function(event) {
+		// TODO 添加分享功能
+		console.log('---------1', event.target.dataset);
+	},
+
+	onDeleteClick: function(event) {
+		wx.showModal({
+			title: '提示',
+			content: '删除后将作品将无法恢复，是否删除',
+			success: ((res) => {
+				if (!res.confirm) {
+					return
+				}			  
+
+				const item = event.target.dataset.item;
+				const sandpaintings = wx.getStorageSync('sandpaintings');
+				for (let i=0; i<sandpaintings.length; i++) {
+					if (sandpaintings[i].id == item.id) {
+						sandpaintings.splice(i, 1);
+						break;
+					}
+				}
+				wx.setStorageSync('sandpaintings', sandpaintings);
+
+				for (let i=0; i<this.data.sandpaintings.length; i++) {
+					if (this.data.sandpaintings[i].id == item.id) {
+						this.data.sandpaintings.splice(i, 1);
+						break;
+					}
+				}
+				this.setData({sandpaintings: this.data.sandpaintings});
+
+				wx.showToast({title: '成功'})
+			}).bind(this)
+		})
+	}
 })
