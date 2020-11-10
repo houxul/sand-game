@@ -103,12 +103,22 @@ Page({
 		}, true);
 	},
 
-	onShareToClick: function(event) {
-		// TODO 添加分享功能
-		console.log('---------1', event.target.dataset);
-	},
-
 	onLikeClick: function(event) {
 		console.log('---------onLikeClick');
+	},
+
+	onShareAppMessage: function (res) {
+		if (res.from !== 'button') {
+			return {
+				title: '不一样的沙图',
+				path: '/pages/hotsandpaintings/hotsandpaintings',
+			}
+		}
+		const imgUrl = res.target.dataset.item.fileId;
+		return {
+			title: '不一样的沙图',
+			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
+			imageUrl: imgUrl,
+		}
 	}
 })

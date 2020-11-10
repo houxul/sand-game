@@ -29,8 +29,9 @@
 				<view>1111</view>
 			</view>
 			<view class="sandpainting-item-bottom-right">
-				<image class='image-action' src="../../images/share-to.png"
-					data-item="{{item}}" bindtap="onShareToClick"></image>
+				<button open-type="share" size="mini" class="button-image-action" data-item="{{item}}">
+					<image class='image-action' src="../../images/share-to.png"></image>
+				</button>
 			</view>
 		</view>
 	</view>

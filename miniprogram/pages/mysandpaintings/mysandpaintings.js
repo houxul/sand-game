@@ -175,9 +175,19 @@ Page({
 		})
 	},
 
-	onShareToClick: function(event) {
-		// TODO 添加分享功能
-		console.log('---------1', event.target.dataset);
+	onShareAppMessage: function (res) {
+		if (res.from !== 'button') {
+			return {
+				title: '不一样的沙图',
+				path: '/pages/hotsandpaintings/hotsandpaintings',
+			}
+		}
+		const imgUrl = res.target.dataset.item.localPath;
+		return {
+			title: '不一样的沙图',
+			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
+			imageUrl: imgUrl,
+		}
 	},
 
 	onDeleteClick: function(event) {
