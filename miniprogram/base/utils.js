@@ -75,3 +75,18 @@ export function guid() {
 	}
 	return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
 }
+
+export function timeFormat(t) {
+	const interval = (new Date().getTime() - t)/1000;
+
+	if (interval < 60) {
+		return "刚刚"
+	} else if (interval < 60*60) {
+		return Math.floor(interval/60) + "分钟前";
+	} else if (interval < 24*60*60) {
+		return Math.ceil(interval/3600) + "小时前";
+	} else {
+		const date = new Date(t + 8*3600*100);
+		return date.toJSON().substr(0, 19).replace('T', ' ').replace(/-/g, '.');
+	}
+}

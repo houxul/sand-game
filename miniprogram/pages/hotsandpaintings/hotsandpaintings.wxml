@@ -1,2 +1,58 @@
-<!--miniprogram/pages/hotsandpaintings/hotsandpaintings.wxml-->
-<text>miniprogram/pages/hotsandpaintings/hotsandpaintings.wxml</text>
+<!--miniprogram/pages/mysandpaintings/mysandpaintings.wxml-->
+
+<scroll-view class="sandpaintings">
+	<view class="sandpainting-item"
+	wx:for="{{sandpaintings}}" 
+	data-index="{{index}}" 
+	wx:key="index">
+		<view class="sandpainting-item-top">
+			<view class="sandpainting-item-top-left">
+				<image class="avatar" src="{{item.userAvatarUrl}}" />
+				{{item.userNickName}}
+			</view>
+			<view class="sandpainting-item-top-right">{{utils.timeFormat(item.createdAt)}}</view>
+		</view>
+		<view wx:if="{{item.horizontal}}" class="sandpainting-item-horizontal">
+			<image class="sandpainting-item-horizontal-img" src="{{item.fileId}}"
+			style="width: {{screenWidth-40}}px; height: {{(screenWidth -40) * item.height/item.width}}px"
+			data-url="{{item.fileId}}" bindtap="onImageClick"/>
+		</view>
+		<view wx:else class="sandpainting-item-vertical">
+			<image class="sandpainting-item-vertical-img" src="{{item.fileId}}" 
+				style="width: {{320*item.width/item.height}}px; height: 320px"
+				data-item="{{item}}" data-url="{{item.fileId}}" bindtap="onImageClick"/>
+		</view>
+		<view class="sandpainting-item-bottom">
+			<view class="sandpainting-item-bottom-left">
+				<image class='image-action' src="../../images/unlike.png"
+					data-item="{{item}}" bindtap="onLikeClick"></image>
+				<view>1111</view>
+			</view>
+			<view class="sandpainting-item-bottom-right">
+				<image class='image-action' src="../../images/share-to.png"
+					data-item="{{item}}" bindtap="onShareToClick"></image>
+			</view>
+		</view>
+	</view>
+</scroll-view>
+
+
+<wxs module="utils">
+	module.exports = {
+			timeFormat: function(t) {
+			var interval = (getDate().getTime() - t)/1000;
+
+			if (interval < 60) {
+				return "刚刚"
+			} else if (interval < 60*60) {
+				return Math.floor(interval/60) + "分钟前";
+			} else if (interval < 24*60*60) {
+				return Math.ceil(interval/3600) + "小时前";
+			}
+
+			var date = getDate(t + 8*3600*100);
+			return date.toJSON().substring(0, 19).replace('T', ' ');
+			return '13424332'
+		}
+	}
+</wxs>

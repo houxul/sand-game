@@ -285,7 +285,7 @@ Page({
 	},
 	
     hotActionHandler: function() {
-		console.log('------月度最受喜欢的沙绘')
+		wx.navigateTo({url: '/pages/hotsandpaintings/hotsandpaintings'})
 	},
 
     settingActionHandler: function() {
