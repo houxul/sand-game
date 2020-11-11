@@ -10,6 +10,7 @@ Page({
 	 */
 	data: {
 		sandpaintings: [],
+		ilikes: [],
 		screenWidth: databus.screenWidth,
 		screenHeight: databus.screenHeight,
 	},
@@ -20,6 +21,7 @@ Page({
 	onLoad: function (options) {
 		this.offset = 0;
 		this.limit = 4;
+		this.loadIlike();
 		this.loadSandpaintings();
 	},
 
@@ -73,9 +75,8 @@ Page({
 	},
 
 	loadSandpaintings: function() {
-		// TODO 排序
 		const db = wx.cloud.database();
-		db.collection('sandpaintings').orderBy('createdAt', 'desc')
+		db.collection('sandpaintings').orderBy('likes', 'desc')
 		.skip(this.offset) 
 		.limit(this.limit)
 		.get()
@@ -89,22 +90,80 @@ Page({
 			this.setData({sandpaintings: sandpaintings})
 		}).bind(this))
 		.catch(err => {
-			wx.showToast({title: '获取数据失败', icon:"none"});
+			wx.showToast({title: '获取数据失败，请重试', icon:"none"});
 		})
+	},
+
+	loadIlike() {
+		const ilike = wx.cloud.database().collection('ilike');
+		ilike.count({
+			success: (function(res) {
+				ilike.limit(res.total).get().then((res => {
+					res.data.forEach(item => {this.data.ilikes.push(item.sandPaintingId)});
+					this.setData({ilikes: this.data.ilikes});
+				}).bind(this))
+				.catch(err => {
+					console.log(err);
+					wx.showToast({title: '获取数据失败，请重试', icon:"none"});
+				})
+			}).bind(this),
+			fail: function(err) {
+				console.log(err);
+				wx.showToast({
+				  title: '获取数据失败，请重试',
+				  icon: 'none'
+				})
+			}
+		});
 	},
 
 	onImageClick: function(event) {
 		wx.previewImage({
 		  urls: this.data.sandpaintings.map(item=> item.fileId),
 		  current: event.target.dataset.url,
-		  fail: function(res) {
+		  fail: function(err) {
+			  console.log(err)
 			  wx.showToast({title: '预览失败',})
 		  }
 		}, true);
 	},
 
 	onLikeClick: function(event) {
-		console.log('---------onLikeClick');
+		const item = event.target.dataset.item;
+		const sandPaintingId = item._id;
+		const like = !this.data.ilikes.includes(sandPaintingId)
+		wx.cloud.callFunction({
+			name: 'likesandpainting',
+			data: {
+				sandPaintingId,
+			  	like: like,
+			},
+			success: (function(res) {
+				if (!like) {
+					const index = this.data.ilikes.indexOf(sandPaintingId);
+					this.data.ilikes.splice(index, 1);
+				} else {
+					this.data.ilikes.push(sandPaintingId);
+				}
+
+				for (let i=0; i < this.data.sandpaintings.length; i++) {
+					if (item._id == this.data.sandpaintings[i]._id) {
+						this.data.sandpaintings[i].likes += (like ? 1 : -1);
+						break;
+					}
+				}
+
+				this.setData({
+					ilikes: this.data.ilikes,
+					sandpaintings: this.data.sandpaintings,
+				})
+			}).bind(this),
+			fail: function(err) {
+				console.log(err)
+				wx.showToast({title: '操作失败', icon:"none"})
+			}
+		})
+		return
 	},
 
 	onShareAppMessage: function (res) {

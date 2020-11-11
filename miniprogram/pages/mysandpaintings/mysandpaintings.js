@@ -105,7 +105,8 @@ Page({
 		wx.previewImage({
 		  urls: this.data.sandpaintings.map(item=> item.localPath),
 		  current: event.target.dataset.url,
-		  fail: function(res) {
+		  fail: function(err) {
+			  console.log(err)
 			  wx.showToast({title: '预览失败',})
 		  }
 		}, true);
@@ -140,6 +141,7 @@ Page({
 								horizontal: item.horizontal,
 								width: item.width,
 								height: item.height,
+								likes: 0,
 								createdAt: new Date().getTime(),
 							},
 							success: (res) => {
@@ -163,12 +165,14 @@ Page({
 								wx.showToast({title: '成功'})
 							},
 							fail: (err) => {
+								console.log(err)
 								wx.showToast({icon: 'none',title: '新增记录失败，请重试'})
 							}
 						})
 					},
 					fail: (err) => {
-					  wx.showToast({icon: 'none',title: '上传文件失败，请重试'})
+						console.log(err)
+						wx.showToast({icon: 'none',title: '上传文件失败，请重试'})
 					}
 				})
 			}).bind(this),

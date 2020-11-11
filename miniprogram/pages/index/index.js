@@ -237,12 +237,14 @@ Page({
 						wx.setStorageSync('sandpaintings', sandpaintings);
 						finishCallback();
 					},
-					fail(res) {
+					fail(err) {
+						console.log(err)
 						wx.showToast({title:'保存本地失败，请重试', icon: 'none'})		
 					}
 				});
 			},
-			fail(res) {
+			fail(err) {
+				console.log(err)
 				wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
 			}
 		}, this)

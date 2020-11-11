@@ -26,7 +26,7 @@
 			<view class="sandpainting-item-bottom-left">
 				<image class='image-action' src="../../images/unlike.png"
 					data-item="{{item}}" bindtap="onLikeClick"></image>
-				<view>1111</view>
+				<view wx:if="{{item.likes != 0}}">{{item.likes}}</view>
 			</view>
 			<view class="sandpainting-item-bottom-right">
 				<button open-type="share" size="mini" class="button-image-action" data-item="{{item}}">

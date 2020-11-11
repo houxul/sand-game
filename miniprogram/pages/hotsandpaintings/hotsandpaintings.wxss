@@ -105,6 +105,6 @@
 .avatar {
 	width: 24px;
 	height: 24px;
-	/* margin: 10px; */
+	margin-right: 5px;
 	border-radius: 50%;
 }

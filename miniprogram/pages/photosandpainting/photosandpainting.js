@@ -26,7 +26,8 @@ Page({
 					imgHeight: res.height * databus.screenWidth/res.width,
 				})
 			}).bind(this),
-			fail(res) {
+			fail(err) {
+				console.log(err)
 				wx.showToast({title: '获取照片尺寸失败，请重试', icon: 'none'})
 			}
 		})
@@ -96,7 +97,8 @@ Page({
 						this.setData({img: tempFilePath, showMask:false});
 						wx.showToast({title: '成功'})
 					}).bind(this),
-					fail(res) {
+					fail(err) {
+						console.log(err)
 						wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
 					}
 				}, this)

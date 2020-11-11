@@ -15,7 +15,8 @@ Page({
 		wx.previewImage({
 			urls: [options.imgUrl],
 			current: options.imgUrl,
-			fail: function(res) {
+			fail: function(err) {
+				console.log(err)
 				wx.showToast({title: '预览失败',})
 			}
 		  }, true);
