@@ -21,8 +21,8 @@
 				<image class='image-action' src="../../images/delete.png"
 					data-item="{{item}}" bindtap="onDeleteClick"></image>
 
-				<image wx:if="{{!item.share}}" class='image-action' src="../../images/share.png"
-					data-item="{{item}}" bindtap="onShareClick"></image>
+				<image wx:if="{{!item.upload}}" class='image-action' src="../../images/upload.png"
+					data-item="{{item}}" bindtap="onUploadClick"></image>
 				<button wx:else open-type="share" size="mini" class="button-image-action" data-item="{{item}}">
 					<image class='image-action' src="../../images/share-to.png"></image>
 				</button>

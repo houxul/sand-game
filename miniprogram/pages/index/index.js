@@ -23,7 +23,8 @@ Page({
 			{icon: "../../images/restart.png", key:"重新开始"},
 			{icon: "../../images/landscape.png", key:"横屏开始"},
 			{icon: "../../images/my.png", key:"我的沙绘"},
-			{icon: "../../images/picture.png", key:"照片沙绘"},
+			// {icon: "../../images/picture.png", key:"照片沙绘"},
+			{icon: "../../images/newest.png", key:"最新沙绘"},
 			{icon: "../../images/fire.png", key:"热门沙绘"},
 			{icon: "../../images/setting.png", key:"设置"},
 			{icon: "../../images/help.png", key:"帮助"},
@@ -187,7 +188,8 @@ Page({
 				this.mySandPaintingActionHandler();
 				break;
 			case 4:
-				this.photoSandPaintingActionHandler();
+				// this.photoSandPaintingActionHandler();
+				this.newestSandPaintingActionHandler();
 				break;
 			case 5:
 				this.hotActionHandler();
@@ -229,7 +231,7 @@ Page({
 							id: guid(),
 							localPath: savedFilePath,
 							horizontal: databus.horizontal,
-							share: false,
+							upload: false,
 							width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
 							height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
 							createdAt: new Date().getTime(),
@@ -284,6 +286,10 @@ Page({
 				wx.navigateTo({url: '/pages/photosandpainting/photosandpainting?file='+tempFilePath})
 			}
 		})
+	},
+
+	newestSandPaintingActionHandler: function() {
+		wx.navigateTo({url: '/pages/newestsandpaintings/newestsandpaintings'})
 	},
 	
     hotActionHandler: function() {

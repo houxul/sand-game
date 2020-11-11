@@ -82,23 +82,6 @@ Page({
 		}
 		this.offset += count;
 		this.setData({sandpaintings: sandpaintings})
-		// const db = wx.cloud.database();
-		// db.collection('sandpaintings').orderBy('createdAt', 'desc')
-		// .skip(this.offset) 
-		// .limit(this.limit)
-		// .get()
-		// .then((res => {
-		// 	if (res.data.length == 0) {
-		// 		return
-		// 	}
-		// 	this.offset += res.data.length;
-		// 	const sandpaintings = this.data.sandpaintings;
-		// 	sandpaintings.push(...res.data);
-		// 	this.setData({sandpaintings: sandpaintings})
-		// }).bind(this))
-		// .catch(err => {
-		// 	wx.showToast({title: '获取数据失败', icon:"none"});
-		// })
 	},
 
 	onImageClick: function(event) {
@@ -112,10 +95,10 @@ Page({
 		}, true);
 	},
 
-	onShareClick: function(event) {
+	onUploadClick: function(event) {
 		wx.showModal({
 			title: '提示',
-			content: '分享后其他人可以看到',
+			content: '上传后其他人可以此作品',
 			success: ((res) => {
 				if (!res.confirm) {
 					return
@@ -148,7 +131,7 @@ Page({
 								const sandpaintings = wx.getStorageSync('sandpaintings');
 								for (let i=0; i<sandpaintings.length; i++) {
 									if (sandpaintings[i].id == event.target.dataset.item.id) {
-										sandpaintings[i].share = true;
+										sandpaintings[i].upload = true;
 										break;
 									}
 								}
@@ -156,7 +139,7 @@ Page({
 
 								for (let i=0; i<this.data.sandpaintings.length; i++) {
 									if (this.data.sandpaintings[i].id == event.target.dataset.item.id) {
-										this.data.sandpaintings[i].share = true;
+										this.data.sandpaintings[i].upload = true;
 										break;
 									}
 								}
