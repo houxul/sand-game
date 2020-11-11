@@ -169,13 +169,13 @@ Page({
 	onShareAppMessage: function (res) {
 		if (res.from !== 'button') {
 			return {
-				title: '不一样的沙图',
+				title: '彩色沙子',
 				path: '/pages/hotsandpaintings/hotsandpaintings',
 			}
 		}
 		const imgUrl = res.target.dataset.item.fileId;
 		return {
-			title: '不一样的沙图',
+			title: '彩色沙子',
 			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
 			imageUrl: imgUrl,
 		}

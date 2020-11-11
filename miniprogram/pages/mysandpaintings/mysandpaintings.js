@@ -98,7 +98,7 @@ Page({
 	onUploadClick: function(event) {
 		wx.showModal({
 			title: '提示',
-			content: '上传后其他人可以此作品',
+			content: '上传后其他用户可以看到此作品',
 			success: ((res) => {
 				if (!res.confirm) {
 					return
@@ -165,13 +165,13 @@ Page({
 	onShareAppMessage: function (res) {
 		if (res.from !== 'button') {
 			return {
-				title: '不一样的沙图',
+				title: '彩色沙子',
 				path: '/pages/hotsandpaintings/hotsandpaintings',
 			}
 		}
 		const imgUrl = res.target.dataset.item.localPath;
 		return {
-			title: '不一样的沙图',
+			title: '彩色沙子',
 			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
 			imageUrl: imgUrl,
 		}
