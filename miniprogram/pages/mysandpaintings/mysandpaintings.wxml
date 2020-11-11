@@ -16,7 +16,7 @@
 				data-item="{{item}}" data-url="{{item.localPath}}" bindtap="onImageClick"/>
 		</view>
 		<view class="sandpainting-item-bottom">
-			<view class="sandpainting-item-bottom-left">{{item.createdAt}}</view>
+			<view class="sandpainting-item-bottom-left">{{utils.timeFormat(item.createdAt)}}</view>
 			<view class="sandpainting-item-bottom-right">
 				<image class='image-action' src="../../images/delete.png"
 					data-item="{{item}}" bindtap="onDeleteClick"></image>
@@ -30,3 +30,5 @@
 		</view>
 	</view>
 </scroll-view>
+
+<wxs src="./../utils.wxs" module="utils" />

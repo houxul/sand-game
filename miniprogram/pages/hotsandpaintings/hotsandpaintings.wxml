@@ -37,23 +37,4 @@
 	</view>
 </scroll-view>
 
-
-<wxs module="utils">
-	module.exports = {
-			timeFormat: function(t) {
-			var interval = (getDate().getTime() - t)/1000;
-
-			if (interval < 60) {
-				return "刚刚"
-			} else if (interval < 60*60) {
-				return Math.floor(interval/60) + "分钟前";
-			} else if (interval < 24*60*60) {
-				return Math.ceil(interval/3600) + "小时前";
-			}
-
-			var date = getDate(t + 8*3600*100);
-			return date.toJSON().substring(0, 19).replace('T', ' ');
-			return '13424332'
-		}
-	}
-</wxs>
+<wxs src="./../utils.wxs" module="utils" />
