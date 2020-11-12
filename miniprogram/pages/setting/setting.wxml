@@ -16,12 +16,18 @@
 	<view class="switch-line-item">
 		<view>画布背景颜色</view>
 		<button bindtap="onClickBgColor" 
-		style="width: 120px; background-color: {{bgColor}}; margin: 0px"></button>
+		style="width: 50px; height: 50px; background-color: {{bgColor}}; margin: 0px; border-radius: 50%;"></button>
 	</view>
 	<view wx:if="{{showColorPicker}}" class="color-picker-item">
 		<canvas type="2d" id="colorpicker"  style="width:100%; height:150px"
 			bindtouchstart="onClickColorPicker" 
 			bindtouchmove="onClickColorPicker" >
 		</canvas>
+		<view class="switch-line-item">
+			<button type="warn" size="mini" style="margin: 0px;"
+			bindtap="onClickResetBgColor">重置</button>
+			<button type="primary" size="mini" style="margin: 0px;"
+			bindtap="onClickApplyBgColor">应用</button>
+		</view>
 	</view>
 </view>

@@ -65,6 +65,13 @@ Page({
 		if (this.colorPickerBtn) {
 			this.colorPickerBtn.update();
 		}
+
+		if (this.bgRgba != databus.bgRgba) {
+			this.bgRgba = databus.bgRgba;
+			if (this.sandTable) {
+				this.sandTable.updateBg();
+			}
+		}
 	},
 
 	/**

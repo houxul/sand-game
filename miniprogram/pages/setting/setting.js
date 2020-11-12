@@ -1,7 +1,7 @@
 // miniprogram/pages/setting/setting.js
 
 import DataBus from '../../base/databus'
-import {hslToRgb, strToAb, abToStr, rgbToStr} from '../../base/utils'
+import {hslToRgb, strToAb, abToStr, rgbToStr, strToRgb} from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -12,7 +12,7 @@ Page({
 	 */
 	data: {
 		sandNumInterval: [10, 120],
-		colorChangeSpeedInterval: [1, 200]
+		colorChangeSpeedInterval: [1, 200],
 	},
 
 	/**
@@ -145,5 +145,12 @@ Page({
 
 		const rgba = this.colorPickerCtx.getImageData(x, y, 1, 1).data;
 		this.setData({bgColor: rgbToStr(rgba)})
+	},
+	onClickResetBgColor: function(event) {
+		databus.bgRgba = databus.default.bgRgba;
+		this.setData({bgColor: rgbToStr(databus.bgRgba)})
+	},
+	onClickApplyBgColor: function(event) {
+		databus.bgRgba = [...strToRgb(this.data.bgColor), 255]
 	}
 })

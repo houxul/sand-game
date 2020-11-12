@@ -58,6 +58,22 @@ export default class SandTable {
     this.autoMoveSpeed = [0, 0]
   }
 
+  updateBg() {
+    if (databus.horizontal) {
+      for (let i=0; i < this.img.height; i++) {
+        for (let j=0; j< this.sandPileSideline[i]; j++) {
+          this.setImgData(j, i, databus.bgRgba);
+        }
+      }
+    } else {
+      for (let i=0; i < this.img.width; i++) {
+        for (let j=0; j< this.sandPileSideline[i]; j++) {
+          this.setImgData(i, j, databus.bgRgba);
+        }
+      }
+    }
+  }
+
   saveProgress() {
     const imgDataBuffer = abToStr(this.imgData.buffer)
     wx.setStorageSync('sandtable.sandPileSideline', this.sandPileSideline)

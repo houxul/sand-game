@@ -7,6 +7,10 @@ export function rgbToStr(rgb) {
 	return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
 }
 
+export function strToRgb(str) {
+	return str.split('(')[1].split(')')[0].split(',').map(item => parseInt(item));
+}
+
 export function hslToRgb(h,s,l){
 	h=h/360;
 	s=s/100;
