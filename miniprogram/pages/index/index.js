@@ -3,7 +3,7 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
-import { guid } from '../../base/utils'
+import { guid, rgbToHex, rgbToStr } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -66,11 +66,17 @@ Page({
 			this.colorPickerBtn.update();
 		}
 
-		if (this.bgRgba != databus.bgRgba) {
+
+		if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
 			this.bgRgba = databus.bgRgba;
 			if (this.sandTable) {
 				this.sandTable.updateBg();
 			}
+
+			wx.setNavigationBarColor({
+				frontColor: '#ffffff',
+				backgroundColor: rgbToHex(databus.bgRgba),
+			})
 		}
 	},
 
@@ -309,37 +315,5 @@ Page({
 
     helpActionHandler: function() {
       console.log('------帮助')
-	},
-	
-	saveSandPainting(callback) {
-		// const imgPath = this.sandTable.offScreenCanvas.toTempFilePathSync();
-		// wx.cloud.uploadFile({
-		//   cloudPath: guid() + '.png',
-		//   filePath: imgPath,
-		//   success: (res) => {
-		// 	const db = wx.cloud.database()
-		// 	db.collection('SandPainting').add({
-		// 	  data: {
-		// 		fileId: res.fileID,
-		// 		createdAt: new Date().getTime(),
-		// 	  },
-		// 	  success: (res) => {
-		// 		tryRun(callback);
-		// 	  },
-		// 	  fail: (err) => {
-		// 		wx.showToast({
-		// 		  icon: 'none',
-		// 		  title: '新增记录失败'
-		// 		})
-		// 	  }
-		// 	})
-		//   },
-		//   fail: (err) => {
-		// 	wx.showToast({
-		// 	  icon: 'none',
-		// 	  title: '上传文件失败'
-		// 	})
-		//   }
-		// })
 	},
 })

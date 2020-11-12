@@ -7,6 +7,17 @@ export function rgbToStr(rgb) {
 	return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
 }
 
+export function rgbToHex(rgb) {
+	const ff = function(num) {
+		let str = num.toString(16)
+		if (str.length == 1) {
+			str = '0' + str
+		}
+		return str
+	}
+	return '#' + ff(rgb[0]) + ff(rgb[1]) + ff(rgb[2]);
+}
+
 export function strToRgb(str) {
 	return str.split('(')[1].split(')')[0].split(',').map(item => parseInt(item));
 }

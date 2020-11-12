@@ -151,6 +151,6 @@ Page({
 		this.setData({bgColor: rgbToStr(databus.bgRgba)})
 	},
 	onClickApplyBgColor: function(event) {
-		databus.bgRgba = [...strToRgb(this.data.bgColor), 255]
+		databus.bgRgba = [...strToRgb(this.data.bgColor), 214]
 	}
 })
