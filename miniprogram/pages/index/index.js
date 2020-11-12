@@ -3,7 +3,7 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
-import { guid, rgbToHex, rgbToStr } from '../../base/utils'
+import { guid, rgbToStr } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -14,7 +14,7 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 70}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 150}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenu: false,
 		avatarUrl: "../../images/default-avatar.png",
@@ -72,11 +72,6 @@ Page({
 			if (this.sandTable) {
 				this.sandTable.updateBg();
 			}
-
-			wx.setNavigationBarColor({
-				frontColor: '#ffffff',
-				backgroundColor: rgbToHex(databus.bgRgba),
-			})
 		}
 	},
 

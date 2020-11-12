@@ -24,7 +24,7 @@ page{
 
 .menu-button {
 	position: absolute;
-	top: 80px;
+	top: 160px;
 	left: 30px;
 	z-index: 99;
 	width: 40px;
@@ -52,7 +52,7 @@ page{
 }
 
 .menu-userinfo {
-	margin-top: 60rpx;
+	margin-top: 120px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
