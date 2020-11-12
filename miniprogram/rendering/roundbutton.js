@@ -3,9 +3,13 @@ import { rgbToStr } from '../base/utils'
 
 export default class Roundbutton {
 	constructor(options) {
-		options.canvas.width = 2 * options.radius;
-		options.canvas.height = 2 * options.radius;
-		this.ctx = options.canvas.getContext('2d');
+		const canvas = options.canvas;
+		this.ctx = canvas.getContext('2d');
+		const dpr = wx.getSystemInfoSync().pixelRatio
+		canvas.width = 2 * options.radius * dpr
+		canvas.height = 2 * options.radius * dpr
+		this.ctx.scale(dpr, dpr)
+
 		this.rgbs = options.rgbs;
 		this.radius = options.radius;
 		this.draw();

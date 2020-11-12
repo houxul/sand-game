@@ -34,30 +34,27 @@
         "packNpmRelationList": [],
         "minifyWXSS": true
     },
-    "appid": "wx3d01e7298a770017",
+    "appid": "wx6ef03566572bbdc6",
     "projectname": "sand-game",
-    "libVersion": "2.13.2",
+    "libVersion": "2.14.0",
     "simulatorType": "wechat",
     "simulatorPluginLibVersion": {},
     "condition": {
-        "search": {
-            "list": []
-        },
-        "conversation": {
-            "list": []
-        },
         "plugin": {
             "list": []
         },
         "game": {
             "list": []
         },
+        "gamePlugin": {
+            "list": []
+        },
         "miniprogram": {
             "list": [
                 {
-                    "id": -1,
-                    "name": "db guide",
-                    "pathName": "pages/databaseGuide/databaseGuide"
+                    "name": "pages/colorpicker/colorpicker",
+                    "pathName": "pages/colorpicker/colorpicker",
+                    "scene": null
                 }
             ]
         }

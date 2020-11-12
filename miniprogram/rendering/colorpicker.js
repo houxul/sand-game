@@ -1,5 +1,5 @@
 import DataBus from '../base/databus'
-import {hslToRgb, rgbToStr, tryRun, genRgb, strToAb, abToStr} from '../base/utils'
+import {hslToRgb, strToAb, abToStr} from '../base/utils'
 let databus = new DataBus()
 
 export default class ColorPicker {
@@ -27,19 +27,6 @@ export default class ColorPicker {
 
 	drawToCanvas(ctx) {
 		this.drawBackGround(ctx);
-		this.drawCircle(ctx, this.switchCircle);
-		this.drawCircle(ctx, this.displayCircle);
-	}
-
-	drawCircle(ctx, circle) {
-		for (let i = circle.colors.length - 1; i>=0; i--) {
-			const item = circle.colors[i];
-			ctx.beginPath(); 
-			ctx.arc(circle.x, circle.y, (i+1)*circle.radius/circle.colors.length, 0, 2*Math.PI, false); 
-			ctx.fillStyle= rgbToStr(item); 
-			ctx.closePath(); 
-			ctx.fill();
-		}
 	}
 
 	drawBackGround(ctx) {
@@ -79,42 +66,6 @@ export default class ColorPicker {
 		imgData[dataIndex + 1] = rgba[1]
 		imgData[dataIndex + 2] = rgba[2]
 		imgData[dataIndex + 3] = rgba[3]
-	}
-		
-		onClick = ((x, y) => {
-			if (this.inCircle(x, y, this.displayCircle)) {
-				tryRun(this.exitPageCallball)
-				return true
-			}
-
-			if (this.inCircle(x, y, this.switchCircle)) {
-				const colorNum = Math.floor(Math.random()*5)+2;
-				const colors = []
-				for (let i=0; i<colorNum; i++) {
-					colors.push(genRgb())
-				}
-				this.updateDisplayCircleColors(colors)
-				return true
-			}
-
-			const imgData = this.ctx.getImageData(x, y, 1, 1)
-			this.updateDisplayCircleColors([[...imgData.data]])
-			return true
-		}).bind(this)
-	
-		inCircle(x, y, circle) {
-			const {x: pntX, y: pntY} = circle
-			if ((x-pntX)*(x-pntX) + (y-pntY)*(y-pntY) > circle.radius*circle.radius) {
-				return false
-			}
-	
-			return true
-		}
-
-		updateDisplayCircleColors(colors) {
-		this.displayCircle.colors.splice(0, this.displayCircle.colors.length)
-		this.displayCircle.colors.push(...colors)
-		this.drawCircle(this.ctx, this.displayCircle);
 	}
 }
 	

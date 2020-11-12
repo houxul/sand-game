@@ -1,4 +1,10 @@
 <canvas type="2d" id="colorpicker" 
-	bindtap="onClick"
+	bindtap="onClickCanvas"
 	style="width:100%; height:100%">
+</canvas>
+
+<canvas type="2d" id="switchbutton" class="switchbutton" bindtap="onClickSwitch">
+</canvas>
+
+<canvas type="2d" id="displaybutton" class="displaybutton" bindtap="onClickDisplay">
 </canvas>
