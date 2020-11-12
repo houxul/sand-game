@@ -1,4 +1,3 @@
-<!--miniprogram/pages/setting/setting.wxml-->
 <view class="page-view">
 	<view class="switch-line-item">
 		<view>声音</view>
@@ -14,5 +13,15 @@
 		<slider bindchange="colorChangeSpeedChange" value="{{colorChangeSpeed}}" 
 		min="{{colorChangeSpeedInterval[0]}}" max="{{colorChangeSpeedInterval[1]}}"></slider>
 	</view>
+	<view class="switch-line-item">
+		<view>画布背景颜色</view>
+		<button bindtap="onClickBgColor" 
+		style="width: 120px; background-color: {{bgColor}}; margin: 0px"></button>
+	</view>
+	<view wx:if="{{showColorPicker}}" class="color-picker-item">
+		<canvas type="2d" id="colorpicker"  style="width:100%; height:150px"
+			bindtouchstart="onClickColorPicker" 
+			bindtouchmove="onClickColorPicker" >
+		</canvas>
+	</view>
 </view>
-<!-- TODO 设置背景颜色 -->

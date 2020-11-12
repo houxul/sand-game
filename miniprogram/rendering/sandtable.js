@@ -12,7 +12,13 @@ export default class SandTable {
     this.ctx = options.canvas.getContext('2d');
     
     this.img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight);
-    this.imgData = this.img.data.fill(214)
+    this.imgData = this.img.data;
+    for (let i=0; i< this.imgData.length; i+=4) {
+      this.imgData[i] = databus.bgRgba[0];
+      this.imgData[i+1] = databus.bgRgba[1];
+      this.imgData[i+2] = databus.bgRgba[2];
+      this.imgData[i+3] = databus.bgRgba[3];
+    }
 
     this.sands = []
     this.sandPileSideline = new Array(this.img.height);
@@ -42,7 +48,13 @@ export default class SandTable {
     } else {
       this.sandPileSideline.fill(this.img.height)
     }
-    this.imgData.fill(214)
+    for (let i=0; i< this.imgData.length; i+=4) {
+      this.imgData[i] = databus.bgRgba[0];
+      this.imgData[i+1] = databus.bgRgba[1];
+      this.imgData[i+2] = databus.bgRgba[2];
+      this.imgData[i+3] = databus.bgRgba[3];
+    }
+
     this.autoMoveSpeed = [0, 0]
   }
 
@@ -74,7 +86,7 @@ export default class SandTable {
 
   tryAddSandToSandPile(sand) {
     if (!this.isCrossSandPileSideline(sand.preX, sand.preY)) {
-      this.setImgData(sand.preX, sand.preY, [214, 214, 214, 214]);
+      this.setImgData(sand.preX, sand.preY, databus.bgRgba);
     }
 
     // if (sand.crossBorder) {

@@ -54,6 +54,12 @@
                 {
                     "name": "pages/colorpicker/colorpicker",
                     "pathName": "pages/colorpicker/colorpicker",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/setting/setting",
+                    "pathName": "pages/setting/setting",
                     "scene": null
                 }
             ]

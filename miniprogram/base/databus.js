@@ -34,6 +34,7 @@ export default class DataBus {
     this.horizontal = false;
     this.voice = true;
     this.colorChangeSpeed = 50;
+    this.bgRgba = [214, 214, 214, 214];
   }
 
   reset(){

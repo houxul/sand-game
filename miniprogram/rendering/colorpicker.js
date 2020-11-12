@@ -5,23 +5,7 @@ let databus = new DataBus()
 export default class ColorPicker {
 	constructor(ctx) {
 		this.ctx = ctx
-
 		this.btnAreaY = 100
-		
-		this.switchCircle = {
-			x: 50,
-			y: this.btnAreaY/2,
-			radius: 20,
-			colors: [[0,0,0], [255,255,255],[0,0,0],[255,255,255],[0,0,0]]
-		}
-		
-		this.displayCircle = {
-			x: databus.screenWidth - 50,
-			y: this.btnAreaY/2,
-			radius: 30,
-			colors: databus.pickerRgbs
-		}
-
 		this.drawToCanvas(ctx);
 	}
 
