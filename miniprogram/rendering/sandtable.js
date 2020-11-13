@@ -1,6 +1,6 @@
 import DataBus from '../base/databus'
 import Sand from '../base/sand'
-import { abToStr, strToAb, tryRun, rgbToStr } from '../base/utils'
+import { abToStr, strToAb, tryRun } from '../base/utils'
 
 let databus = new DataBus()
 
@@ -29,8 +29,7 @@ export default class SandTable {
     }
 
     this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
-    this.autoMoveSpeed = [0, 0]
-    this.touchMovePnts = []
+    this.resetSandSourcePnt();
 
     this.bindLoop = (() => {
       this.genSand();
@@ -54,8 +53,6 @@ export default class SandTable {
       this.imgData[i+2] = databus.bgRgba[2];
       this.imgData[i+3] = databus.bgRgba[3];
     }
-
-    this.autoMoveSpeed = [0, 0]
   }
 
   updateBg() {
@@ -182,10 +179,10 @@ export default class SandTable {
   }
 
   genSand() {    
-    if (!this.sandSourcePnt) {
+    if (!this.sandSourcePnts.length) {
       return
     }
-    let {x, y} = this.sandSourcePnt;
+    let {x, y} = this.sandSourcePnts.shift();
     x = Math.floor(x)
     y = Math.floor(y)
     let cross = false;
@@ -202,29 +199,33 @@ export default class SandTable {
       sand.init(x, y, databus.sandFrameColor, !cross)
       this.sands.push(sand)
     }
+
+    if (this.autoGenSand) {
+      if (databus.horizontal) {
+        y += (Math.random() * 6 - 2) * this.sandMoveDir;
+        x += Math.random() > 0.5 ? 5 : - 5
+        if (y > this.img.height - 8) {
+          y = 8
+        } 
+        if (y < 8) {
+          y = this.img.height - 8
+        }
+        this.sandSourcePnts.push({x, y})
+      } else {
+        x += (Math.random() * 6 - 2) * this.sandMoveDir;
+        y += Math.random() > 0.5 ? 5 : - 5
+        if (x > this.img.width - 8) {
+          x = 8
+        } 
+        if (x < 8) {
+          x = this.img.width - 8
+        }
+        this.sandSourcePnts.push({x, y})
+      }
+    } 
   }
 
   update() {
-    if (this.sandSourcePnt && this.autoGenSand) {
-      if (databus.horizontal) {
-        this.sandSourcePnt.y += this.autoMoveSpeed[1];
-        if (this.sandSourcePnt.y > this.img.height - 8) {
-          this.sandSourcePnt.y = 8
-        } 
-        if (this.sandSourcePnt.y < 8) {
-          this.sandSourcePnt.y = this.img.height - 8
-        }
-      } else {
-        this.sandSourcePnt.x += this.autoMoveSpeed[0];
-        if (this.sandSourcePnt.x > this.img.width - 8) {
-          this.sandSourcePnt.x = 8
-        } 
-        if (this.sandSourcePnt.x < 8) {
-          this.sandSourcePnt.x = this.img.width - 8
-        }
-      }
-    } 
-
     for (let i = this.sands.length-1; i >= 0; i--) {
       const item = this.sands[i]
       item.update()
@@ -248,63 +249,39 @@ export default class SandTable {
   }
 
   touchStartHandler(x, y) {
-    this.touchMovePnts.splice(0, this.touchMovePnts.length);
     if (this.autoGenSand) {
       return true
     }
-    this.sandSourcePnt = {x, y}
+    this.sandSourcePnts.push({x, y});
     tryRun(this.genSandStartCallback)
     return true
   }
 
   touchMoveHandler(x, y) {
     if (this.autoGenSand) {
-      if (this.touchMovePnts.length > 50) {
-        this.touchMovePnts.shift();
-      }
-      this.touchMovePnts.push({x, y})
       return true
     }
 
-    this.sandSourcePnt = {x, y}
+    this.sandSourcePnts.push({x, y});
     return true
   }
 
   touchEndHandler(x, y) {
-    if (new Date().getTime() - this.touchTime < 500) {
+    if (databus.autoDownSand && (new Date().getTime() - this.touchTime < 500)) {
       this.touchTime = new Date().getTime();
-      this.autoGenSand = true
-      this.autoMoveSpeed = [0, 0]
+      this.autoGenSand = true;
+      this.sandSourcePnts.push({x, y});
       return true
-    }
-
-    const touchDir = this.touchDirection()
-    if (this.autoGenSand) {
-      if (touchDir == 2 || touchDir == 4) {
-        if ((this.autoMoveSpeed[0] > 0 && touchDir == 4) || (this.autoMoveSpeed[0] < 0 && touchDir == 2)) {
-          this.autoMoveSpeed[0] = 0
-        }
-        this.autoMoveSpeed[0] += (this.touchMovePnts[this.touchMovePnts.length-1].x - this.touchMovePnts[0].x)*5/this.img.width
-        return true
-      }
-
-      if (touchDir == 1 || touchDir == 3) {
-        if ((this.autoMoveSpeed[1] > 0 && touchDir == 1) || (this.autoMoveSpeed[1] < 0 && touchDir == 3)) {
-          this.autoMoveSpeed[1] = 0
-        }
-        this.autoMoveSpeed[1] += (this.touchMovePnts[this.touchMovePnts.length-1].y - this.touchMovePnts[0].y)*5/this.img.height
-        return true
-      }
     }
 
     tryRun(this.genSandEndCallback)
     this.touchTime = new Date().getTime();
-    this.sandSourcePnt = null
     this.autoGenSand = false
+    this.sandMoveDir = Math.random() > 0.5 ? 1 : -1;
     return true
   }
 
-  touchDirection() {
+  /* touchDirection() {
     let [xDirection, yDirection] = [0, 0]
     let [xInvalidDirection, yInvalidDirection] = [false, false]
     for (let i=5; i<this.touchMovePnts.length; i+=5) {
@@ -345,10 +322,10 @@ export default class SandTable {
       return xDirection > 0 ? 2 : 4
     }
     return yDirection > 0 ? 3 : 1
-  }
+  }*/
 
   resetSandSourcePnt() {
-    this.sandSourcePnt = null;
+    this.sandSourcePnts = [];
     this.autoGenSand = false;
   }
 }
