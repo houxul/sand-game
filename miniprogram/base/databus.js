@@ -42,20 +42,43 @@ export default class DataBus {
     this.default = {
       bgRgba: this.bgRgba,
     }
+
+    this.loadSetting();
   }
 
   reset(){
     this.sandFrame = 0
   }
 
-  saveProgress() {
-    wx.setStorageSync('databus', {sandFrame: this.sandFrame})
+  // saveProgress() {
+  //   wx.setStorageSync('databus', {sandFrame: this.sandFrame})
+  // }
+
+  // tryRecoveryProgress() {
+  //   const databus = wx.getStorageSync('databus')
+  //   if (databus&&databus.sandFrame) {
+  //     this.sandFrame = databus.sandFrame
+  //   }
+  // }
+
+  loadSetting() {
+    const load = (function(key) {
+      const value = wx.getStorageSync('databus.'+key)
+      if (value != undefined) {
+        Reflect.set(this, key, value)
+      }
+    }).bind(this);
+
+    load('colorChangeSpeed');
+    load('autoDownSand');
+    load('bgRgba');
+    load('genSandNum');
   }
 
-  tryRecoveryProgress() {
-    const databus = wx.getStorageSync('databus')
-    if (databus&&databus.sandFrame) {
-      this.sandFrame = databus.sandFrame
+  updateSetting(options) {
+    for (const item in options) {
+      Reflect.set(this, item, options[item])
+      wx.setStorageSync('databus.' + item, options[item])
     }
   }
 

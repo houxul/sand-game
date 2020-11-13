@@ -78,13 +78,13 @@ Page({
 
 	},
 	changeAutoDownSand: function(res) {
-		databus.autoDownSand = res.detail.value;
+		databus.updateSetting({autoDownSand: res.detail.value});
 	},
 	sandNumChange: function(res) {
-		databus.genSandNum = res.detail.value;
+		databus.updateSetting({genSandNum: res.detail.value});
 	},
 	colorChangeSpeedChange: function(res) {
-		databus.colorChangeSpeed = res.detail.value;
+		databus.updateSetting({colorChangeSpeed: res.detail.value});
 	},
 	onClickBgColor: function(event) {
 		this.setData({showColorPicker: !this.data.showColorPicker});
@@ -150,6 +150,6 @@ Page({
 		this.setData({bgColor: rgbToStr(databus.bgRgba)})
 	},
 	onClickApplyBgColor: function(event) {
-		databus.bgRgba = [...strToRgb(this.data.bgColor), 214]
+		databus.updateSetting({bgRgba: [...strToRgb(this.data.bgColor), 214]});
 	}
 })
