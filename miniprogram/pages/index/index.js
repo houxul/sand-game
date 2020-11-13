@@ -16,6 +16,7 @@ Page({
 		clrPickBtnRadius: 25,
 		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 150}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
+		showMenuButton: true,
 		showMenu: false,
 		avatarUrl: "../../images/default-avatar.png",
 		menuActions: [
@@ -118,6 +119,14 @@ Page({
 	initSandTable: function(res) {
 		const canvas = res.node;
 		this.sandTable = new SandTable({canvas});
+
+		this.sandTable.genSandStartCallback = (function() {
+			this.setData({showMenuButton: false});
+		}).bind(this)
+
+		this.sandTable.genSandEndCallback = (function() {
+			this.setData({showMenuButton: true});
+		}).bind(this)
 	},
 
 	initColorPickerButton: function(res) {

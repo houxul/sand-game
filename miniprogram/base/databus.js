@@ -35,7 +35,6 @@ export default class DataBus {
     this.pickerLinearGradient = new Array(2000)
     this.resetPickerLinearGradient()
     this.horizontal = false;
-    this.voice = true;
     this.colorChangeSpeed = 50;
     this.autoDownSand = true;
     this.bgRgba = [214, 214, 214, 214];

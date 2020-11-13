@@ -21,7 +21,6 @@ Page({
 	onLoad: function (options) {
 		const bgColor = rgbToStr(databus.bgRgba);
 		this.setData({
-			voice: databus.voice,
 			autoDownSand: databus.autoDownSand,
 			sandNum: databus.genSandNum,
 			colorChangeSpeed: databus.colorChangeSpeed,
@@ -80,9 +79,6 @@ Page({
 	},
 	changeAutoDownSand: function(res) {
 		databus.autoDownSand = res.detail.value;
-	},
-	changeVoice: function(res) {
-		databus.voice = res.detail.value;
 	},
 	sandNumChange: function(res) {
 		databus.genSandNum = res.detail.value;
