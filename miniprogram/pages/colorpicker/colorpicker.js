@@ -81,8 +81,8 @@ Page({
 	},
 
 	initCanvasSize: function(canvas) {
-		canvas.width = databus.screenWidth
-		canvas.height = databus.screenHeight
+		canvas.width = databus.windowWidth
+		canvas.height = databus.windowHeight
 	},
 
 	initCanvas: function(res) {
