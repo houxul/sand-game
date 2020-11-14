@@ -1,0 +1,7 @@
+<view class="page-view">
+	<view wx:for="{{tips}}" class='tip-item'>
+		<view class="tip-title">{{item.title}}</view>
+		<view class="tip-content">{{item.content}}</view>
+		<image wx:if="{{!!item.img}}" class="tip-img" src="{{item.img}}"/>
+	</view>
+</view>

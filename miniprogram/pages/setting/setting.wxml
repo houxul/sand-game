@@ -31,3 +31,7 @@
 		</view>
 	</view>
 </view>
+
+<!-- <view class="bg-view">
+	<image mode="aspectFit" src="../../images/setting-bg.png"></image>
+</view> -->

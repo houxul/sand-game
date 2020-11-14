@@ -23,7 +23,7 @@ Page({
 			{icon: "../../images/finish.png", key:"完成绘制"},
 			{icon: "../../images/restart.png", key:"重新开始"},
 			{icon: "../../images/landscape.png", key:"横屏开始"},
-			{icon: "../../images/my.png", key:"我的沙绘"},
+			{icon: "../../images/my.png", key:"我的作品"},
 			// {icon: "../../images/picture.png", key:"照片沙绘"},
 			{icon: "../../images/newest.png", key:"最新沙绘"},
 			{icon: "../../images/fire.png", key:"热门沙绘"},
@@ -318,6 +318,6 @@ Page({
 	},
 
     helpActionHandler: function() {
-      console.log('------帮助')
+		wx.navigateTo({url: '/pages/help/help'})
 	},
 })
