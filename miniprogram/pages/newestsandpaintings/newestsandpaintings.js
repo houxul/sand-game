@@ -10,7 +10,6 @@ Page({
 	 */
 	data: {
 		sandpaintings: [],
-		ilikes: [],
 		screenWidth: databus.screenWidth,
 		screenHeight: databus.screenHeight,
 	},
@@ -19,10 +18,10 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		this.ilikeSet = new Set();
 		this.offset = 0;
 		this.limit = 4;
-		this.loadIlike();
-		this.loadSandpaintings();
+		this.loadData();
 	},
 
 	/**
@@ -86,7 +85,11 @@ Page({
 			}
 			this.offset += res.data.length;
 			const sandpaintings = this.data.sandpaintings;
-			sandpaintings.push(...res.data);
+			
+			res.data.forEach(item => {
+				item.ilike = this.ilikeSet.has(item._id)
+				sandpaintings.push(item);
+			});
 			this.setData({sandpaintings: sandpaintings})
 		}).bind(this))
 		.catch(err => {
@@ -94,13 +97,13 @@ Page({
 		})
 	},
 
-	loadIlike() {
+	loadData() {
 		const ilike = wx.cloud.database().collection('ilike');
 		ilike.count({
 			success: (function(res) {
 				ilike.limit(res.total).get().then((res => {
-					res.data.forEach(item => {this.data.ilikes.push(item.sandPaintingId)});
-					this.setData({ilikes: this.data.ilikes});
+					res.data.forEach(item => {this.ilikeSet.add(item.sandPaintingId)});
+					this.loadSandpaintings();
 				}).bind(this))
 				.catch(err => {
 					console.log(err);
@@ -131,7 +134,7 @@ Page({
 	onLikeClick: function(event) {
 		const item = event.target.dataset.item;
 		const sandPaintingId = item._id;
-		const like = !this.data.ilikes.includes(sandPaintingId)
+		const like = !this.ilikeSet.has(sandPaintingId)
 		wx.cloud.callFunction({
 			name: 'likesandpainting',
 			data: {
@@ -140,23 +143,20 @@ Page({
 			},
 			success: (function(res) {
 				if (!like) {
-					const index = this.data.ilikes.indexOf(sandPaintingId);
-					this.data.ilikes.splice(index, 1);
+					this.ilikeSet.delete(sandPaintingId);
 				} else {
-					this.data.ilikes.push(sandPaintingId);
+					this.ilikeSet.add(sandPaintingId);
 				}
 
 				for (let i=0; i < this.data.sandpaintings.length; i++) {
 					if (item._id == this.data.sandpaintings[i]._id) {
 						this.data.sandpaintings[i].likes += (like ? 1 : -1);
+						this.data.sandpaintings[i].ilike = like;
 						break;
 					}
 				}
 
-				this.setData({
-					ilikes: this.data.ilikes,
-					sandpaintings: this.data.sandpaintings,
-				})
+				this.setData({sandpaintings: this.data.sandpaintings})
 			}).bind(this),
 			fail: function(err) {
 				console.log(err)

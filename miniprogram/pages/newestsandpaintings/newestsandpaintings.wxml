@@ -4,7 +4,7 @@
 	<image mode="aspectFit" src="../../images/empty.png"></image>
 	<view>没有任何作品，赶快上传一个吧！</view>
 </view>
-<scroll-view class="sandpaintings">
+<scroll-view wx:else class="sandpaintings">
 	<view class="sandpainting-item"
 	wx:for="{{sandpaintings}}" 
 	data-index="{{index}}" 
@@ -28,7 +28,7 @@
 		</view>
 		<view class="sandpainting-item-bottom">
 			<view class="sandpainting-item-bottom-left">
-				<image wx:if="{{true}}" class='image-action' src="../../images/like.png"
+				<image wx:if="{{item.ilike}}" class='image-action' src="../../images/like.png"
 					data-item="{{item}}" bindtap="onLikeClick"></image>
 				<image wx:else class='image-action' src="../../images/unlike.png"
 					data-item="{{item}}" bindtap="onLikeClick"></image>
