@@ -146,7 +146,7 @@ Page({
 		this.setData({bgColor: rgbToStr(rgba)})
 	},
 	onClickResetBgColor: function(event) {
-		databus.bgRgba = databus.default.bgRgba;
+		databus.updateSetting({bgRgba: databus.default.bgRgba});
 		this.setData({bgColor: rgbToStr(databus.bgRgba)})
 	},
 	onClickApplyBgColor: function(event) {

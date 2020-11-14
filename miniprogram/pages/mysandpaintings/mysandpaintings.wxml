@@ -1,6 +1,10 @@
 <!--miniprogram/pages/mysandpaintings/mysandpaintings.wxml-->
 
-<scroll-view class="sandpaintings">
+<view class="empty-view" wx:if="{{!!!sandpaintings.length}}">
+	<image mode="aspectFit" src="../../images/empty.png"></image>
+	<view>没有任何作品，赶快创作去吧！</view>
+</view>
+<scroll-view wx:else class="sandpaintings">
 	<view class="sandpainting-item"
 	wx:for="{{sandpaintings}}" 
 	data-index="{{index}}" 
@@ -21,8 +25,9 @@
 				<image class='image-action' src="../../images/delete.png"
 					data-item="{{item}}" bindtap="onDeleteClick"></image>
 
-				<image wx:if="{{!item.upload}}" class='image-action' src="../../images/upload.png"
-					data-item="{{item}}" bindtap="onUploadClick"></image>
+				<button wx:if="{{!item.upload}}" size="mini" class="button-image-action" data-item="{{item}}" bindtap="onUploadClick">
+					<image class='image-action' src="../../images/upload.png"></image>
+				</button>
 				<button wx:else open-type="share" size="mini" class="button-image-action" data-item="{{item}}">
 					<image class='image-action' src="../../images/share-to.png"></image>
 				</button>

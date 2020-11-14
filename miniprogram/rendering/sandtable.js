@@ -202,7 +202,7 @@ export default class SandTable {
 
     if (this.autoGenSand) {
       if (databus.horizontal) {
-        y += (Math.random() * 6 - 2) * this.sandMoveDir;
+        y += (Math.random() * 3.5 - 1.1) * this.sandMoveDir;
         x += Math.random() > 0.5 ? 5 : - 5
         if (y > this.img.height - 8) {
           y = 8
@@ -212,7 +212,7 @@ export default class SandTable {
         }
         this.sandSourcePnts.push({x, y})
       } else {
-        x += (Math.random() * 6 - 2) * this.sandMoveDir;
+        x += (Math.random() * 3.5 - 1.1) * this.sandMoveDir;
         y += Math.random() > 0.5 ? 5 : - 5
         if (x > this.img.width - 8) {
           x = 8
@@ -235,6 +235,7 @@ export default class SandTable {
       }
     }
   }
+
 
   draw() {
     this.ctx.putImageData(this.img, 0, 0);
@@ -273,7 +274,7 @@ export default class SandTable {
       this.sandSourcePnts.push({x, y});
       return true
     }
-
+ 
     tryRun(this.genSandEndCallback)
     this.touchTime = new Date().getTime();
     this.autoGenSand = false

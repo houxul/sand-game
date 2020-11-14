@@ -109,7 +109,7 @@ Page({
 					return
 				}
 
-				// wx.showLoading({title: '上传中...'})
+				wx.showLoading({title: '上传中...'})
 				const item = event.target.dataset.item;
 				wx.cloud.uploadFile({
 					cloudPath: item.id + '.png',

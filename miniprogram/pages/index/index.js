@@ -14,7 +14,7 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 150}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 140}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenuButton: true,
 		showMenu: false,

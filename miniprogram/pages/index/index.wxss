@@ -24,7 +24,7 @@ page{
 
 .menu-button {
 	position: absolute;
-	top: 160px;
+	top: 150px;
 	left: 30px;
 	z-index: 99;
 	width: 40px;
