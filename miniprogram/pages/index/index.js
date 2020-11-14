@@ -13,8 +13,8 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		clrPickBtnRadius: 25,
-		clrPickBtnPnts: [{x: databus.screenWidth - 70, y: 140}, {x: databus.screenWidth - 70, y: databus.screenHeight - 100}],
+		clrPickBtnRadius: 30,
+		clrPickBtnPnts: [{x: databus.screenWidth - 80, y: 120}, {x: databus.screenWidth - 80, y: databus.screenHeight - 100}],
 		clrPickBtnPntIndex: 0,
 		showMenuButton: true,
 		showMenu: false,

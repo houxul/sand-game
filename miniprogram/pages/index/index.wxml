@@ -7,7 +7,7 @@
 		bindtap="tapHandler">
 	</canvas>
 	<canvas type="2d" id="colorpickerbutton" class="colorpickerbutton" 
-		style="position: absolute; top: {{clrPickBtnPnts[clrPickBtnPntIndex].y}}px; left: {{clrPickBtnPnts[clrPickBtnPntIndex].x}}px; z-index: 98; width: 50px; height: 50px;"
+		style="position: absolute; top: {{clrPickBtnPnts[clrPickBtnPntIndex].y}}px; left: {{clrPickBtnPnts[clrPickBtnPntIndex].x}}px; z-index: 98; width: 60px; height: 60px;"
 		bindtap="onClickColorPicker">
 	</canvas>
 	<cover-image wx:if="{{showMenuButton}}" class="menu-button" src="../../images/menu.png" bindtap="onClickMenu"/>
