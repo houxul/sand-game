@@ -286,7 +286,7 @@ Page({
 
 	mySandPaintingActionHandler: function() {
 		this.data.menuActions[3].tip = null;
-		this.setData({menuActions: this.data.menuActions});
+		this.setData({showMenu: false, menuActions: this.data.menuActions});
 
 		wx.navigateTo({
 			url: '/pages/mysandpaintings/mysandpaintings',
@@ -294,6 +294,7 @@ Page({
     },
 
     photoSandPaintingActionHandler: function() {
+		this.setData({showMenu: false});
 		wx.chooseImage({
 			count: 1,
 			sizeType: ['original', 'compressed'],
@@ -306,18 +307,22 @@ Page({
 	},
 
 	newestSandPaintingActionHandler: function() {
+		this.setData({showMenu: false});
 		wx.navigateTo({url: '/pages/newestsandpaintings/newestsandpaintings'})
 	},
 	
     hotActionHandler: function() {
+		this.setData({showMenu: false});
 		wx.navigateTo({url: '/pages/hotsandpaintings/hotsandpaintings'})
 	},
 
     settingActionHandler: function() {
+		this.setData({showMenu: false});
 		wx.navigateTo({url: '/pages/setting/setting'})
 	},
 
     helpActionHandler: function() {
+		this.setData({showMenu: false});
 		wx.navigateTo({url: '/pages/help/help'})
 	},
 })
