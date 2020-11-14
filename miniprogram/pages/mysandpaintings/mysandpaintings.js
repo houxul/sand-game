@@ -110,7 +110,7 @@ Page({
 				}
 
 				wx.showLoading({title: '上传中...'})
-				const item = event.target.dataset.item;
+				const item = event.currentTarget.dataset.item;
 				wx.cloud.uploadFile({
 					cloudPath: item.id + '.png',
 					filePath: item.localPath,
@@ -131,7 +131,7 @@ Page({
 							success: (res) => {
 								const sandpaintings = wx.getStorageSync('sandpaintings');
 								for (let i=0; i<sandpaintings.length; i++) {
-									if (sandpaintings[i].id == event.target.dataset.item.id) {
+									if (sandpaintings[i].id == item.id) {
 										sandpaintings[i].upload = true;
 										break;
 									}
@@ -139,7 +139,7 @@ Page({
 								wx.setStorageSync('sandpaintings', sandpaintings);
 
 								for (let i=0; i<this.data.sandpaintings.length; i++) {
-									if (this.data.sandpaintings[i].id == event.target.dataset.item.id) {
+									if (this.data.sandpaintings[i].id == item.id) {
 										this.data.sandpaintings[i].upload = true;
 										break;
 									}
@@ -164,6 +164,7 @@ Page({
 	},
 
 	onShareAppMessage: function (res) {
+		console.log('---', res);
 		if (res.from !== 'button') {
 			return {
 				title: '彩色沙子',
@@ -205,7 +206,34 @@ Page({
 				}
 				this.setData({sandpaintings: this.data.sandpaintings});
 
-				wx.showToast({title: '成功'})
+				if (!item.upload) {
+					return
+				}
+				wx.showModal({
+					title: '提示',
+					content: '本地已删除，是否删除已上传的此作品',
+					success: function(res) {
+						if (!res.confirm) {
+							return
+						}
+						const collection = wx.cloud.database().collection('sandpaintings');
+						collection.doc(item.id).get()
+  						.then((res) => {
+							const fileId = res.data.fileId;
+							collection.doc(item.id).remove().then(
+								function(res) {
+									wx.cloud.deleteFile({
+										fileList: [fileId],
+										success: res => {
+											wx.showToast({title: '成功'})
+										},
+										fail: console.error
+									})
+								}
+							).catch(console.error);
+						}).catch(console.error);
+					}
+				});
 			}).bind(this)
 		})
 	}
