@@ -171,6 +171,7 @@ Page({
 			const ctx = canvas.getContext('2d');
 
 			ctx.fillStyle = 'rgb(245, 245, 245)';
+			ctx.restore()
 			ctx.beginPath();
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.fillRect(0, 0, canvas.width, canvas.height);
