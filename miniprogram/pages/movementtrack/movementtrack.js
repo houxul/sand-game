@@ -98,6 +98,8 @@ Page({
 	onClickApply: function() {
 		databus.movementTrack.splice(0, databus.movementTrack.length);
 		databus.movementTrack.push(...this.movementTrack.pnts);
+		wx.setStorageSync('databus.movementTrack', databus.movementTrack);
+		this.autoDownSandFrame = 0;
 		wx.navigateBack({delta: 2});
 		wx.showToast({title: '应用成功'})
 	},

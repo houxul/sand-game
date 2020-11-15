@@ -68,16 +68,20 @@ export default class DataBus {
   loadSetting() {
     const load = (function(key) {
       const value = wx.getStorageSync('databus.'+key)
-      if (value != undefined) {
-        Reflect.set(this, key, value)
+      if (value == "" || value == undefined || value == null) {
+        return;
       }
+      Reflect.set(this, key, value)
     }).bind(this);
 
-    // load('colorChangeSpeed');
-    // load('autoDownSand');
-    // load('bgRgba');
-    // load('genSandNum');
-    // load('movementTrack');
+    load('colorChangeSpeed');
+    load('autoDownSand');
+    load('bgRgba');
+    load('genSandNum');
+    load('movementTrack');
+
+    // const info = wx.getStorageInfoSync();
+    // console.log('-------------', info);
   }
 
   updateSetting(options) {

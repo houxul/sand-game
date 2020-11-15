@@ -163,8 +163,8 @@ Page({
 	},
 
 	onClickColorPicker: function(event) {
-		if (!this.data.showMenu) {
-			this.setData({showMenu: true});
+		if (!this.data.showMenuButton) {
+			this.setData({showMenuButton: true});
 		}
 		this.sandTable.resetSandSourcePnt();
 		wx.navigateTo({
