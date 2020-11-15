@@ -37,17 +37,17 @@ export default class MovementTrack {
 		this.drawBg();
 	}
 
+	setStartingPoint(pnt) {
+		this.ctx.moveTo(pnt[0], pnt[1]);
+		this.pnts.push([...pnt, 0]);
+	}
+
 	update(pnt) {
 		this.pnts.push(pnt);
 		this.draw(pnt);
 	}
 
 	draw(pnt) {
-		if (this.pnts.length == 1) {
-			this.ctx.moveTo(this.pnts[0][0], this.pnts[0][1])
-			return;
-		}
-
 		// this.ctx.strokeStyle= 'rgb(255, 0, 0)';
 		// this.ctx.moveTo(this.pnts[0][0], this.pnts[0][1])
 		// for (let i=1; i<this.pnts.length; i++) {

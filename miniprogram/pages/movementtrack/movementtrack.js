@@ -33,7 +33,11 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-
+		wx.showToast({
+		  title: '按下屏幕移动手指，开始画沙子移动轨迹',
+		  icon: "none",
+		  duration: 3500,
+		})
 	},
 
 	/**
@@ -78,6 +82,8 @@ Page({
 
 	touchStartHandler: function(event) {
 		this.setData({showAction: false});
+		const {clientX:x, clientY:y} = event.touches[0];
+		this.movementTrack.setStartingPoint([x, y]);
 	},
 
 	touchMoveHandler: function(event) {
@@ -96,6 +102,10 @@ Page({
 		this.movementTrack.clean();
 	},
 	onClickApply: function() {
+		if (!this.movementTrack.pnts.length) {
+			wx.showToast({title: '还没有轨迹哦!', icon: 'none'});
+			return
+		}
 		databus.movementTrack.splice(0, databus.movementTrack.length);
 		databus.movementTrack.push(...this.movementTrack.pnts);
 		wx.setStorageSync('databus.movementTrack', databus.movementTrack);

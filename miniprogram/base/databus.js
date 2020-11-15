@@ -124,5 +124,6 @@ export default class DataBus {
 		for (let i=0; i< this.screenHeight; i++) {
       this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i]);
     }
+    this.movementTrack[0].push(0);
   }
 }

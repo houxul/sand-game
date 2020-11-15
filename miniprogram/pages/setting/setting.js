@@ -182,9 +182,12 @@ Page({
 			ctx.scale(scale, scale);
 
 			ctx.strokeStyle = 'rgb(255, 0, 0)';
-			ctx.moveTo(databus.movementTrack[0][0], databus.movementTrack[0][1])
-			for (let i=1; i<databus.movementTrack.length; i++) {
-				ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
+			for (let i=0; i<databus.movementTrack.length; i++) {
+				if (databus.movementTrack[i].length == 2) {
+					ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
+				} else {
+					ctx.moveTo(databus.movementTrack[i][0], databus.movementTrack[i][1])
+				}
 			}
 			ctx.stroke();
 		}).bind(this)).exec();
