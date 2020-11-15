@@ -224,6 +224,22 @@ Page({
 	},
 
 	finishActionHandler: function() {
+		if (!this.sandTable.fullSandPile) {
+			wx.showModal({
+				content: '确认绘制结束?',
+				success: (res) => {
+					if (!res.confirm) {
+						return
+					}
+					this.finishSandTable();
+				}
+			});
+			return;
+		}
+		this.finishSandTable();		
+	},
+
+	finishSandTable: function() {
 		const finishCallback = (function() {
 			databus.reset()
 			this.sandTable.reset();
@@ -273,9 +289,18 @@ Page({
 	},
 
     restartActionHandler: function() {
-		databus.reset()
-		this.sandTable.reset();
-		this.setData({showMenu: false});
+		wx.showModal({
+			content: '确认重新开始?',
+			success: ((res) => {
+				if (!res.confirm) {
+					return
+				}
+				
+				databus.reset()
+				this.sandTable.reset();
+				this.setData({showMenu: false});
+			}).bind(this)
+		});
     },
 
     horizontalScreenRestartActionHandler: function() {

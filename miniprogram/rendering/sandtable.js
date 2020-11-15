@@ -27,6 +27,7 @@ export default class SandTable {
     } else {
       this.sandPileSideline.fill(this.img.height)
     }
+    this.corssZeroLineNum = 0;
 
     this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
     this.resetSandSourcePnt();
@@ -47,6 +48,7 @@ export default class SandTable {
     } else {
       this.sandPileSideline.fill(this.img.height)
     }
+    this.corssZeroLineNum = 0;
     for (let i=0; i< this.imgData.length; i+=4) {
       this.imgData[i] = databus.bgRgba[0];
       this.imgData[i+1] = databus.bgRgba[1];
@@ -71,22 +73,30 @@ export default class SandTable {
     }
   }
 
-  saveProgress() {
-    const imgDataBuffer = abToStr(this.imgData.buffer)
-    wx.setStorageSync('sandtable.sandPileSideline', this.sandPileSideline)
-    wx.setStorageSync('sandtable.imgDataBuffer', imgDataBuffer)
-  }
+  // saveProgress() {
+  //   const imgDataBuffer = abToStr(this.imgData.buffer)
+  //   wx.setStorageSync('sandtable.sandPileSideline', this.sandPileSideline)
+  //   wx.setStorageSync('sandtable.imgDataBuffer', imgDataBuffer)
+  // }
 
-  tryRecoveryProgress() {
-    const sandPileSideline = wx.getStorageSync('sandtable.sandPileSideline')
-    const imgDataBuffer = wx.getStorageSync('sandtable.imgDataBuffer')
-    if (sandPileSideline &&imgDataBuffer) {
-      this.sandPileSideline = sandPileSideline
-      const buffer = strToAb(imgDataBuffer)
-      const dataArray = new Uint8ClampedArray(buffer)
-      for (let i=0; i<dataArray.length; i++) {
-        this.imgData[i]=dataArray[i]
-      }
+  // tryRecoveryProgress() {
+  //   const sandPileSideline = wx.getStorageSync('sandtable.sandPileSideline')
+  //   const imgDataBuffer = wx.getStorageSync('sandtable.imgDataBuffer')
+  //   if (sandPileSideline &&imgDataBuffer) {
+  //     this.sandPileSideline = sandPileSideline
+  //     const buffer = strToAb(imgDataBuffer)
+  //     const dataArray = new Uint8ClampedArray(buffer)
+  //     for (let i=0; i<dataArray.length; i++) {
+  //       this.imgData[i]=dataArray[i]
+  //     }
+  //   }
+  // }
+
+  get fullSandPile() {
+    if (databus.horizontal) {
+      return (this.corssZeroLineNum == this.img.height)
+    } else {
+      return (this.corssZeroLineNum == this.img.width)
     }
   }
 
@@ -164,6 +174,10 @@ export default class SandTable {
       this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
       this.setImgData(x, y, rgba)
       this.sandPileSideline[x] -= 1
+
+      if (this.sandPileSideline[x] == 0) {
+        this.corssZeroLineNum++;
+      }
     }
   }
 
@@ -182,6 +196,12 @@ export default class SandTable {
     if (!this.sandSourcePnts.length) {
       return
     }
+
+    if (this.fullSandPile) {
+      tryRun(this.genSandEndCallback);
+      return;
+    }
+
     let {x, y} = this.sandSourcePnts.shift();
     x = Math.floor(x)
     y = Math.floor(y)
