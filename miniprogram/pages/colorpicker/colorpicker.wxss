@@ -3,13 +3,6 @@ page{
 	overflow:hidden;
 }
 
-.colorpicker {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	z-index: 0;
-}
-
 .switchbutton {
 	position: absolute; 
 	z-index: 100;

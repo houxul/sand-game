@@ -6,7 +6,6 @@
 	flex-direction: column;
 	margin-top: 10px;
 	font-size: 15px;
-	/* color: #888888; */
 }
 
 .switch-line-item {
@@ -38,3 +37,5 @@
 	align-items: center;
 	justify-content: center;
 } */
+
+button {margin: 10px;}

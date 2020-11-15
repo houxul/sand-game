@@ -201,27 +201,7 @@ export default class SandTable {
     }
 
     if (this.autoGenSand) {
-      if (databus.horizontal) {
-        y += (Math.random() * 3.5 - 1.1) * this.sandMoveDir;
-        x += Math.random() > 0.5 ? 5 : - 5
-        if (y > this.img.height - 8) {
-          y = 8
-        } 
-        if (y < 8) {
-          y = this.img.height - 8
-        }
-        this.sandSourcePnts.push({x, y})
-      } else {
-        x += (Math.random() * 3.5 - 1.1) * this.sandMoveDir;
-        y += Math.random() > 0.5 ? 5 : - 5
-        if (x > this.img.width - 8) {
-          x = 8
-        } 
-        if (x < 8) {
-          x = this.img.width - 8
-        }
-        this.sandSourcePnts.push({x, y})
-      }
+      this.sandSourcePnts.push(databus.autoDownSandFramePnt);
     } 
   }
 
@@ -271,14 +251,13 @@ export default class SandTable {
     if (databus.autoDownSand && (new Date().getTime() - this.touchTime < 500)) {
       this.touchTime = new Date().getTime();
       this.autoGenSand = true;
-      this.sandSourcePnts.push({x, y});
+      this.sandSourcePnts.push(databus.autoDownSandFramePnt);
       return true
     }
  
     tryRun(this.genSandEndCallback)
     this.touchTime = new Date().getTime();
     this.autoGenSand = false
-    this.sandMoveDir = Math.random() > 0.5 ? 1 : -1;
     return true
   }
 

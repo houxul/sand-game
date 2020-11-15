@@ -40,7 +40,7 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-
+		this.renderMovementTrack();
 	},
 
 	/**
@@ -78,7 +78,10 @@ Page({
 
 	},
 	changeAutoDownSand: function(res) {
+		this.setData({autoDownSand: res.detail.value});
 		databus.updateSetting({autoDownSand: res.detail.value});
+
+		this.renderMovementTrack();
 	},
 	sandNumChange: function(res) {
 		databus.updateSetting({genSandNum: res.detail.value});
@@ -151,5 +154,42 @@ Page({
 	},
 	onClickApplyBgColor: function(event) {
 		databus.updateSetting({bgRgba: [...strToRgb(this.data.bgColor), 214]});
+	},
+	onClickMovementTrack: function(event) {
+		wx.navigateTo({url: '/pages/movementtrack/movementtrack'});
+	},
+	renderMovementTrack: function(event) {
+		if (!this.data.autoDownSand) {
+			return;	
+		}
+		this.createSelectorQuery()
+		.select('#movementtrack')
+		.node((function(res) {
+			const canvas = res.node;
+			canvas.width = databus.screenWidth; 
+			canvas.height = databus.screenWidth*databus.screenWidth/databus.screenHeight;
+			const ctx = canvas.getContext('2d');
+
+			ctx.fillStyle = 'rgb(245, 245, 245)';
+			ctx.beginPath();
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+			ctx.translate(databus.screenWidth, 0)
+			ctx.rotate(Math.PI/2);
+			const scale = databus.screenWidth/databus.screenHeight;
+			ctx.scale(scale, scale);
+
+			ctx.strokeStyle = 'rgb(255, 0, 0)';
+			ctx.moveTo(databus.movementTrack[0][0], databus.movementTrack[0][1])
+			for (let i=1; i<databus.movementTrack.length; i++) {
+				ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
+			}
+			ctx.stroke();
+		}).bind(this)).exec();
+	},
+	onClickResetMovementTrack: function(event) {
+		databus.resetMovementTrack();
+		this.renderMovementTrack();
 	}
 })

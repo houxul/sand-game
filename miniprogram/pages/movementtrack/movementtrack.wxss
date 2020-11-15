@@ -1,0 +1,24 @@
+/* miniprogram/pages/movementtrack/movementtrack.wxss */
+
+page{
+	height: 100%;
+	overflow:hidden;
+}
+
+.action-view {
+	position: absolute;
+	top: 130px;
+	right: 10px;
+	z-index: 99;
+	background-color: rgba(67, 67, 67, 0.3);
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.img {
+	margin: 20px 10px 20px 10px;
+	width: 24px;
+	height: 24px;
+}

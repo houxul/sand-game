@@ -163,6 +163,9 @@ Page({
 	},
 
 	onClickColorPicker: function(event) {
+		if (!this.data.showMenu) {
+			this.setData({showMenu: true});
+		}
 		this.sandTable.resetSandSourcePnt();
 		wx.navigateTo({
 			url: '/pages/colorpicker/colorpicker',

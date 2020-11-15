@@ -1,0 +1,11 @@
+<canvas type="2d" id="movementtrack" 
+		style="width:100%; height:100%" 
+		bind:touchstart="touchStartHandler" 
+		bind:touchmove="touchMoveHandler" 
+		bind:touchend="touchEndHandler">
+</canvas>
+<cover-view wx:if="{{showAction}}" class="action-view">
+	<cover-image class="img" src="../../images/back.png" bindtap="onClickBack"/>
+	<cover-image class="img" src="../../images/clean.png" bindtap="onClickClean"/>
+	<cover-image class="img" src="../../images/apply.png" bindtap="onClickApply"/>
+</cover-view>

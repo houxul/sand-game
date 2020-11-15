@@ -1,7 +1,17 @@
 <view class="page-view">
 	<view class="switch-line-item">
-		<view>双击自动落沙</view>
+		<view>自动落沙</view>
 		<switch checked="{{autoDownSand}}" bindchange="changeAutoDownSand"></switch>
+	</view>
+	<view wx:if="{{autoDownSand}}" class="color-picker-item">
+		<canvas type="2d" id="movementtrack" style="width:100%; height:150px" 
+				bindtap="onClickMovementTrack">
+		</canvas>
+		<view class="switch-line-item">
+			<view>沙子移动轨迹</view>
+			<button type="warn" size="mini" style="margin: 0px;"
+			bindtap="onClickResetMovementTrack">重置</button>
+		</view>
 	</view>
 	<view class="slider-line-item">
 		<view>沙子数量</view>

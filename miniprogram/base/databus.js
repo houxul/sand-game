@@ -29,6 +29,7 @@ export default class DataBus {
 
     this.gameOver   = false
     this.sandFrame  = 0
+    this.autoDownSandFrame = 0;
     this.genSandNum = 30;
     this.overlayAlpha = 0.08;
     this.pickerRgbs = [genRgb(), genRgb(), genRgb(), genRgb()]
@@ -38,6 +39,8 @@ export default class DataBus {
     this.colorChangeSpeed = 50;
     this.autoDownSand = true;
     this.bgRgba = [214, 214, 214, 214];
+    this.movementTrack = [];
+    this.resetMovementTrack();
 
     this.default = {
       bgRgba: this.bgRgba,
@@ -48,6 +51,7 @@ export default class DataBus {
 
   reset(){
     this.sandFrame = 0
+    this.autoDownSandFrame = 0;
   }
 
   // saveProgress() {
@@ -69,10 +73,11 @@ export default class DataBus {
       }
     }).bind(this);
 
-    load('colorChangeSpeed');
-    load('autoDownSand');
-    load('bgRgba');
-    load('genSandNum');
+    // load('colorChangeSpeed');
+    // load('autoDownSand');
+    // load('bgRgba');
+    // load('genSandNum');
+    // load('movementTrack');
   }
 
   updateSetting(options) {
@@ -101,5 +106,19 @@ export default class DataBus {
   get sandFrameColor() {
     this.sandFrame++
     return this.pickerLinearGradient[Math.floor(this.sandFrame * this.colorChangeSpeed/1600) % (this.pickerLinearGradient.length)]
+  }
+
+  get autoDownSandFramePnt() {
+    this.autoDownSandFrame++ 
+    const track = this.movementTrack[this.autoDownSandFrame%this.movementTrack.length];
+    return {x: track[0], y:track[1]};
+  }
+
+  resetMovementTrack() {
+    this.movementTrack.splice(0, this.movementTrack.length);
+    const arcHeight = this.screenWidth/2;
+		for (let i=0; i< this.screenHeight; i++) {
+      this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i]);
+    }
   }
 }

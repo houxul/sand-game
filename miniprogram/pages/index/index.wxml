@@ -3,8 +3,7 @@
 	<canvas type="2d" id="sandtable" class="canvas" 
 		bind:touchstart="touchStartHandler" 
 		bind:touchmove="touchMoveHandler" 
-		bind:touchend="touchEndHandler"
-		bindtap="tapHandler">
+		bind:touchend="touchEndHandler">
 	</canvas>
 	<canvas type="2d" id="colorpickerbutton" class="colorpickerbutton" 
 		style="position: absolute; top: {{clrPickBtnPnts[clrPickBtnPntIndex].y}}px; left: {{clrPickBtnPnts[clrPickBtnPntIndex].x}}px; z-index: 98; width: 60px; height: 60px;"
