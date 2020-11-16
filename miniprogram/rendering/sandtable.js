@@ -192,17 +192,22 @@ export default class SandTable {
     this.imgData[dataIndex + 3] = rgba[3]
   }
 
-  genSand() {    
-    if (!this.sandSourcePnts.length) {
-      return
-    }
-
+  genSand() {
     if (this.fullSandPile) {
+      this.resetSandSourcePnt();
       tryRun(this.genSandEndCallback);
       return;
     }
 
-    let {x, y} = this.sandSourcePnts.shift();
+    if (!this.movePnts.length && !this.sandSourcePnt) {
+      return
+    }
+
+    let sandSourcePnt = this.sandSourcePnt;
+    if (this.movePnts.length) {
+      sandSourcePnt = this.movePnts.shift();
+    }
+    let {x, y} = sandSourcePnt;
     x = Math.floor(x)
     y = Math.floor(y)
     let cross = false;
@@ -221,8 +226,8 @@ export default class SandTable {
     }
 
     if (this.autoGenSand) {
-      this.sandSourcePnts.push(databus.autoDownSandFramePnt);
-    } 
+      this.sandSourcePnt = databus.autoDownSandFramePnt;
+    }
   }
 
   update() {
@@ -251,33 +256,30 @@ export default class SandTable {
 
   touchStartHandler(x, y) {
     if (this.autoGenSand) {
-      return true
+      this.autoGenSand = false;
     }
-    this.sandSourcePnts.push({x, y});
+    this.sandSourcePnt = {x, y};
     tryRun(this.genSandStartCallback)
     return true
   }
 
   touchMoveHandler(x, y) {
-    if (this.autoGenSand) {
-      return true
-    }
-
-    this.sandSourcePnts.push({x, y});
+    this.sandSourcePnt = {x, y};
+    this.movePnts.push({x, y});
     return true
   }
 
   touchEndHandler(x, y) {
-    if (databus.autoDownSand && (new Date().getTime() - this.touchTime < 500)) {
-      this.touchTime = new Date().getTime();
+    this.sandSourcePnt = undefined;
+    const lastTouchTime = this.lastTouchTime;
+    this.lastTouchTime = new Date().getTime();
+    if (databus.autoDownSand && (new Date().getTime() - lastTouchTime < 500)) {
       this.autoGenSand = true;
-      this.sandSourcePnts.push(databus.autoDownSandFramePnt);
+      this.sandSourcePnt = databus.autoDownSandFramePnt;
       return true
     }
  
     tryRun(this.genSandEndCallback)
-    this.touchTime = new Date().getTime();
-    this.autoGenSand = false
     return true
   }
 
@@ -325,7 +327,8 @@ export default class SandTable {
   }*/
 
   resetSandSourcePnt() {
-    this.sandSourcePnts = [];
+    this.movePnts = [];
+    this.sandSourcePnt = undefined;
     this.autoGenSand = false;
   }
 }
