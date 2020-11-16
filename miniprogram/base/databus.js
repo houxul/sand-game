@@ -37,7 +37,7 @@ export default class DataBus {
     this.resetPickerLinearGradient()
     this.horizontal = false;
     this.colorChangeSpeed = 50;
-    this.autoDownSand = true;
+    this.autoDownSand = false;
     this.bgRgba = [214, 214, 214, 214];
     this.movementTrack = [];
     this.resetMovementTrack();
