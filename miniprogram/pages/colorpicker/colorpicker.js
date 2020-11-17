@@ -107,7 +107,7 @@ Page({
 		this.displayButton = new RoundButton({
 			canvas,
 			radius: 30,
-			rgbs: databus.pickerRgbs
+			rgbs: [...databus.pickerRgbs]
 		})
 	},
 
@@ -127,13 +127,12 @@ Page({
 	},
 
 	onClickDisplay: function(res) {
-		databus.resetPickerLinearGradient();
+		databus.resetPickerRgbs(this.displayButton.rgbs);
 		wx.navigateBack();
 	},
 	
 	updateDisplayButtonColors: function(colors) {
-		databus.pickerRgbs.splice(0, databus.pickerRgbs.length)
-		databus.pickerRgbs.push(...colors)
+		this.displayButton.rgbs = colors;
 		this.displayButton.update();
 	},
 })

@@ -32,9 +32,9 @@ export default class DataBus {
     this.autoDownSandFrame = 0;
     this.genSandNum = 40;
     this.overlayAlpha = 0.08;
-    this.pickerRgbs = [genRgb(), genRgb(), genRgb(), genRgb()]
-    this.pickerLinearGradient = new Array(2000)
-    this.resetPickerLinearGradient()
+    this.pickerRgbs = [];
+    this.pickerLinearGradient = new Array(2000);
+    this.resetPickerRgbs([genRgb(), genRgb(), genRgb(), genRgb()])
     this.horizontal = false;
     this.colorChangeSpeed = 50;
     this.autoDownSand = false;
@@ -91,7 +91,10 @@ export default class DataBus {
     }
   }
 
-  resetPickerLinearGradient() {
+  resetPickerRgbs(rgbs) {
+    this.pickerRgbs.splice(0, this.pickerRgbs.length);
+    this.pickerRgbs.push(...rgbs);
+
     this.sandFrame = 0
     const colors = this.pickerRgbs.concat([this.pickerRgbs[0]]);
     const step = this.pickerLinearGradient.length/this.pickerRgbs.length
