@@ -106,8 +106,25 @@ Page({
 			wx.showToast({title: '还没有轨迹哦!', icon: 'none'});
 			return
 		}
+
 		databus.movementTrack.splice(0, databus.movementTrack.length);
-		databus.movementTrack.push(...this.movementTrack.pnts);
+		for (let i=0; i < this.movementTrack.pnts.length; i++) {
+			const pnt = this.movementTrack.pnts[i];
+			if (pnt[2] == 0) {
+				databus.movementTrack.push(pnt);
+				continue;
+			}
+
+			const prePnt = this.movementTrack.pnts[i-1];
+			const distance = Math.sqrt((prePnt[0]-pnt[0])*(prePnt[0]-pnt[0]) + (prePnt[1]-pnt[1])*(prePnt[1]-pnt[1]))
+			const xStep = (pnt[0]-prePnt[0])/distance;
+			const yStep = (pnt[1]-prePnt[1])/distance;
+			for (let j=1; j<distance; j++) {
+				databus.movementTrack.push([prePnt[0] + j*xStep, prePnt[1] + j*yStep]);	
+			}
+			databus.movementTrack.push(pnt);
+		}
+
 		wx.setStorageSync('databus.movementTrack', databus.movementTrack);
 		this.autoDownSandFrame = 0;
 		wx.navigateBack({delta: 2});
