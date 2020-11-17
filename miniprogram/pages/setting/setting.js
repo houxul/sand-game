@@ -11,7 +11,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		sandNumInterval: [10, 120],
+		sandNumInterval: [5, 140],
 		colorChangeSpeedInterval: [1, 200],
 	},
 
@@ -199,10 +199,14 @@ Page({
 
 		ctx.beginPath();
 		for (let i=0; i<databus.movementTrack.length; i++) {
-			if (databus.movementTrack[i].length == 2) {
-				ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
-			} else {
+			if (databus.movementTrack[i].length != 3) {
+				continue;
+			}
+			// 只连接起始点和转折点
+			if (databus.movementTrack[i][2] == 0) {
 				ctx.moveTo(databus.movementTrack[i][0], databus.movementTrack[i][1])
+			} else {
+				ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
 			}
 		}
 		ctx.stroke();

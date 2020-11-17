@@ -112,9 +112,9 @@ export default class SandTable {
       this.setImgData(sand.preX, sand.preY, databus.bgRgba);
     }
 
-    // if (sand.crossBorder) {
-    //   return
-    // }
+    if (sand.crossBorder) {
+      return true
+    }
 
     const sandX = sand.curX;
     const sandY = sand.curY;
@@ -218,8 +218,7 @@ export default class SandTable {
       cross = this.sandPileSideline[x] <= y
       y = cross ? this.sandPileSideline[x] -1 : y
     }
-    const genSandNum = databus.genSandNum + Math.floor(Math.random()*20)
-    for (let i=0; i<genSandNum; i++) {
+    for (let i=0; i<databus.genSandNum; i++) {
       const sand = databus.pool.getItemByClass('sand', Sand)
       sand.init(x, y, databus.sandFrameColor, !cross)
       this.sands.push(sand)

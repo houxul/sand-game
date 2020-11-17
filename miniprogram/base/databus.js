@@ -30,7 +30,7 @@ export default class DataBus {
     this.gameOver   = false
     this.sandFrame  = 0
     this.autoDownSandFrame = 0;
-    this.genSandNum = 30;
+    this.genSandNum = 40;
     this.overlayAlpha = 0.08;
     this.pickerRgbs = [genRgb(), genRgb(), genRgb(), genRgb()]
     this.pickerLinearGradient = new Array(2000)
@@ -122,7 +122,7 @@ export default class DataBus {
     this.movementTrack.splice(0, this.movementTrack.length);
     const arcHeight = this.screenWidth/2;
 		for (let i=0; i< this.screenHeight; i++) {
-      this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i]);
+      this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i, 1]);
     }
     this.movementTrack[0].push(0);
   }

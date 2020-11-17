@@ -39,11 +39,21 @@ export default class MovementTrack {
 
 	setStartingPoint(pnt) {
 		this.ctx.moveTo(pnt[0], pnt[1]);
+		// 单条线的起点
 		this.pnts.push([...pnt, 0]);
 	}
 
 	update(pnt) {
-		this.pnts.push(pnt);
+		const prePnt = this.pnts[this.pnts.length-1];
+		const distance = Math.sqrt((prePnt[0]-pnt[0])*(prePnt[0]-pnt[0]) + (prePnt[1]-pnt[1])*(prePnt[1]-pnt[1]))
+		const xStep = (pnt[0]-prePnt[0])/distance;
+		const yStep = (pnt[1]-prePnt[1])/distance;
+		for (let i=1; i<distance; i++) {
+			this.pnts.push([prePnt[0] + i*xStep, prePnt[1] + i*yStep]);	
+		}
+
+		// 单条线上的转折点
+		this.pnts.push([...pnt, 1]);
 		this.draw(pnt);
 	}
 
