@@ -40,7 +40,16 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		this.renderMovementTrack();
+		if (!this.data.autoDownSand) {
+			return
+		}
+
+		if (!this.movementTrackCanvas) {
+			this.initMovementTrack();
+			return;
+		}
+
+		this.renderMovementTrack(this.movementTrackCanvas);
 	},
 
 	/**
@@ -77,11 +86,27 @@ Page({
 	onShareAppMessage: function () {
 
 	},
+	initMovementTrack: function() {
+		this.createSelectorQuery()
+		.select('#movementtrack')
+		.node((function(res) {
+			const canvas = res.node;
+			canvas.width = databus.screenWidth; 
+			canvas.height = databus.screenWidth*databus.screenWidth/databus.screenHeight;
+			this.movementTrackCanvas = canvas;
+			this.renderMovementTrack(this.movementTrackCanvas);
+		}).bind(this)).exec();
+	},
 	changeAutoDownSand: function(res) {
 		this.setData({autoDownSand: res.detail.value});
 		databus.updateSetting({autoDownSand: res.detail.value});
 
-		this.renderMovementTrack();
+		if (!this.data.autoDownSand) {
+			this.movementTrackCanvas = undefined;
+			return;
+		}
+
+		this.initMovementTrack();
 	},
 	sandNumChange: function(res) {
 		databus.updateSetting({genSandNum: res.detail.value});
@@ -158,42 +183,34 @@ Page({
 	onClickMovementTrack: function(event) {
 		wx.navigateTo({url: '/pages/movementtrack/movementtrack'});
 	},
-	renderMovementTrack: function(event) {
-		if (!this.data.autoDownSand) {
-			return;	
-		}
-		this.createSelectorQuery()
-		.select('#movementtrack')
-		.node((function(res) {
-			const canvas = res.node;
-			canvas.width = databus.screenWidth; 
-			canvas.height = databus.screenWidth*databus.screenWidth/databus.screenHeight;
-			const ctx = canvas.getContext('2d');
+	renderMovementTrack: function(canvas) {
+		const ctx = canvas.getContext('2d');
+		ctx.save();
+		ctx.fillStyle = 'rgb(245, 245, 245)';
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-			ctx.fillStyle = 'rgb(245, 245, 245)';
-			ctx.restore()
-			ctx.beginPath();
-			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
+		ctx.translate(databus.screenWidth, 0)
+		ctx.rotate(Math.PI/2);
+		const scale = databus.screenWidth/databus.screenHeight;
+		ctx.scale(scale, scale);
 
-			ctx.translate(databus.screenWidth, 0)
-			ctx.rotate(Math.PI/2);
-			const scale = databus.screenWidth/databus.screenHeight;
-			ctx.scale(scale, scale);
+		ctx.strokeStyle = 'rgb(255, 0, 0)';
 
-			ctx.strokeStyle = 'rgb(255, 0, 0)';
-			for (let i=0; i<databus.movementTrack.length; i++) {
-				if (databus.movementTrack[i].length == 2) {
-					ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
-				} else {
-					ctx.moveTo(databus.movementTrack[i][0], databus.movementTrack[i][1])
-				}
+		ctx.beginPath();
+		for (let i=0; i<databus.movementTrack.length; i++) {
+			if (databus.movementTrack[i].length == 2) {
+				ctx.lineTo(databus.movementTrack[i][0], databus.movementTrack[i][1]);
+			} else {
+				ctx.moveTo(databus.movementTrack[i][0], databus.movementTrack[i][1])
 			}
-			ctx.stroke();
-		}).bind(this)).exec();
+		}
+		ctx.stroke();
+
+		ctx.restore();
 	},
 	onClickResetMovementTrack: function(event) {
 		databus.resetMovementTrack();
-		this.renderMovementTrack();
+		this.renderMovementTrack(this.movementTrackCanvas);
 	}
 })
