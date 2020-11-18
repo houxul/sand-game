@@ -14,7 +14,7 @@ export default class RotateImage {
 
 	draw(oriImg) {
 		for (let i=0; i< this.img.data.length; i+=4) {
-			const index = ((this.img.width - ((i/4)%this.img.width)) * oriImg.width)*4 + Math.floor((i/4)/this.img.width)*4
+			const index = ((this.img.width - ((i/4)%this.img.width)-1) * oriImg.width)*4 + Math.floor((i/4)/this.img.width)*4
 			this.img.data[i] = oriImg.data[index]
 			this.img.data[i+1] = oriImg.data[index+1]
 			this.img.data[i+2] = oriImg.data[index+2]
