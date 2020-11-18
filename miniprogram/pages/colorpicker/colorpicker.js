@@ -111,8 +111,24 @@ Page({
 		})
 	},
 
-	onClickCanvas: function(event) {
-		const {clientX:x, clientY:y} = event.touches[0];
+	correctTouchPnt: function(x, y) {
+		if (x<0) {
+			x = 0;
+		} else if (x > databus.windowWidth-1) {
+			x = databus.windowWidth -1;
+		}
+
+		if (y<0) {
+			y = 0;
+		} else if (y > databus.windowHeight-1) {
+			y = databus.windowHeight-1;
+		}
+		return {x, y};
+	},
+
+	touchCanvasHandler: function(event) {
+		const {clientX, clientY} = event.touches[0];
+		const {x, y} = this.correctTouchPnt(clientX, clientY);
 		const imgData = this.colorPicker.ctx.getImageData(x, y, 1, 1)
 		this.updateDisplayButtonColors([[...imgData.data]])
 	},

@@ -1,5 +1,6 @@
 <canvas type="2d" id="colorpicker" 
-	bindtap="onClickCanvas"
+	bind:touchstart="touchCanvasHandler" 
+	bind:touchmove="touchCanvasHandler" 
 	style="width:100%; height:100%">
 </canvas>
 
