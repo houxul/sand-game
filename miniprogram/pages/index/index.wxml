@@ -7,7 +7,8 @@
 	</canvas>
 	<canvas type="2d" id="colorpickerbutton" class="colorpickerbutton" 
 		style="position: absolute; top: {{clrPickBtnPnts[clrPickBtnPntIndex].y}}px; left: {{clrPickBtnPnts[clrPickBtnPntIndex].x}}px; z-index: 98; width: 60px; height: 60px;"
-		bindtap="onClickColorPicker">
+		bindtap="onClickColorPicker"
+		bind:longpress="onLongPressColorPicker">
 	</canvas>
 	<cover-image wx:if="{{showMenuButton}}" class="menu-button" src="../../images/menu.png" bindtap="onClickMenu"/>
 	<cover-view wx:if="{{showMenu}}" class="menu-view">
@@ -30,5 +31,9 @@
 			</cover-view>
 		</cover-view>
 		<cover-view class="menu-shadow" bindtap="onClickMenuShadow"></cover-view>
-	</cover-view >
+	</cover-view>
+	<cover-view wx:if="{{showMyColors}}" class="mycolors" style="top:200px; left:{{clrPickBtnPnts[clrPickBtnPntIndex].x}}px">
+		<canvas wx:for="{{myColors}}" id="mycolor-{{index}}" key="{{index}}"
+		type="2d" class="mycolor-item"></canvas>
+	</cover-view>
 </view>

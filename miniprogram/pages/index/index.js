@@ -18,6 +18,8 @@ Page({
 		clrPickBtnPntIndex: 0,
 		showMenuButton: true,
 		showMenu: false,
+		showMyColors: false,
+		myColors: databus.myColors,
 		avatarUrl: "../../images/default-avatar.png",
 		menuActions: [
 			{icon: "../../images/finish.png", key:"完成绘制"},
@@ -57,6 +59,12 @@ Page({
 		wx.createSelectorQuery()
 		.select('#colorpickerbutton')
 		.node(this.initColorPickerButton.bind(this)).exec();
+
+		if (this.data.showMyColors) {
+			wx.createSelectorQuery()
+			.selectAll('.mycolor-item')
+			.node(this.initMyColors.bind(this)).exec();
+		}
 	},
 
 	/**
@@ -66,7 +74,6 @@ Page({
 		if (this.colorPickerBtn) {
 			this.colorPickerBtn.update();
 		}
-
 
 		if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
 			this.bgRgba = databus.bgRgba;
@@ -121,7 +128,7 @@ Page({
 		this.sandTable = new SandTable({canvas});
 
 		this.sandTable.genSandStartCallback = (function() {
-			this.setData({showMenuButton: false});
+			this.setData({showMenuButton: false, showMyColors: false});
 		}).bind(this)
 
 		this.sandTable.genSandEndCallback = (function() {
@@ -136,6 +143,17 @@ Page({
 			radius: this.data.clrPickBtnRadius,
 			rgbs: databus.pickerRgbs
 		})
+	},
+
+	initMyColors: function(res) {
+		for (let i=0; i<res.length; i++) {
+			const canvas = res[i].node;
+			new RoundButton({
+				canvas,
+				radius: this.data.clrPickBtnRadius,
+				rgbs: [this.data.myColors[i]],
+			})
+		}
 	},
 
 	touchStartHandler: function(event) {
@@ -163,15 +181,17 @@ Page({
 	},
 
 	onClickColorPicker: function(event) {
-		if (!this.data.showMenuButton) {
-			this.setData({showMenuButton: true});
+		if (!this.data.showMenuButton || this.data.showMyColors) {
+			this.setData({showMenuButton: true, showMyColors: false});
 		}
 		this.sandTable.resetSandSourcePnt();
 		wx.navigateTo({
 			url: '/pages/colorpicker/colorpicker',
 		})
 	},
-
+	onLongPressColorPicker: function(event) {
+		console.log('------------onLongPressColorPicker', databus.myColors);
+	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
 		this.setData({showMenu: true});
@@ -180,8 +200,6 @@ Page({
 	onClickMenuShadow: function(event) {
 		this.setData({showMenu: false});
 	},
-
-
 	onClickAvatar: function(res) {
 		if (res.detail.userInfo) {
 			const userInfo = res.detail.userInfo;
