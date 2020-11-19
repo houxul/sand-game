@@ -1,0 +1,17 @@
+/* component/mycolor.wxss */
+.mycolor {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	top: 0px;
+	left: 0px;
+}
+
+.delete {
+	position: absolute;
+	width: 15px;
+	height: 15px;
+	top: 0px;
+	right: 0px;
+	z-index: 100;
+}

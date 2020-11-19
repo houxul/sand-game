@@ -32,8 +32,11 @@
 		</cover-view>
 		<cover-view class="menu-shadow" bindtap="onClickMenuShadow"></cover-view>
 	</cover-view>
-	<cover-view wx:if="{{showMyColors}}" class="mycolors" style="top:200px; left:{{clrPickBtnPnts[clrPickBtnPntIndex].x}}px">
-		<canvas wx:for="{{myColors}}" id="mycolor-{{index}}" key="{{index}}"
-		type="2d" class="mycolor-item"></canvas>
+	<cover-view wx:if="{{showMyColors}}" class="mycolors">
+		<cover-image class="add-color" src="../../images/add-color.png" bindtap="onClickAddColor"></cover-image>
+		<mycolor wx:for="{{myColors}}" rgbs="{{item}}" id="{{index}}" radius="25" class="mycolor-item-view"
+			binddelete="onDeleteMyColor" 
+			bindclick="onClickMyColor" 
+		></mycolor>
 	</cover-view>
 </view>

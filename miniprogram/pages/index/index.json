@@ -1,4 +1,6 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "mycolor": "../../component/mycolor/mycolor"
+  },
   "navigationStyle": "custom"
 }

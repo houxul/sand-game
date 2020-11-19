@@ -1,7 +1,7 @@
 
 import { rgbToStr } from '../base/utils'
 
-export default class Roundbutton {
+export default class RoundButton {
 	constructor(options) {
 		const canvas = options.canvas;
 		this.ctx = canvas.getContext('2d');

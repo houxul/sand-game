@@ -105,3 +105,35 @@ export function timeFormat(t) {
 		return date.toJSON().substr(0, 19).replace('T', ' ').replace(/-/g, '.');
 	}
 }
+
+export function equalColor(rgbM, rgbN) {
+	for (let i=0; i<3; i++) {
+		if (rgbM[i] != rgbN[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+export function equalColors(rgbListM, rgbListN) {
+	if (rgbListM.length != rgbListN.length) {
+		return false;
+	}
+
+	for (let i=0; i<rgbListM.length; i++) {
+		if (!equalColor(rgbListM[i], rgbListN[i])) {
+			return false
+		}
+	}
+	return true;
+}
+
+export function hasColors(rgbLists, rgbList) {
+	for (let i=0;i<rgbLists.length; i++) {
+		if (equalColors(rgbLists[i], rgbList)) {
+			return true;
+		}
+	}
+
+	return false;
+}

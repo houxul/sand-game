@@ -1,0 +1,12 @@
+<cover-view class="mycolor">
+	<cover-image wx:if="{{showDelete}}"
+		class="delete" 
+		src="../../images/mini-delete.png" 
+		bindtap="onDelete">
+	</cover-image>
+	<cover-view wx:for="{{views}}" 
+		style="position: absolute; width: {{item.width}}px; height: {{item.width}}px; top: {{item.top}}px; right: {{item.top}}px; z-index: {{index}}; background-color: {{item.bg}}; border-radius: 50%;"
+		bind:longpress="onLongPress"
+		bindtap="onClick"> 
+	</cover-view>
+</cover-view>
