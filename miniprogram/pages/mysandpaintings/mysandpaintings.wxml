@@ -8,7 +8,7 @@
 	<view class="sandpainting-item"
 	wx:for="{{sandpaintings}}" 
 	data-index="{{index}}" 
-	wx:key="index">
+	wx:key="id">
 		<view wx:if="{{item.horizontal}}" class="sandpainting-item-horizontal">
 			<image class="sandpainting-item-horizontal-img" src="{{item.localPath}}"
 			style="width: {{screenWidth-40}}px; height: {{(screenWidth -40) * item.height/item.width}}px"

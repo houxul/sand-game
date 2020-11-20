@@ -7,7 +7,7 @@ Component({
 	 * 组件的属性列表
 	 */
 	properties: {
-		id: String,
+		index: Number,
 		rgbs: Array,
 		radius: Number,
 	},
@@ -24,14 +24,14 @@ Component({
 	 */
 	methods: {
 		onDelete: function(res) {
-			this.triggerEvent('delete', {id: this.data.id}, {})
+			this.triggerEvent('delete', {index: this.data.index, rgbs: this.data.rgbs}, {})
 			this.setData({showDelete: false});
 		}, 
 		onLongPress: function(res) {
 			this.setData({showDelete: true});
 		},
 		onClick: function(res) {
-			this.triggerEvent('click', {id: this.data.id}, {})
+			this.triggerEvent('click', {index: this.data.index}, {})
 		}
 	},
 	lifetimes: {
@@ -50,6 +50,9 @@ Component({
 
 			this.setData({views});
 		},
+		detached: function() {
+			console.log('------------detached', this.data.index);
+		}
 	},
 
 	initCanvas: function(res) {

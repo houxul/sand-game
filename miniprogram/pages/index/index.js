@@ -3,7 +3,7 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
-import { guid, rgbToStr, hasColors } from '../../base/utils'
+import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -19,7 +19,6 @@ Page({
 		showMenuButton: true,
 		showMenu: false,
 		showMyColors: false,
-		myColors: [...databus.myColors],
 		avatarUrl: "../../images/default-avatar.png",
 		menuActions: [
 			{icon: "../../images/finish.png", key:"完成绘制"},
@@ -42,6 +41,11 @@ Page({
 		if (userInfo) {
 			this.setData({avatarUrl: userInfo.avatarUrl});
 		}
+
+		const myColors = databus.myColors.map((item) => {
+			return {rgbs: item, radius: 25, id: colorsId(item)};
+		})
+		this.setData({myColors})
 	},
 
 	/**
@@ -370,24 +374,22 @@ Page({
 		wx.navigateTo({url: '/pages/help/help'})
 	},
 	onClickAddColor: function(res) {
-		console.log('----------onClickAddColor', databus.myColors, databus.pickerRgbs)
 		if (hasColors(databus.myColors, databus.pickerRgbs)) {
 			return
 		}
-		console.log('----------onClickAddColor1')
-		databus.myColors.push(databus.pickerRgbs);
-		this.data.myColors.push(databus.pickerRgbs);
+		databus.myColors.push([...databus.pickerRgbs]);
+		this.data.myColors.push({rgbs: [...databus.pickerRgbs], id: colorsId(databus.pickerRgbs), radius: 25});
 		this.setData({myColors: this.data.myColors});
 	},
 	onDeleteMyColor: function(res) {
-		const index = parseInt(res.target.id);
+		const {index} = res.detail;
 		databus.myColors.splice(index, 1);
 		this.data.myColors.splice(index, 1);
 		this.setData({myColors: this.data.myColors})
 	},
 	onClickMyColor: function(res) {
-		const index = parseInt(res.target.id);
-		const rgbs = this.data.myColors[index];
+		const index = res.detail.index;
+		const rgbs = this.data.myColors[index].rgbs;
 		databus.resetPickerRgbs(rgbs);
 		this.setData({showMyColors: false});
 		this.colorPickerBtn.update();

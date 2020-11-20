@@ -34,7 +34,9 @@
 	</cover-view>
 	<cover-view wx:if="{{showMyColors}}" class="mycolors">
 		<cover-image class="add-color" src="../../images/add-color.png" bindtap="onClickAddColor"></cover-image>
-		<mycolor wx:for="{{myColors}}" rgbs="{{item}}" id="{{index}}" radius="25" class="mycolor-item-view"
+		<mycolor wx:for="{{myColors}}" rgbs="{{item.rgbs}}" index="{{index}}" radius="{{item.radius}}" 
+			wx:key="id" 
+			class="mycolor-item-view"
 			binddelete="onDeleteMyColor" 
 			bindclick="onClickMyColor" 
 		></mycolor>

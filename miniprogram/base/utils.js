@@ -137,3 +137,12 @@ export function hasColors(rgbLists, rgbList) {
 
 	return false;
 }
+
+export function colorsId(rgbList) {
+	const rgbs = []
+	for (let i=0; i<rgbList.length; i++) {
+		rgbs.push(rgbToStr(rgbList[i]))
+	}
+
+	return rgbs.join('-');
+}

@@ -164,7 +164,6 @@ Page({
 	},
 
 	onShareAppMessage: function (res) {
-		console.log('---', res);
 		if (res.from !== 'button') {
 			return {
 				title: '彩色沙子',

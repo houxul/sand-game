@@ -8,7 +8,7 @@
 	<view class="sandpainting-item"
 	wx:for="{{sandpaintings}}" 
 	data-index="{{index}}" 
-	wx:key="index">
+	wx:key="_id">
 		<view class="sandpainting-item-top">
 			<view class="sandpainting-item-top-left">
 				<image class="avatar" src="{{item.userAvatarUrl}}" />

@@ -40,7 +40,7 @@ export default class DataBus {
     this.autoDownSand = false;
     this.bgRgba = [214, 214, 214, 214];
     this.movementTrack = [];
-    this.myColors = [[[255,0,0], [0,255,0], [0, 0, 255]],[[0,255,0]],[[0,0,255]]];
+    this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
     this.resetMovementTrack();
 
     this.default = {
