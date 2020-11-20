@@ -14,8 +14,18 @@ Page({
 	 */
 	data: {
 		clrPickBtnRadius: 30,
-		clrPickBtnPnts: [{x: databus.screenWidth - 80, y: 120}, {x: databus.screenWidth - 80, y: databus.screenHeight - 100}],
+		clrPickBtnPnts: [
+			{x: databus.screenWidth - 80, y: 120}, 
+			{x: databus.screenWidth - 80, y: databus.screenHeight - 100},
+			{x: 30, y: 120}, 
+			{x: databus.screenWidth - 80, y: 120}, 
+		],
 		clrPickBtnPntIndex: 0,
+		menuBtnPnts: [
+			{x: 30, y: 135}, 
+			{x: 30, y: databus.screenHeight-100}
+		],
+		menuBtnPntIndex: 0,
 		showMenuButton: true,
 		showMenu: false,
 		showMyColors: false,
@@ -162,7 +172,7 @@ Page({
 	touchMoveHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
 		if (this.inColorPickerButton(x, y)) {
-			this.setData({clrPickBtnPntIndex: (this.data.clrPickBtnPntIndex+1)%2});
+			this.setData({clrPickBtnPntIndex: (databus.horizontal*2) + (this.data.clrPickBtnPntIndex+1)%2});
 		}
 		this.sandTable.touchMoveHandler(x, y);
 	},
@@ -325,7 +335,12 @@ Page({
 		this.sandTable.reset();
 
 		this.data.menuActions[2].key = databus.horizontal ? '竖屏开始' : '横屏开始';
-		this.setData({showMenu: false, menuActions: this.data.menuActions});
+		this.setData({
+			showMenu: false, 
+			menuActions: this.data.menuActions, 
+			clrPickBtnPntIndex: databus.horizontal*2,
+			menuBtnPntIndex: (this.data.menuBtnPntIndex+1)%2,
+		});
     },
 
 	mySandPaintingActionHandler: function() {

@@ -10,7 +10,8 @@
 		bindtap="onClickColorPicker"
 		bind:longpress="onLongPressColorPicker">
 	</canvas>
-	<cover-image wx:if="{{showMenuButton}}" class="menu-button" src="../../images/menu.png" bindtap="onClickMenu"/>
+	<cover-image wx:if="{{showMenuButton}}" style="left:{{menuBtnPnts[menuBtnPntIndex].x}}px; top:{{menuBtnPnts[menuBtnPntIndex].y}}px;"
+		class="menu-button" src="../../images/menu.png" bindtap="onClickMenu"/>
 	<cover-view wx:if="{{showMenu}}" class="menu-view">
 		<cover-view class="menu-area">
 			<cover-view class="menu-userinfo">
