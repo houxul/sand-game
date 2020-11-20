@@ -33,7 +33,9 @@
 		</cover-view>
 		<cover-view class="menu-shadow" bindtap="onClickMenuShadow"></cover-view>
 	</cover-view>
-	<cover-view wx:if="{{showMyColors}}" class="mycolors">
+	<cover-view wx:if="{{showMyColors}}" class="mycolors"
+		style="top: {{myColorsRect.top}}px; left:{{myColorsRect.left}}px; width:{{myColorsRect.width}}px; height:{{myColorsRect.height}}px; flex-direction:{{myColorsRect.layout}} "
+	>
 		<mycolor wx:for="{{myColors}}" rgbs="{{item.rgbs}}" index="{{index}}" radius="{{item.radius}}" 
 			wx:key="id" 
 			class="mycolor-item-view"

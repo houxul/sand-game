@@ -199,6 +199,7 @@ Page({
 	},
 	onLongPressColorPicker: function(event) {
 		this.setData({showMyColors: true});
+		this.resetMyColorsRect();
 	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
@@ -395,6 +396,7 @@ Page({
 		
 		this.data.myColors.push({rgbs: [...databus.pickerRgbs], id: colorsId(databus.pickerRgbs), radius: 25});
 		this.setData({myColors: this.data.myColors});
+		this.resetMyColorsRect();
 	},
 	onDeleteMyColor: function(res) {
 		const {index} = res.detail;
@@ -403,7 +405,8 @@ Page({
 		wx.setStorageSync('databus.myColors', databus.myColors)
 
 		this.data.myColors.splice(index, 1);
-		this.setData({myColors: this.data.myColors})
+		this.setData({myColors: this.data.myColors});
+		this.resetMyColorsRect();
 	},
 	onClickMyColor: function(res) {
 		const index = res.detail.index;
@@ -411,5 +414,34 @@ Page({
 		databus.resetPickerRgbs(rgbs);
 		this.setData({showMyColors: false});
 		this.colorPickerBtn.update();
+	},
+	resetMyColorsRect: function(res) {
+		const count = databus.myColors.length + 1;
+		const cell = 50 + 2 * 8;
+		if (databus.horizontal) {
+			const maxCellNum = 6;
+			const width = Math.ceil(count / maxCellNum) * cell;
+			const height = count <= maxCellNum ? count * cell : maxCellNum * cell;
+			const top = (databus.screenHeight -  height)/2;
+			const left = (databus.screenWidth -  width)/2;
+			const layout = 'column-reverse';
+			this.setData({
+				myColorsRect: {
+					height, width, top, left, layout
+				}
+			})
+		} else {
+			const maxCellNum = 4;
+			const height = Math.ceil(count / maxCellNum) * cell;
+			const width = count <= maxCellNum ? count * cell : maxCellNum * cell;
+			const top = (databus.screenHeight -  height)/2;
+			const left = (databus.screenWidth -  width)/2;
+			const layout = 'row';
+			this.setData({
+				myColorsRect: {
+					height, width, top, left, layout
+				}
+			})
+		}
 	}
 })

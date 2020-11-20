@@ -109,9 +109,6 @@ page{
 .mycolors {
 	position: absolute;
 	z-index: 100;
-	top: 200px;
-	right: 10%;
-	width: 80%;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
