@@ -5,9 +5,9 @@
   },
   "triggers": [
     {
-      "name": "addlike",
+      "name": "fixedlike",
       "type": "timer",
-      "config": "0 0 3 * * * *"
+      "config": "0 19 */11 * * * *"
     }
   ]
 }

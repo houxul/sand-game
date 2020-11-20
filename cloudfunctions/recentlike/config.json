@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "openapi": [
+    ]
+  },
+  "triggers": [
+    {
+      "name": "recentlike",
+      "type": "timer",
+      "config": "0 19 */1 * * * *"
+    }
+  ]
+}

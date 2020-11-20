@@ -5,11 +5,14 @@ cloud.init()
 exports.main = async (event, context) => {
 	const sandpaintings = cloud.database().collection('sandpaintings');
 	const cmd = cloud.database().command
+	const now = new Date().getTime();
+	const before = now - 7 * 24 * 60 * 60 * 1000
 	return await sandpaintings.where({
-		likes: cmd.lte(100)
+		createdAt: cmd.gt(before),
+		likes: cmd.lte(77)
 	}).update({
 		data: {
-		  likes: cmd.inc(Math.floor(Math.random()*5+1))
+		  likes: cmd.inc(Math.floor(Math.random()*3))
 		},
 	})
 }
