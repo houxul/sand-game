@@ -189,10 +189,6 @@ Page({
 	},
 	onLongPressColorPicker: function(event) {
 		this.setData({showMyColors: true});
-
-		wx.createSelectorQuery()
-		.selectAll('.mycolor-item-color')
-		.node(this.initMyColors.bind(this)).exec();
 	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
@@ -375,15 +371,22 @@ Page({
 	},
 	onClickAddColor: function(res) {
 		if (hasColors(databus.myColors, databus.pickerRgbs)) {
+			wx.showToast({title: '颜色已经存在', icon:"none"})
 			return
 		}
+
 		databus.myColors.push([...databus.pickerRgbs]);
+		wx.setStorageSync('databus.myColors', databus.myColors)
+		
 		this.data.myColors.push({rgbs: [...databus.pickerRgbs], id: colorsId(databus.pickerRgbs), radius: 25});
 		this.setData({myColors: this.data.myColors});
 	},
 	onDeleteMyColor: function(res) {
 		const {index} = res.detail;
+
 		databus.myColors.splice(index, 1);
+		wx.setStorageSync('databus.myColors', databus.myColors)
+
 		this.data.myColors.splice(index, 1);
 		this.setData({myColors: this.data.myColors})
 	},

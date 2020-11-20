@@ -80,6 +80,7 @@ export default class DataBus {
     load('bgRgba');
     load('genSandNum');
     load('movementTrack');
+    load('myColors');
 
     // const info = wx.getStorageInfoSync();
     // console.log('-------------', info);

@@ -16,9 +16,10 @@ export default class RoundButton {
 	}
 
 	draw() {
-		for (let i = this.rgbs.length - 1; i>=0; i--) {
+		const step = this.radius/this.rgbs.length;
+		for (let i = 0 ; i<this.rgbs.length; i++) {
 			this.ctx.beginPath();
-			this.ctx.arc(this.radius, this.radius, (i+1)*this.radius/this.rgbs.length, 0, 2*Math.PI, false);
+			this.ctx.arc(this.radius, this.radius, (this.rgbs.length-i) * step, 0, 2*Math.PI, false);
 			this.ctx.fillStyle= rgbToStr(this.rgbs[i]);
 			this.ctx.closePath();
 			this.ctx.fill();
