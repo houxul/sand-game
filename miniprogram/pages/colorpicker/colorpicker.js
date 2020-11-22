@@ -106,14 +106,14 @@ Page({
 	correctTouchPnt: function(x, y) {
 		if (x<0) {
 			x = 0;
-		} else if (x > databus.windowWidth-1) {
-			x = databus.windowWidth -1;
+		} else if (x > databus.screenWidth-1) {
+			x = databus.screenWidth -1;
 		}
 
 		if (y<0) {
 			y = 0;
-		} else if (y > databus.windowHeight-1) {
-			y = databus.windowHeight-1;
+		} else if (y > databus.screenHeight-1) {
+			y = databus.screenHeight-1;
 		}
 		return {x, y};
 	},

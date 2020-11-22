@@ -31,12 +31,12 @@ export default class ColorPicker {
 			};
 			img.src = colorboardPath;
 		} else {       
-			const img = ctx.createImageData(databus.windowWidth, databus.windowHeight - this.btnAreaY)
+			const img = ctx.createImageData(databus.screenWidth, databus.screenHeight - this.btnAreaY)
 			const imgData = img.data;
-			const hslX = 360 / databus.windowWidth
-			const hslY = 100 / (databus.windowHeight - this.btnAreaY)
-			for (let x=0; x < databus.windowWidth; x++) {
-				for (let y = 0; y < (databus.windowHeight - this.btnAreaY); y++) {
+			const hslX = 360 / databus.screenWidth
+			const hslY = 100 / (databus.screenHeight - this.btnAreaY)
+			for (let x=0; x < databus.screenWidth; x++) {
+				for (let y = 0; y < (databus.screenHeight - this.btnAreaY); y++) {
 					const rgb = hslToRgb(x*hslX, 100, 100 - y*hslY);
 					this.setImgData(imgData, x, y, [...rgb, 255])
 				}
@@ -48,11 +48,11 @@ export default class ColorPicker {
 		grd.addColorStop(1, "rgb(255,255,255)")
 		grd.addColorStop(0, "rgb(0,0,0)")
 		ctx.fillStyle = grd
-		ctx.fillRect(0, 0, databus.windowWidth, this.btnAreaY)
+		ctx.fillRect(0, 0, databus.screenWidth, this.btnAreaY)
 	}
 	
 	setImgData(imgData, x, y, rgba) {
-		const dataIndex = 4 * (y * databus.windowWidth	+ x)
+		const dataIndex = 4 * (y * databus.screenWidth	+ x)
 		imgData[dataIndex] = rgba[0]
 		imgData[dataIndex + 1] = rgba[1]
 		imgData[dataIndex + 2] = rgba[2]

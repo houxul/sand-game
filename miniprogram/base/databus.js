@@ -24,9 +24,6 @@ export default class DataBus {
     this.screenWidth  = sysInfo.screenWidth
     this.screenHeight = sysInfo.screenHeight
 
-    this.windowWidth  = sysInfo.windowWidth
-    this.windowHeight = sysInfo.windowHeight
-
     this.gameOver   = false
     this.sandFrame  = 0
     this.autoDownSandFrame = 0;

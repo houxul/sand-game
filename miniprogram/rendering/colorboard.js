@@ -22,11 +22,11 @@ export default class ColorBoard {
 		const imgData = this.img.data;
 		const hslX = 360 / databus.screenWidth
 		const hslY = 100 / databus.screenHeight
-		for (let x=0; x< databus.windowWidth; x++) {
-			for (let y = 0; y < databus.windowHeight; y++) {
+		for (let x=0; x< databus.screenWidth; x++) {
+			for (let y = 0; y < databus.screenHeight; y++) {
 				const rgb = hslToRgb(x*hslX, 100, 100 - y*hslY);
 
-				const dataIndex = 4 * (y * databus.windowWidth	+ x)
+				const dataIndex = 4 * (y * databus.screenWidth	+ x)
 				imgData[dataIndex] = rgb[0]
 				imgData[dataIndex + 1] = rgb[1]
 				imgData[dataIndex + 2] = rgb[2]
