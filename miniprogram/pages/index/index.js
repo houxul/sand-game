@@ -14,6 +14,8 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
+		screenWidth: databus.screenWidth,
+		screenHeight: databus.screenHeight,
 		clrPickBtnRadius: 30,
 		clrPickBtnPnts: [
 			{x: databus.screenWidth - 80, y: 120}, 

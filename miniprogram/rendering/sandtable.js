@@ -21,7 +21,7 @@ export default class SandTable {
     }
 
     this.sands = []
-    this.sandPileSideline = new Array(this.img.height);
+    this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
     if (databus.horizontal) {
       this.sandPileSideline.fill(this.img.width)
     } else {
