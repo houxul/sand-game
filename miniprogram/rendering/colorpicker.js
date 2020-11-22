@@ -1,30 +1,38 @@
 import DataBus from '../base/databus'
-import {hslToRgb, strToAb, abToStr} from '../base/utils'
+import {hslToRgb} from '../base/utils'
 let databus = new DataBus()
 
 export default class ColorPicker {
-	constructor(ctx) {
-		this.ctx = ctx
-		this.btnAreaY = 100
-		this.drawToCanvas(ctx);
+	constructor(options) {
+		this.btnAreaY = 150
+		this.initCanvasSize(options.canvas)
+		this.drawToCanvas(options.canvas);
 	}
 
-	drawToCanvas(ctx) {
-		this.drawBackGround(ctx);
+	initCanvasSize(canvas) {
+		canvas.width = databus.screenWidth
+		canvas.height = databus.screenHeight
 	}
 
-	drawBackGround(ctx) {
-		const img = ctx.createImageData(databus.windowWidth, databus.windowHeight - this.btnAreaY)
-		const imgData = img.data;
+	drawToCanvas(canvas) {
+		this.drawBackGround(canvas);
+	}
 
-		const bufferStr = wx.getStorageSync('colorpicker.background');
-		if (bufferStr) {
-			const buffer = strToAb(bufferStr)
-			const dataArray = new Uint8ClampedArray(buffer)
-			for (let i=0; i<dataArray.length; i++) {
-				imgData[i]=dataArray[i]
-			}
-		} else {
+	drawBackGround(canvas) {
+		const ctx = canvas.getContext('2d');
+		this.ctx = ctx;
+		
+		const colorboardPath = wx.getStorageSync('colorboard');
+		if (colorboardPath) {
+			const img = canvas.createImage();
+			img.onload = (res) => {
+				ctx.drawImage(img, 0, 0, databus.screenWidth, databus.screenHeight,
+					0, this.btnAreaY, databus.screenWidth, databus.screenHeight-this.btnAreaY);
+			};
+			img.src = colorboardPath;
+		} else {       
+			const img = ctx.createImageData(databus.windowWidth, databus.windowHeight - this.btnAreaY)
+			const imgData = img.data;
 			const hslX = 360 / databus.windowWidth
 			const hslY = 100 / (databus.windowHeight - this.btnAreaY)
 			for (let x=0; x< databus.windowWidth; x++) {
@@ -33,13 +41,12 @@ export default class ColorPicker {
 					this.setImgData(imgData, x, y, [...rgb, 255])
 				}
 			}
-			wx.setStorageSync('colorpicker.background', abToStr(imgData.buffer));
+			ctx.putImageData(img, 0, this.btnAreaY);
 		}
-		ctx.putImageData(img, 0, this.btnAreaY);
 
 		const grd = ctx.createLinearGradient(0, 0, 0, this.btnAreaY)
-		grd.addColorStop(0, "rgb(255,255,255)")
-		grd.addColorStop(1, "rgb(0,0,0)")
+		grd.addColorStop(1, "rgb(255,255,255)")
+		grd.addColorStop(0, "rgb(0,0,0)")
 		ctx.fillStyle = grd
 		ctx.fillRect(0, 0, databus.windowWidth, this.btnAreaY)
 	}

@@ -3,6 +3,7 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
+import ColorBoard from '../../rendering/colorboard'
 import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
 
 let databus = new DataBus()
@@ -73,6 +74,12 @@ Page({
 		wx.createSelectorQuery()
 		.select('#colorpickerbutton')
 		.node(this.initColorPickerButton.bind(this)).exec();
+
+		if (!wx.getStorageSync('colorboard')) {
+			wx.createSelectorQuery()
+			.select('#colorboard')
+			.node(this.initColorBoard.bind(this)).exec();
+		}
 	},
 
 	/**
@@ -153,15 +160,9 @@ Page({
 		})
 	},
 
-	initMyColors: function(res) {
-		for (let i=0; i<res.length; i++) {
-			const canvas = res[i].node;
-			new RoundButton({
-				canvas,
-				radius: this.data.clrPickBtnRadius,
-				rgbs: this.data.myColors[i],
-			})
-		}
+	initColorBoard: async function(res) {
+		const canvas = res.node;
+		new ColorBoard({canvas})
 	},
 
 	touchStartHandler: function(event) {

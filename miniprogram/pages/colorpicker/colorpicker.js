@@ -80,17 +80,9 @@ Page({
 
 	},
 
-	initCanvasSize: function(canvas) {
-		canvas.width = databus.windowWidth
-		canvas.height = databus.windowHeight
-	},
-
 	initCanvas: function(res) {
-		const canvas = res.node;
-		const ctx = canvas.getContext('2d');
-		this.initCanvasSize(canvas);
-		
-		this.colorPicker = new ColorPicker(ctx);
+		const canvas = res.node;				
+		this.colorPicker = new ColorPicker({canvas});
 	},
 
 	initSwitchButton: function(res) {
