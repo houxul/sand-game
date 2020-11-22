@@ -35,9 +35,9 @@ export default class ColorPicker {
 			const imgData = img.data;
 			const hslX = 360 / databus.windowWidth
 			const hslY = 100 / (databus.windowHeight - this.btnAreaY)
-			for (let x=0; x< databus.windowWidth; x++) {
+			for (let x=0; x < databus.windowWidth; x++) {
 				for (let y = 0; y < (databus.windowHeight - this.btnAreaY); y++) {
-					const rgb = hslToRgb(x*hslX, 100, y*hslY);
+					const rgb = hslToRgb(x*hslX, 100, 100 - y*hslY);
 					this.setImgData(imgData, x, y, [...rgb, 255])
 				}
 			}

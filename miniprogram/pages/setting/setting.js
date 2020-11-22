@@ -123,19 +123,20 @@ Page({
 			.node((function(res) {
 				const canvas = res.node;
 				const ctx = canvas.getContext('2d');
-				const imgWidth = canvas.width;
-				const imgHeight = canvas.height;
-				const img = ctx.createImageData(imgWidth, imgHeight);
-				const imgData = img.data;
-		
-				const bufferStr = wx.getStorageSync('setting.colorpicker.background');
-				if (bufferStr) {
-					const buffer = strToAb(bufferStr)
-					const dataArray = new Uint8ClampedArray(buffer)
-					for (let i=0; i<dataArray.length; i++) {
-						imgData[i]=dataArray[i]
-					}
+
+				const colorboardPath = wx.getStorageSync('colorboard');
+				if (colorboardPath) {
+					const img = canvas.createImage();
+					img.onload = (res) => {
+						ctx.drawImage(img, 0, 0, databus.screenWidth, databus.screenHeight,
+							0, 0, canvas.width, canvas.height);
+					};
+					img.src = colorboardPath;
 				} else {
+					const imgWidth = canvas.width;
+					const imgHeight = canvas.height;
+					const img = ctx.createImageData(imgWidth, imgHeight);
+					const imgData = img.data;
 					const hslX = 360 / imgWidth;
 					const hslY = 100 / imgHeight;
 					for (let x=0; x< imgWidth; x++) {
@@ -148,9 +149,9 @@ Page({
 							imgData[dataIndex + 3] = 255
 						}
 					}
-					wx.setStorageSync('setting.colorpicker.background', abToStr(imgData.buffer));
+					ctx.putImageData(img, 0, 0);
 				}
-				ctx.putImageData(img, 0, 0);
+
 				this.colorPickerCtx = ctx;
 				this.colorPickerCanvas = canvas;
 			}).bind(this)).exec();
