@@ -88,10 +88,6 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		if (this.colorPickerBtn) {
-			this.colorPickerBtn.update();
-		}
-
 		if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
 			this.bgRgba = databus.bgRgba;
 			if (this.sandTable) {
@@ -160,6 +156,10 @@ Page({
 			radius: this.data.clrPickBtnRadius,
 			rgbs: databus.pickerRgbs
 		})
+
+		databus.pickerColorChange = (function() {
+			this.colorPickerBtn.update();
+		}).bind(this);
 	},
 
 	initColorBoard: async function(res) {
@@ -206,7 +206,7 @@ Page({
 	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
-		this.setData({showMenu: true});
+		this.setData({showMenu: true, showMyColors: false});
 	},
 
 	onClickMenuShadow: function(event) {
@@ -416,7 +416,6 @@ Page({
 		const rgbs = this.data.myColors[index].rgbs;
 		databus.resetPickerRgbs(rgbs);
 		this.setData({showMyColors: false});
-		this.colorPickerBtn.update();
 	},
 	resetMyColorsRect: function(res) {
 		const count = databus.myColors.length + 1;

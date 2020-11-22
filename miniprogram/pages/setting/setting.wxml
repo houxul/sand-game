@@ -4,14 +4,20 @@
 		<switch checked="{{autoDownSand}}" bindchange="changeAutoDownSand"></switch>
 	</view>
 	<view wx:if="{{autoDownSand}}" class="movementtrack-item">
+		<view class="movementtrack-action">
+			<view class="switch-line-item">
+				<view>沙子移动轨迹</view>
+				<button type="warn" size="mini" 
+				bindtap="onClickResetMovementTrack">重置</button>
+			</view>
+			<view class="switch-line-item">
+				<view>颜色不重复</view>
+				<switch checked="{{notRepeatColor}}" bindchange="notRepeatColorChange"></switch>
+			</view>
+		</view>
 		<canvas type="2d" id="movementtrack" style="width:{{movementTrackCanvasSize[0]}}px; height:{{movementTrackCanvasSize[1]}}px" 
 				bindtap="onClickMovementTrack">
 		</canvas>
-		<view class="movementtrack-action">
-			<view>沙子移动轨迹</view>
-			<button type="warn" size="mini" style="margin: 0px;"
-			bindtap="onClickResetMovementTrack">重置</button>
-		</view>
 	</view>
 	<view class="slider-line-item">
 		<view>沙子数量</view>

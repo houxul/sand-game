@@ -27,6 +27,7 @@ Page({
 			colorChangeSpeed: databus.colorChangeSpeed,
 			bgColor,
 			showColorPicker: false,
+			notRepeatColor: databus.notRepeatColor,
 		});
 	},
 
@@ -114,6 +115,9 @@ Page({
 	},
 	colorChangeSpeedChange: function(res) {
 		databus.updateSetting({colorChangeSpeed: res.detail.value});
+	},
+	notRepeatColorChange: function(res) {
+		databus.updateSetting({notRepeatColor: res.detail.value});
 	},
 	onClickBgColor: function(event) {
 		this.setData({showColorPicker: !this.data.showColorPicker});

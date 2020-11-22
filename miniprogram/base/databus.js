@@ -1,5 +1,5 @@
 import Pool from './pool'
-import { genRgb } from './utils'
+import { genRgb, tryRun } from './utils'
 
 let instance
 
@@ -27,6 +27,7 @@ export default class DataBus {
     this.gameOver   = false
     this.sandFrame  = 0
     this.autoDownSandFrame = 0;
+    this.notRepeatColor = true;
     this.genSandNum = 40;
     this.overlayAlpha = 0.08;
     this.pickerRgbs = [];
@@ -78,6 +79,7 @@ export default class DataBus {
     load('genSandNum');
     load('movementTrack');
     load('myColors');
+    load('notRepeatColor');
 
     // const info = wx.getStorageInfoSync();
     // console.log('-------------', info);
@@ -107,16 +109,36 @@ export default class DataBus {
       const b = startColor[2] + (endColor[2] - startColor[2]) * percent
       this.pickerLinearGradient[i] = [r, g, b]
     }
+
+    tryRun(this.pickerColorChange);
   }
 
   get sandFrameColor() {
-    this.sandFrame++
-    return this.pickerLinearGradient[Math.floor(this.sandFrame * this.colorChangeSpeed/1600) % (this.pickerLinearGradient.length)]
+    let index = Math.floor(this.sandFrame * this.colorChangeSpeed/1600);
+    if (index < this.pickerLinearGradient.length) {
+      this.sandFrame++
+    } else {
+      index = 0;
+      this.sandFrame = 0;
+      if (this.autoDownSandFrame && this.notRepeatColor) {
+        const colorNum = Math.floor(Math.random()*5)+2;
+        const colors = []
+        for (let i=0; i<colorNum; i++) {
+          colors.push(genRgb())
+        }
+        this.resetPickerRgbs(colors);
+      }
+    }
+    return this.pickerLinearGradient[index];
   }
 
   get autoDownSandFramePnt() {
-    this.autoDownSandFrame++ 
-    const track = this.movementTrack[this.autoDownSandFrame%this.movementTrack.length];
+    if (this.autoDownSandFrame < this.movementTrack.length-1) {
+      this.autoDownSandFrame++;
+    } else {
+      this.autoDownSandFrame = 0;
+    }
+    const track = this.movementTrack[this.autoDownSandFrame];
     return {x: track[0], y:track[1]};
   }
 
