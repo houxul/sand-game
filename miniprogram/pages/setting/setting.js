@@ -13,6 +13,7 @@ Page({
 	data: {
 		sandNumInterval: [5, 140],
 		colorChangeSpeedInterval: [1, 200],
+		movementTrackCanvasSize: [150* databus.screenWidth/databus.screenHeight, 150]
 	},
 
 	/**
@@ -91,8 +92,8 @@ Page({
 		.select('#movementtrack')
 		.node((function(res) {
 			const canvas = res.node;
-			canvas.width = databus.screenWidth; 
-			canvas.height = databus.screenWidth*databus.screenWidth/databus.screenHeight;
+			canvas.width = databus.screenWidth;
+			canvas.height = databus.screenHeight;
 			this.movementTrackCanvas = canvas;
 			this.renderMovementTrack(this.movementTrackCanvas);
 		}).bind(this)).exec();
@@ -122,6 +123,7 @@ Page({
 			.select('#colorpicker')
 			.node((function(res) {
 				const canvas = res.node;
+				canvas.width = databus.screenWidth;
 				const ctx = canvas.getContext('2d');
 
 				const colorboardPath = wx.getStorageSync('colorboard');
@@ -135,6 +137,7 @@ Page({
 				} else {
 					const imgWidth = canvas.width;
 					const imgHeight = canvas.height;
+
 					const img = ctx.createImageData(imgWidth, imgHeight);
 					const imgData = img.data;
 					const hslX = 360 / imgWidth;
@@ -187,16 +190,11 @@ Page({
 	renderMovementTrack: function(canvas) {
 		const ctx = canvas.getContext('2d');
 		ctx.save();
-		ctx.fillStyle = 'rgb(245, 245, 245)';
+
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-		ctx.translate(databus.screenWidth, 0)
-		ctx.rotate(Math.PI/2);
-		const scale = databus.screenWidth/databus.screenHeight;
-		ctx.scale(scale, scale);
-
+		ctx.fillStyle = 'rgb(245, 245, 245)';
 		ctx.strokeStyle = 'rgb(255, 0, 0)';
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		ctx.beginPath();
 		for (let i=0; i<databus.movementTrack.length; i++) {

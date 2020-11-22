@@ -29,6 +29,18 @@
 	margin: 10px 20px 10px 20px;
 }
 
+.movementtrack-item {
+	display: flex;
+	justify-content: space-between;
+	margin: 10px 50px 10px 50px;
+}
+
+.movementtrack-action {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin: 10px 40px 10px 20px;
+}
 /* .bg-view {
 	position: absolute;
 	z-index: -1;
