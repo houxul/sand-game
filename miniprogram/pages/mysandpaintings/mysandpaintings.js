@@ -110,7 +110,8 @@ Page({
 				}
 
 				wx.showLoading({title: '上传中...'})
-				const item = event.currentTarget.dataset.item;
+				const index = event.currentTarget.dataset.index;
+				const item = this.data.sandpaintings[index];
 				wx.cloud.uploadFile({
 					cloudPath: item.id + '.png',
 					filePath: item.localPath,
@@ -138,12 +139,7 @@ Page({
 								}
 								wx.setStorageSync('sandpaintings', sandpaintings);
 
-								for (let i=0; i<this.data.sandpaintings.length; i++) {
-									if (this.data.sandpaintings[i].id == item.id) {
-										this.data.sandpaintings[i].upload = true;
-										break;
-									}
-								}
+								this.data.sandpaintings[index].upload = true;
 								this.setData({sandpaintings: this.data.sandpaintings});
 
 								wx.showToast({title: '成功'})
@@ -170,10 +166,11 @@ Page({
 				path: '/pages/hotsandpaintings/hotsandpaintings',
 			}
 		}
-		const imgUrl = res.target.dataset.item.localPath;
+		const item = res.target.dataset.item;
+		const imgUrl = item.localPath;
 		return {
 			title: '彩色沙子',
-			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
+			path: '/pages/picturepreview/picturepreview?id='+item.id,
 			imageUrl: imgUrl,
 		}
 	},
@@ -187,7 +184,12 @@ Page({
 					return
 				}			  
 
-				const item = event.target.dataset.item;
+				const index = event.target.dataset.index;
+				const item = this.data.sandpaintings[index];
+
+				this.data.sandpaintings.splice(index, 1);
+				this.setData({sandpaintings: this.data.sandpaintings});
+
 				const sandpaintings = wx.getStorageSync('sandpaintings');
 				for (let i=0; i<sandpaintings.length; i++) {
 					if (sandpaintings[i].id == item.id) {
@@ -196,14 +198,6 @@ Page({
 					}
 				}
 				wx.setStorageSync('sandpaintings', sandpaintings);
-
-				for (let i=0; i<this.data.sandpaintings.length; i++) {
-					if (this.data.sandpaintings[i].id == item.id) {
-						this.data.sandpaintings.splice(i, 1);
-						break;
-					}
-				}
-				this.setData({sandpaintings: this.data.sandpaintings});
 
 				if (!item.upload) {
 					return

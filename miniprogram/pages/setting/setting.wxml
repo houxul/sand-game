@@ -6,12 +6,12 @@
 	<view wx:if="{{autoDownSand}}" class="movementtrack-item">
 		<view class="movementtrack-action">
 			<view class="switch-line-item">
-				<view>沙子移动轨迹</view>
+				<view class="mini-text">沙子移动轨迹</view>
 				<button type="warn" size="mini" 
 				bindtap="onClickResetMovementTrack">重置</button>
 			</view>
 			<view class="switch-line-item">
-				<view>颜色不重复</view>
+				<view class="mini-text">颜色不重复</view>
 				<switch checked="{{notRepeatColor}}" bindchange="notRepeatColorChange"></switch>
 			</view>
 		</view>

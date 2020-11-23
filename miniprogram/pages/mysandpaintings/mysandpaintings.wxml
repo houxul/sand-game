@@ -17,15 +17,15 @@
 		<view wx:else class="sandpainting-item-vertical">
 			<image class="sandpainting-item-vertical-img" src="{{item.localPath}}" 
 				style="width: {{320*item.width/item.height}}px; height: 320px"
-				data-item="{{item}}" data-url="{{item.localPath}}" bindtap="onImageClick"/>
+				data-url="{{item.localPath}}" bindtap="onImageClick"/>
 		</view>
 		<view class="sandpainting-item-bottom">
 			<view class="sandpainting-item-bottom-left">{{utils.timeFormat(item.createdAt)}}</view>
 			<view class="sandpainting-item-bottom-right">
 				<image class='image-action' src="../../images/delete.png"
-					data-item="{{item}}" bindtap="onDeleteClick"></image>
-
-				<button wx:if="{{!item.upload}}" size="mini" class="button-image-action" data-item="{{item}}" bindtap="onUploadClick">
+					data-index="{{index}}" bindtap="onDeleteClick">
+				</image>
+				<button wx:if="{{!item.upload}}" size="mini" class="button-image-action" data-index="{{index}}" bindtap="onUploadClick">
 					<image class='image-action' src="../../images/upload.png"></image>
 				</button>
 				<button wx:else open-type="share" size="mini" class="button-image-action" data-item="{{item}}">

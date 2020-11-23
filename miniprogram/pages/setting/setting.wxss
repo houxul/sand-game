@@ -51,3 +51,7 @@
 } */
 
 button {margin: 10px;}
+
+.mini-text {
+	font-size: 13px;
+}

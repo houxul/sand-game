@@ -270,11 +270,13 @@ Page({
 	},
 
 	finishSandTable: function() {
+		wx.showLoading({title: '正在保存'});
 		const finishCallback = (function() {
 			databus.reset()
 			this.sandTable.reset();
 			this.data.menuActions[3].tip = '../../images/new-msg.png';
 			this.setData({menuActions: this.data.menuActions});
+			wx.hideLoading();
 		}).bind(this);
 	
 		let canvas = this.sandTable.canvas;

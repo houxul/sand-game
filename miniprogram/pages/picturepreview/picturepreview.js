@@ -12,6 +12,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
+		// TODO 通过id预览
 		wx.previewImage({
 			urls: [options.imgUrl],
 			current: options.imgUrl,
