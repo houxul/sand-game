@@ -1,6 +1,6 @@
 
 export function genRgb() {
-    return [Math.random()*255, Math.random()*255, Math.random()*255];
+    return [Math.floor(Math.random()*256), Math.floor(Math.random()*256), Math.floor(Math.random()*256)];
 }
 
 export function rgbToStr(rgb) {
@@ -145,4 +145,41 @@ export function colorsId(rgbList) {
 	}
 
 	return rgbs.join('-');
+}
+
+export function similarColor(rgbM, rgbN) {
+	const threshold = 100;
+	let diff = 0;
+	for (let i=0;i <3; i++) {
+		diff += (rgbM[i] - rgbN[i])*(rgbM[i] - rgbN[i]);
+	}
+	return diff < threshold;
+}
+
+export function existSimilarColor(rgbs, rgb) {
+	for (let i=0; i<rgbs.length; i++) {
+		if (similarColor(rgbs[i], rgb)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+export function genUnsimilarColors(colors = [], minNum = 1, maxNum = 5) {
+	const colorNum = Math.floor(Math.random()*(maxNum-minNum+1)) + minNum;
+	const diffList = [...colors];
+	const newColors = [];
+
+	let count = 0;
+	while (count < colorNum) {
+		const color = genRgb();
+		if (existSimilarColor(diffList, color)) {
+			continue;
+		}
+		count+=1;
+		diffList.push(color);
+		newColors.push(color);
+	}
+	return newColors;
 }

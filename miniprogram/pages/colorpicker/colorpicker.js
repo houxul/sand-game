@@ -2,7 +2,7 @@
 import DataBus from '../../base/databus'
 import ColorPicker from '../../rendering/colorpicker'
 import RoundButton from '../../rendering/roundbutton'
-import { genRgb } from '../../base/utils'
+import { genUnsimilarColors } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -126,12 +126,7 @@ Page({
 	},
 
 	onClickSwitch: function(res) {
-		const colorNum = Math.floor(Math.random()*5)+2;
-		const colors = []
-		for (let i=0; i<colorNum; i++) {
-			colors.push(genRgb())
-		}
-		this.updateDisplayButtonColors(colors)
+		this.updateDisplayButtonColors(genUnsimilarColors(databus.pickerRgbs))
 	},
 
 	onClickDisplay: function(res) {

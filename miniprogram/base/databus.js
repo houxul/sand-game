@@ -1,5 +1,5 @@
 import Pool from './pool'
-import { genRgb, tryRun, equalColor } from './utils'
+import { tryRun, equalColor, genUnsimilarColors } from './utils'
 
 let instance
 
@@ -33,7 +33,7 @@ export default class DataBus {
 		this.pickerRgbs = [];
 		this.linearGradientRgbs = [];
 		this.linearGradientLen = 500;
-		this.resetPickerRgbs([genRgb(), genRgb(), genRgb(), genRgb()])
+		this.resetPickerRgbs(genUnsimilarColors())
 		this.horizontal = false;
 		this.colorChangeSpeed = 50;
 		this.autoDownSand = false;
@@ -126,7 +126,7 @@ export default class DataBus {
 			if (index > this.filledLinearGradientStartIndex && 
 				this.autoDownSandFrame && this.notRepeatColor &&
 				equalColor(this.filledLinearGradientRgb, this.pickerRgbs[0])) {
-					this.filledLinearGradientRgb = genRgb();
+					this.filledLinearGradientRgb = genUnsimilarColors(this.pickerRgbs, 1, 1)[0];
 					this.setLinearGradientRgbs(this.pickerRgbs[this.pickerRgbs.length-1], this.filledLinearGradientRgb, 
 						this.linearGradientLen, this.linearGradientRgbs, this.filledLinearGradientStartIndex);
 			}
@@ -134,12 +134,7 @@ export default class DataBus {
 			index = 0;
 			this.sandFrame = 0;
 			if (this.autoDownSandFrame && this.notRepeatColor) {
-				const colorNum = Math.floor(Math.random()*5)+1;
-				const colors = [this.filledLinearGradientRgb]
-				for (let i=0; i<colorNum; i++) {
-					colors.push(genRgb())
-				}
-				this.resetPickerRgbs(colors);
+				this.resetPickerRgbs([this.filledLinearGradientRgb, ...genUnsimilarColors([this.filledLinearGradientRgb])]);
 			}
 		}
 		return this.linearGradientRgbs[index];
