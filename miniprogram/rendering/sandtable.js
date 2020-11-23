@@ -151,6 +151,10 @@ export default class SandTable {
       this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
       this.setImgData(x, y, rgba)
       this.sandPileSideline[y] -= 1
+
+      if (this.sandPileSideline[y] == 0) {
+        this.corssZeroLineNum++;
+      }
     } else {
       const xLeft = x-1 >= 0 && this.sandPileSideline[x-1] > this.sandPileSideline[x];
       const xRight = x+1 < this.img.width && this.sandPileSideline[x+1] > this.sandPileSideline[x];
