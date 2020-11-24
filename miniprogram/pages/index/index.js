@@ -3,7 +3,6 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
-import ColorBoard from '../../rendering/colorboard'
 import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
 
 let databus = new DataBus()
@@ -59,6 +58,10 @@ Page({
 			return {rgbs: item, radius: 25, id: colorsId(item)};
 		})
 		this.setData({myColors})
+
+		if (!wx.getStorageSync('colorboard')) {
+			this.initColorBoard();
+		}
 	},
 
 	/**
@@ -76,12 +79,6 @@ Page({
 		wx.createSelectorQuery()
 		.select('#colorpickerbutton')
 		.node(this.initColorPickerButton.bind(this)).exec();
-
-		if (!wx.getStorageSync('colorboard')) {
-			wx.createSelectorQuery()
-			.select('#colorboard')
-			.node(this.initColorBoard.bind(this)).exec();
-		}
 	},
 
 	/**
@@ -163,8 +160,22 @@ Page({
 	},
 
 	initColorBoard: async function(res) {
-		const canvas = res.node;
-		new ColorBoard({canvas})
+		wx.cloud.downloadFile({
+			fileID: databus.colorBoardFileId,
+			success: res => {
+				const tempFilePath = res.tempFilePath;
+				const fs = wx.getFileSystemManager()
+				fs.saveFile({
+					tempFilePath,
+					success(res) {
+						const savedFilePath = res.savedFilePath;
+						wx.setStorageSync('colorboard', savedFilePath);
+					},
+					fail: console.error,
+				});
+			},
+			fail: console.error,
+		});
 	},
 
 	touchStartHandler: function(event) {
