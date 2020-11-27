@@ -26,7 +26,7 @@ export default class ColorPicker {
 		if (colorboardPath) {
 			const img = canvas.createImage();
 			img.onload = (res) => {
-				ctx.drawImage(img, 0, 0, 3200, 3200,
+				ctx.drawImage(img, 0, 0, databus.screenWidth, databus.screenHeight,
 					0, this.btnAreaY, databus.screenWidth, databus.screenHeight-this.btnAreaY);
 			};
 			img.src = colorboardPath;

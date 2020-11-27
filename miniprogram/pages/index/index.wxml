@@ -1,6 +1,8 @@
 <view class="page-view">
 	<canvas type="2d" id="rotateimage" class="offscreen-canvas"
 		style="width:{{screenHeight}}px; height:{{screenWidth}}px"> </canvas>
+	<canvas type="2d" id="colorboard" class="offscreen-canvas"
+		style="width:{{screenWidth}}px; height:{{screenHeight}}px"> </canvas>
 	<canvas type="2d" id="sandtable" class="canvas" 
 		bind:touchstart="touchStartHandler" 
 		bind:touchmove="touchMoveHandler" 

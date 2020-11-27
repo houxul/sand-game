@@ -134,7 +134,7 @@ Page({
 				if (colorboardPath) {
 					const img = canvas.createImage();
 					img.onload = (res) => {
-						ctx.drawImage(img, 0, 0, 3200, 3200,
+						ctx.drawImage(img, 0, 0, databus.screenWidth, databus.screenHeight,
 							0, 0, canvas.width, canvas.height);
 					};
 					img.src = colorboardPath;

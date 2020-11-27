@@ -24,7 +24,6 @@ export default class DataBus {
 		this.screenWidth	= sysInfo.screenWidth
 		this.screenHeight = sysInfo.screenHeight
 
-		this.colorBoardFileId = 'cloud://dev-9gvi7hhi3a969b2f.6465-dev-9gvi7hhi3a969b2f-1304113081/colorboard.png'
 		this.gameOver	 = false
 		this.sandFrame	= 0
 		this.autoDownSandFrame = 0;
