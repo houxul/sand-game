@@ -11,9 +11,8 @@ page{
 }
 
 .offscreen-canvas {
-	visibility: hidden;
-	position: absolute;
-	z-index: 0;
+	position:fixed;
+	left:100%;
 }
 
 .canvas {
