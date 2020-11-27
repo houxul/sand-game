@@ -22,11 +22,8 @@ export default class SandTable {
 
 		this.sands = []
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
-		if (databus.horizontal) {
-			this.sandPileSideline.fill(this.img.width)
-		} else {
-			this.sandPileSideline.fill(this.img.height)
-		}
+		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
+		this.sandPileSideline.fill(defaultValue);
 		this.corssZeroLineNum = 0;
 
 		this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
@@ -43,11 +40,8 @@ export default class SandTable {
 	}
 
 	reset() {
-		if (databus.horizontal) {
-			this.sandPileSideline.fill(this.img.width)
-		} else {
-			this.sandPileSideline.fill(this.img.height)
-		}
+		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
+		this.sandPileSideline.fill(defaultValue);
 		this.corssZeroLineNum = 0;
 		for (let i=0; i< this.imgData.length; i+=4) {
 			this.imgData[i] = databus.bgRgba[0];
@@ -128,61 +122,45 @@ export default class SandTable {
 	}
 
 	addSandToSandPile(x,y, rgb) {
+		let index = x;
+		let boundary = [0, this.img.width-1]
 		if (databus.horizontal) {
-			const yLeft = y-1 >= 0 && this.sandPileSideline[y-1] > this.sandPileSideline[y];
-			const yRight = y+1 < this.img.height && this.sandPileSideline[y+1] > this.sandPileSideline[y];
-			if (yLeft && yRight) {
-				const rdm = Math.random();
-				const yDir = rdm > 0.5 ? 1 : -1;
-				this.addSandToSandPile(x, y+yDir, rgb)
-				return;
-			} else if (yLeft) {
-				this.addSandToSandPile(x, y-1, rgb)
-				return
-			} else if (yRight) {
-				this.addSandToSandPile(x, y+1, rgb)
-				return
-			}
-	
-			x = this.sandPileSideline[y] -1
-			const overlayRgb = Math.floor( Math.random() * 256 );
-			const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha), 
-			this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha), 
-			this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
-			this.setImgData(x, y, rgba)
-			this.sandPileSideline[y] -= 1
-
-			if (this.sandPileSideline[y] == 0) {
-				this.corssZeroLineNum++;
-			}
-		} else {
-			const xLeft = x-1 >= 0 && this.sandPileSideline[x-1] > this.sandPileSideline[x];
-			const xRight = x+1 < this.img.width && this.sandPileSideline[x+1] > this.sandPileSideline[x];
-			if (xLeft && xRight) {
-				const rdm = Math.random();
-				const xDir = rdm > 0.5 ? 1 : -1;
-				this.addSandToSandPile(x+xDir, y, rgb)
-				return;
-			} else if (xLeft) {
-				this.addSandToSandPile(x-1, y, rgb)
-				return
-			} else if (xRight) {
-				this.addSandToSandPile(x+1, y, rgb)
-				return
-			}
-	
-			y = this.sandPileSideline[x] -1
-			const overlayRgb = Math.floor( Math.random() * 256 );
-			const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha), 
-			this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha), 
-			this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
-			this.setImgData(x, y, rgba)
-			this.sandPileSideline[x] -= 1
-
-			if (this.sandPileSideline[x] == 0) {
-				this.corssZeroLineNum++;
-			}
+			index = y;
+			boundary = [0, this.img.height-1]
 		}
+
+		let xLeft = index-1 >= boundary[0] && this.sandPileSideline[index-1] > this.sandPileSideline[index];
+		let xRight = index+1 <=  boundary[1] && this.sandPileSideline[index+1] > this.sandPileSideline[index];
+		if (!xLeft && !xRight) {
+			this.sandToSandPile(x, y, rgb);
+			return;
+		}
+
+		if (xLeft && xRight) {
+			Math.random() > 0.5 ? xLeft = false : xRight = false;
+		}
+		const inc = xRight ? 1 : -1;
+		let nextIndex = index+inc;
+		while (nextIndex >= boundary[0] && nextIndex <= boundary[1] && this.sandPileSideline[nextIndex] > this.sandPileSideline[index]) {
+			index = nextIndex;
+			nextIndex += inc;
+		}
+		this.sandToSandPile(index, index, rgb);
+	}
+
+	sandToSandPile(x, y, rgb) {
+		const overlayRgb = Math.floor( Math.random() * 256 );
+		const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha),
+		this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha),
+		this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
+
+		const index = databus.horizontal ? y : x;
+		this.sandPileSideline[index] -= 1;
+		if (this.sandPileSideline[index] == 0) {
+			this.corssZeroLineNum++;
+		}
+		databus.horizontal ? x = this.sandPileSideline[index] : y = this.sandPileSideline[index];
+		this.setImgData(x, y, rgba);
 	}
 
 	setImgData(x, y, rgba) {
@@ -243,7 +221,6 @@ export default class SandTable {
 			}
 		}
 	}
-
 
 	draw() {
 		this.ctx.putImageData(this.img, 0, 0);
