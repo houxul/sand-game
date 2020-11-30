@@ -33,7 +33,7 @@ export default class DataBus {
 		this.pickerRgbs = [];
 		this.linearGradientRgbs = [];
 		this.linearGradientLen = 500;
-		this.resetPickerRgbs(genUnsimilarColors())
+		this.resetPickerRgbs(genUnsimilarColors([], 2))
 		this.horizontal = false;
 		this.colorChangeSpeed = 50;
 		this.autoDownSand = false;

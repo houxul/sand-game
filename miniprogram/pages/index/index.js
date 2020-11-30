@@ -145,7 +145,9 @@ Page({
 		}).bind(this)
 
 		this.sandTable.genSandEndCallback = (function() {
-			this.setData({showMenuButton: true});
+			if (!this.data.showMenuButton) {
+				this.setData({showMenuButton: true});
+			}
 		}).bind(this)
 	},
 
