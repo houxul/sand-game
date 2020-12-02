@@ -19,6 +19,10 @@
 				bindtap="onClickMovementTrack">
 		</canvas>
 	</view>
+	<view class="switch-line-item">
+		<view>高质量沙绘</view>
+		<switch checked="{{highQuality}}" bindchange="changeHighQuality"></switch>
+	</view>
 	<view class="slider-line-item">
 		<view>沙子数量</view>
 		<slider bindchange="sandNumChange" value="{{sandNum}}" 
