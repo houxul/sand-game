@@ -33,7 +33,7 @@ export default class MovementTrack {
 		this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 	clean() {
-		this.pnts.splice(0, this.pnts.length);
+		this.pnts.length = 0;
 		this.drawBg();
 	}
 

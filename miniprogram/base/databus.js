@@ -94,8 +94,8 @@ export default class DataBus {
 	}
 
 	resetPickerRgbs(rgbs) {
-		this.pickerRgbs.splice(0, this.pickerRgbs.length);
-		this.linearGradientRgbs.splice(0, this.linearGradientRgbs.length);
+		this.pickerRgbs.length = 0;
+		this.linearGradientRgbs.length = 0;
 		this.pickerRgbs.push(...rgbs);
 
 		this.sandFrame = 0
@@ -151,7 +151,7 @@ export default class DataBus {
 	}
 
 	resetMovementTrack() {
-		this.movementTrack.splice(0, this.movementTrack.length);
+		this.movementTrack.length = 0;
 		const arcHeight = this.screenWidth/2;
 		for (let i=0; i< this.screenHeight; i++) {
 			this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i, 1]);
