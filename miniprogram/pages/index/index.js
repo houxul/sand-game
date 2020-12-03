@@ -58,7 +58,7 @@ Page({
 		const myColors = databus.myColors.map((item) => {
 			return {rgbs: item, radius: 25, id: colorsId(item)};
 		})
-		this.setData({myColors})
+		this.setData({myColors, useColorBoard: !wx.getStorageSync('colorboard')})
 	},
 
 	/**
@@ -77,7 +77,7 @@ Page({
 		.select('#colorpickerbutton')
 		.node(this.initColorPickerButton.bind(this)).exec();
 
-		if (!wx.getStorageSync('colorboard')) {
+		if (this.data.useColorBoard) {
 			wx.createSelectorQuery()
 			.select('#colorboard')
 			.node(this.initColorBoard.bind(this)).exec();
