@@ -15,7 +15,7 @@
 	</canvas>
 	<cover-image wx:if="{{showMenuButton}}" style="left:{{menuBtnPnts[menuBtnPntIndex].x}}px; top:{{menuBtnPnts[menuBtnPntIndex].y}}px;"
 		class="menu-button" src="../../images/more.png" bindtap="onClickMenu"/>
-	<cover-view wx:if="{{showMenu}}" class="menu-view">
+	<cover-view style="left:{{menuLeft}}px;" class="menu-view">
 		<cover-view class="menu-area">
 			<cover-view class="menu-userinfo">
 				<button open-type="getUserInfo" class="get-userinfo-button" bindgetuserinfo="onClickAvatar">

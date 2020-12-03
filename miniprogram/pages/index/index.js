@@ -33,7 +33,7 @@ Page({
 		],
 		menuBtnPntIndex: 0,
 		showMenuButton: true,
-		showMenu: false,
+		menuLeft: databus.screenWidth,
 		showMyColors: false,
 		avatarUrl: "../../images/default-avatar.png",
 		menuActions: [
@@ -211,11 +211,11 @@ Page({
 	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
-		this.setData({showMenu: true, showMyColors: false});
+		this.setData({menuLeft: 0, showMyColors: false});
 	},
 
 	onClickMenuShadow: function(event) {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 	},
 	onClickAvatar: function(res) {
 		if (res.detail.userInfo) {
@@ -331,7 +331,7 @@ Page({
 				
 				databus.reset()
 				this.sandTable.reset();
-				this.setData({showMenu: false});
+				this.setData({menuLeft: databus.screenWidth});
 			}).bind(this)
 		});
     },
@@ -343,7 +343,7 @@ Page({
 
 		this.data.menuActions[2].key = databus.horizontal ? '竖屏开始' : '横屏开始';
 		this.setData({
-			showMenu: false, 
+			menuLeft: databus.screenWidth, 
 			menuActions: this.data.menuActions, 
 			clrPickBtnPntIndex: databus.horizontal*2,
 			menuBtnPntIndex: (this.data.menuBtnPntIndex+1)%2,
@@ -354,7 +354,7 @@ Page({
 
 	mySandPaintingActionHandler: function() {
 		this.data.menuActions[3].tip = null;
-		this.setData({showMenu: false, menuActions: this.data.menuActions});
+		this.setData({menuLeft: databus.screenWidth, menuActions: this.data.menuActions});
 
 		wx.navigateTo({
 			url: '/pages/mysandpaintings/mysandpaintings',
@@ -362,7 +362,7 @@ Page({
     },
 
     photoSandPaintingActionHandler: function() {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 		wx.chooseImage({
 			count: 1,
 			sizeType: ['original', 'compressed'],
@@ -375,22 +375,22 @@ Page({
 	},
 
 	newestSandPaintingActionHandler: function() {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 		wx.navigateTo({url: '/pages/newestsandpaintings/newestsandpaintings'})
 	},
 	
     hotActionHandler: function() {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 		wx.navigateTo({url: '/pages/hotsandpaintings/hotsandpaintings'})
 	},
 
     settingActionHandler: function() {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 		wx.navigateTo({url: '/pages/setting/setting'})
 	},
 
     helpActionHandler: function() {
-		this.setData({showMenu: false});
+		this.setData({menuLeft: databus.screenWidth});
 		wx.navigateTo({url: '/pages/help/help'})
 	},
 	onClickAddColor: function(res) {
