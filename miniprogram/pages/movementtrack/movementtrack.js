@@ -107,7 +107,7 @@ Page({
 			return
 		}
 
-		databus.movementTrack.splice(0, databus.movementTrack.length);
+		databus.movementTrack.length = 0;
 		for (let i=0; i < this.movementTrack.pnts.length; i++) {
 			const pnt = this.movementTrack.pnts[i];
 			if (pnt[2] == 0) {
