@@ -1,7 +1,7 @@
 <view class="page-view">
 	<canvas type="2d" id="genimage" class="offscreen-canvas"
 		style="width:{{genImageWidth}}px; height:{{genImageHeight}}px"> </canvas>
-	<canvas type="2d" id="colorboard" class="offscreen-canvas"
+	<canvas wx:if="{{useColorBoard}}" type="2d" id="colorboard" class="offscreen-canvas"
 		style="width:{{screenWidth}}px; height:{{screenHeight}}px"> </canvas>
 	<canvas type="2d" id="sandtable" class="canvas" 
 		bind:touchstart="touchStartHandler" 
