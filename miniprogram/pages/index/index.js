@@ -3,7 +3,6 @@ import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
-import GenImage from '../../rendering/genimage'
 import ColorBoard from '../../rendering/colorboard'
 import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
 
@@ -17,8 +16,6 @@ Page({
 	data: {
 		screenWidth: databus.screenWidth,
 		screenHeight: databus.screenHeight,
-		genImageWidth: databus.screenWidth,
-		genImageHeight: databus.screenHeight,
 		clrPickBtnRadius: 30,
 		clrPickBtnPnts: [
 			{x: databus.screenWidth - 80, y: 120}, 
@@ -69,8 +66,8 @@ Page({
 	 */
 	onReady: function () {
 		wx.createSelectorQuery()
-		.select('#genimage')
-		.node(this.initGenImage.bind(this)).exec();
+		.select('#rotateimage')
+		.node(this.initRotateImage.bind(this)).exec();
 
 		wx.createSelectorQuery()
 		.select('#sandtable')
@@ -134,9 +131,9 @@ Page({
 
 	},
 
-	initGenImage: function(res) {
+	initRotateImage: function(res) {
 		const canvas = res.node;
-		this.genImage = new GenImage({canvas});
+		this.rotateImage = new RotateImage({canvas});
 	},
 
 	initSandTable: function(res) {
@@ -284,8 +281,12 @@ Page({
 			wx.hideLoading();
 		}).bind(this);
 	
-		this.genImage.exec(this.sandTable.img);
-		let canvas = this.genImage.canvas;
+		let canvas = this.sandTable.canvas;
+		if (databus.horizontal) {
+			this.rotateImage.draw(this.sandTable.img);
+			canvas = this.rotateImage.canvas;
+		}
+
 		wx.canvasToTempFilePath({
 			canvas,
 			success(res) {
@@ -347,8 +348,6 @@ Page({
 			menuActions: this.data.menuActions, 
 			clrPickBtnPntIndex: databus.horizontal*2,
 			menuBtnPntIndex: (this.data.menuBtnPntIndex+1)%2,
-			genImageWidth: databus.horizontal ? databus.screenHeight : databus.screenWidth,
-			genImageHeight: databus.horizontal ? databus.screenWidth : databus.screenHeight,
 		});
     },
 

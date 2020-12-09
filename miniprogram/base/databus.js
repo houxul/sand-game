@@ -40,7 +40,6 @@ export default class DataBus {
 		this.bgRgba = [214, 214, 214, 214];
 		this.movementTrack = [];
 		this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
-		this.imageQuality = 2;
 		this.resetMovementTrack();
 
 		this.default = {
@@ -82,7 +81,6 @@ export default class DataBus {
 		load('movementTrack');
 		load('myColors');
 		load('notRepeatColor');
-		load('imageQuality');
 
 		// const info = wx.getStorageInfoSync();
 		// console.log('-------------', info);

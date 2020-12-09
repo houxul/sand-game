@@ -1,7 +1,7 @@
 // miniprogram/pages/setting/setting.js
 
 import DataBus from '../../base/databus'
-import {hslToRgb, rgbToStr, strToRgb} from '../../base/utils'
+import {hslToRgb, strToAb, abToStr, rgbToStr, strToRgb} from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -28,7 +28,6 @@ Page({
 			bgColor,
 			showColorPicker: false,
 			notRepeatColor: databus.notRepeatColor,
-			highQuality: (databus.imageQuality != 1)
 		});
 	},
 
@@ -110,10 +109,6 @@ Page({
 		}
 
 		this.initMovementTrack();
-	},
-	changeHighQuality: function(res) {
-		const imageQuality = res.detail.value ? 3 : 1;
-		databus.updateSetting({imageQuality});
 	},
 	sandNumChange: function(res) {
 		databus.updateSetting({genSandNum: res.detail.value});
