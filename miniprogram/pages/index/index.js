@@ -94,13 +94,18 @@ Page({
 				this.sandTable.updateBg();
 			}
 		}
+
+		if (this.sandTable) {
+			this.sandTable.cancelAnimationFrame();
+			this.sandTable.requestAnimationFrame();
+		}
 	},
 
 	/**
 	 * 生命周期函数--监听页面隐藏
 	 */
 	onHide: function () {
-
+		this.sandTable.cancelAnimationFrame();
 	},
 
 	/**

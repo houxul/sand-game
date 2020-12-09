@@ -26,6 +26,7 @@
 			<cover-view class="menu-actions">
 				<cover-view class="menu-action-item" 
 					wx:for="{{menuActions}}" 
+					wx:key="key"
 					data-index="{{index}}"
 					bindtap="onMenuAction">
 					<cover-image class="menu-action-item-icon" src="{{item.icon}}"/>

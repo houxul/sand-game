@@ -13,20 +13,11 @@ export default class SandTable {
 
 		this.img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight);
 		this.imgData = this.img.data;
-		for (let i=0; i< this.imgData.length; i+=4) {
-			this.imgData[i] = databus.bgRgba[0];
-			this.imgData[i+1] = databus.bgRgba[1];
-			this.imgData[i+2] = databus.bgRgba[2];
-			this.imgData[i+3] = databus.bgRgba[3];
-		}
-
-		this.sands = []
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
-		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
-		this.sandPileSideline.fill(defaultValue);
-		this.corssZeroLineNum = 0;
 
 		this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
+		this.sands = []
+		this.reset();
 		this.resetSandSourcePnt();
 
 		this.bindLoop = (() => {
@@ -34,9 +25,10 @@ export default class SandTable {
 			this.update();
 			this.draw();
 		
-			this.canvas.requestAnimationFrame(this.bindLoop);
+			this.aniId = this.canvas.requestAnimationFrame(this.bindLoop);
 		}).bind(this);
-		this.canvas.requestAnimationFrame(this.bindLoop);
+
+		this.requestAnimationFrame();
 	}
 
 	reset() {
@@ -49,6 +41,14 @@ export default class SandTable {
 			this.imgData[i+2] = databus.bgRgba[2];
 			this.imgData[i+3] = databus.bgRgba[3];
 		}
+	}
+
+	cancelAnimationFrame() {
+		this.canvas.cancelAnimationFrame(this.aniId);
+	}
+
+	requestAnimationFrame() {
+		this.aniId = this.canvas.requestAnimationFrame(this.bindLoop);
 	}
 
 	updateBg() {
