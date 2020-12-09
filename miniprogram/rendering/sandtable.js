@@ -1,6 +1,6 @@
 import DataBus from '../base/databus'
 import Sand from '../base/sand'
-import { tryRun, coverRgb, coverAlpha } from '../base/utils'
+import { tryRun } from '../base/utils'
 
 let databus = new DataBus()
 
@@ -13,14 +13,22 @@ export default class SandTable {
 
 		this.img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight);
 		this.imgData = this.img.data;
+		for (let i=0; i< this.imgData.length; i+=4) {
+			this.imgData[i] = databus.bgRgba[0];
+			this.imgData[i+1] = databus.bgRgba[1];
+			this.imgData[i+2] = databus.bgRgba[2];
+			this.imgData[i+3] = databus.bgRgba[3];
+		}
+
+		this.sands = []
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
+		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
+		this.sandPileSideline.fill(defaultValue);
+		this.corssZeroLineNum = 0;
 
-		this.sands = [];
-
-		this.imgAlpha = coverAlpha(1, databus.overlayAlpha) * 255
+		this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
 		this.resetSandSourcePnt();
 
-		this.reset();
 		this.bindLoop = (() => {
 			this.genSand();
 			this.update();
@@ -142,9 +150,9 @@ export default class SandTable {
 
 	sandToSandPile(x, y, rgb) {
 		const overlayRgb = Math.floor( Math.random() * 256 );
-		const rgba = [coverRgb(rgb[0], overlayRgb, 1, databus.overlayAlpha),
-		coverRgb(rgb[1], overlayRgb, 1, databus.overlayAlpha),
-		coverRgb(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
+		const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha),
+		this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha),
+		this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
 
 		const index = databus.horizontal ? y : x;
 		this.sandPileSideline[index] -= 1;
@@ -153,7 +161,6 @@ export default class SandTable {
 		}
 		databus.horizontal ? x = this.sandPileSideline[index] : y = this.sandPileSideline[index];
 		this.setImgData(x, y, rgba);
-		tryRun(this.sandToSandPileCallback, x, y, rgba);
 	}
 
 	setImgData(x, y, rgba) {
@@ -217,6 +224,14 @@ export default class SandTable {
 
 	draw() {
 		this.ctx.putImageData(this.img, 0, 0);
+	}
+
+	rgbOverlay(c1, c2, a1, a2) {
+		return (c1*a1 + c2*a2 -c1*a1*a2)/(a1+a2-a1*a2)
+	}
+
+	alphaOverlay(a1, a2) {
+		return a1+a2-a1*a2;
 	}
 
 	touchStartHandler(x, y) {

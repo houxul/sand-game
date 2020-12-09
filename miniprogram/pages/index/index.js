@@ -2,6 +2,7 @@
 import SandTable from '../../rendering/sandtable'
 import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
+import RotateImage from '../../rendering/rotateimage'
 import GenImage from '../../rendering/genimage'
 import ColorBoard from '../../rendering/colorboard'
 import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
@@ -151,10 +152,6 @@ Page({
 				this.setData({showMenuButton: true});
 			}
 		}).bind(this)
-
-		this.sandTable.sandToSandPileCallback = (function(x, y, rgb) {
-			this.genImage.update(x, y, rgb)
-		}).bind(this);
 	},
 
 	initColorPickerButton: function(res) {
@@ -287,10 +284,7 @@ Page({
 			wx.hideLoading();
 		}).bind(this);
 	
-		if (!this.sandTable.fullSandPile) {
-			this.genImage.updateBg(this.sandTable.sandPileSideline)
-		}
-		this.genImage.exec();
+		this.genImage.exec(this.sandTable.img);
 		let canvas = this.genImage.canvas;
 		wx.canvasToTempFilePath({
 			canvas,
@@ -337,7 +331,6 @@ Page({
 				
 				databus.reset()
 				this.sandTable.reset();
-				this.genImage.reset();
 				this.setData({menuLeft: databus.screenWidth});
 			}).bind(this)
 		});
@@ -347,7 +340,6 @@ Page({
 		databus.horizontal = !databus.horizontal;
 		databus.reset()
 		this.sandTable.reset();
-		this.genImage.reset();
 
 		this.data.menuActions[2].key = databus.horizontal ? '竖屏开始' : '横屏开始';
 		this.setData({

@@ -1,16 +1,14 @@
+
 import DataBus from '../base/databus'
-import { coverRgb, coverAlpha } from '../base/utils'
 
 let databus = new DataBus()
 
 export default class GenImage {
 	constructor(options) {
 		this.canvas = options.canvas;
-		this.imgAlpha = coverAlpha(1, databus.overlayAlpha) * 255
-		this.reset();
 	}
 
-	reset() {
+	exec(oriImg) {
 		let imageWidth = databus.screenWidth;
 		let imageHeight = databus.screenHeight;
 		if (databus.horizontal) {
@@ -23,49 +21,32 @@ export default class GenImage {
 
 		this.canvas.width = imageWidth;
 		this.canvas.height = imageHeight;
-		this.ctx = this.canvas.getContext('2d');
-		this.img = this.ctx.createImageData(imageWidth, imageHeight);
-	}
-	
-	async update(x, y, rgb) {
-		if (databus.horizontal) {
-			const tmp = x;
-			x = databus.screenHeight - y;
-			y = tmp;
-		}
-		this.setPixelRgba(x, y, rgb, databus.imageQuality);
-	}
+		const ctx = this.canvas.getContext('2d');
+		const img = ctx.createImageData(imageWidth, imageHeight);
 
-	exec() {
-		this.ctx.putImageData(this.img, 0, 0);
-	}
-
-	updateBg(sideline) {
 		if (databus.horizontal) {
-			for (let i=0; i < databus.screenHeight; i++) {
-				for (let j=0; j< sideline[i]; j++) {
-					this.setPixelRgba(databus.screenHeight - i, j, databus.bgRgba, databus.imageQuality);
-				}
+			for (let i=0; i< oriImg.data.length; i+=4) {
+				const index = ((oriImg.height - ((i/4)%oriImg.height)-1) * oriImg.width)*4 + Math.floor((i/4)/oriImg.height)*4
+				this.setPixelImgData(img, (i/4) % oriImg.height, Math.floor((i/4)/oriImg.height), oriImg.data.slice(index, index+4), databus.imageQuality)
 			}
 		} else {
-			for (let i=0; i < databus.screenWidth; i++) {
-				for (let j=0; j< sideline[i]; j++) {
-					this.setPixelRgba(i, j, databus.bgRgba, databus.imageQuality);
+			for (let x=0; x<oriImg.width; x++) {
+				for (let y=0; y<oriImg.height; y++) {
+					const index = 4 * (y * oriImg.width + x);
+					this.setPixelImgData(img, x, y, oriImg.data.slice(index, index+4), databus.imageQuality)
 				}
 			}
 		}
+
+		ctx.putImageData(img, 0, 0);
 	}
 
-	setPixelRgba(x, y, rgb, pixelNum) {
+	setPixelImgData(img, x, y, rgba, pixelNum) {
 		x = x * pixelNum;
 		y = y * pixelNum;
 		for (let i=x; i<x+pixelNum; i++) {
 			for (let j=y; j<y+pixelNum; j++) {
-				const overlayRgb = Math.floor( Math.random() * 256 );
-				const newRgba = [coverRgb(rgb[0], overlayRgb, 1, databus.overlayAlpha),
-				coverRgb(rgb[1], overlayRgb, 1, databus.overlayAlpha),
-				coverRgb(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
-				this.setImgData(this.img, i, j, newRgba);
+				this.setImgData(img, i, j, rgba);
 			}
 		}
 	}

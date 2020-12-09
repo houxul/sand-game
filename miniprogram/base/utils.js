@@ -183,11 +183,3 @@ export function genUnsimilarColors(colors = [], minNum = 1, maxNum = 5) {
 	}
 	return newColors;
 }
-
-export function coverRgb(c1, c2, a1, a2) {
-	return (c1*a1 + c2*a2 -c1*a1*a2)/(a1+a2-a1*a2)
-}
-
-export function coverAlpha(a1, a2) {
-	return a1+a2-a1*a2;
-}
