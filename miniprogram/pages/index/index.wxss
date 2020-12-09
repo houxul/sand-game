@@ -40,7 +40,7 @@ page{
 }
 
 .menu-area {
-	width: 65%;
+	width: 250px;
 	height: 100%;
 	background-color: rgb(222, 222, 222);
 	display: flex;
@@ -48,7 +48,7 @@ page{
 }
 
 .menu-shadow {
-	width: 35%;
+	width: calc(100% - 250px);
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.5);
 }
