@@ -88,8 +88,13 @@ export default class DataBus {
 
 	updateSetting(options) {
 		for (const item in options) {
-			Reflect.set(this, item, options[item])
-			wx.setStorageSync('databus.' + item, options[item])
+			const itemVal = options[item];
+			Reflect.set(this, item, itemVal);
+			wx.setStorageSync('databus.' + item, itemVal);
+
+			if (item == 'bgRgba' && this.bgRgbaChangeCallback) {
+				this.bgRgbaChangeCallback(itemVal);
+			}
 		}
 	}
 

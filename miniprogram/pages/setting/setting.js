@@ -181,6 +181,7 @@ Page({
 	},
 	onClickApplyBgColor: function(event) {
 		databus.updateSetting({bgRgba: [...strToRgb(this.data.bgColor), 214]});
+		wx.showToast({title: '应用成功'});
 	},
 	onClickMovementTrack: function(event) {
 		wx.navigateTo({url: '/pages/movementtrack/movementtrack'});

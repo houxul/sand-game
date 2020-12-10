@@ -88,13 +88,6 @@ Page({
 	 * 生命周期函数--监听页面显示
 	 */
 	onShow: function () {
-		if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
-			this.bgRgba = databus.bgRgba;
-			if (this.sandTable) {
-				this.sandTable.updateBg();
-			}
-		}
-
 		if (this.sandTable) {
 			this.sandTable.cancelAnimationFrame();
 			this.sandTable.requestAnimationFrame();
@@ -154,6 +147,15 @@ Page({
 				this.setData({showMenuButton: true});
 			}
 		}).bind(this)
+
+		databus.bgRgbaChangeCallback = (async (bgRgba) => {
+			if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
+				this.bgRgba = databus.bgRgba;
+				if (this.sandTable) {
+					this.sandTable.updateBg();
+				}
+			}
+		}).bind(this);
 	},
 
 	initColorPickerButton: function(res) {
