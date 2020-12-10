@@ -148,7 +148,7 @@ Page({
 			}
 		}).bind(this)
 
-		databus.bgRgbaChangeCallback = (async (bgRgba) => {
+		databus.bgRgbaChangeCallback = ((bgRgba) => {
 			if (!this.bgRgba || rgbToStr(this.bgRgba) != rgbToStr(databus.bgRgba)) {
 				this.bgRgba = databus.bgRgba;
 				if (this.sandTable) {

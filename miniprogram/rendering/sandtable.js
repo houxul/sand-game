@@ -31,7 +31,7 @@ export default class SandTable {
 		this.requestAnimationFrame();
 	}
 
-	reset() {
+	async reset() {
 		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
 		this.sandPileSideline.fill(defaultValue);
 		this.corssZeroLineNum = 0;
@@ -51,7 +51,7 @@ export default class SandTable {
 		this.aniId = this.canvas.requestAnimationFrame(this.bindLoop);
 	}
 
-	updateBg() {
+	async updateBg() {
 		if (databus.horizontal) {
 			for (let i=0; i < this.img.height; i++) {
 				for (let j=0; j< this.sandPileSideline[i]; j++) {
