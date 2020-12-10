@@ -65,7 +65,7 @@ export default class DataBus {
 	//	 }
 	// }
 
-	loadSetting() {
+	async loadSetting() {
 		const load = (function(key) {
 			const value = wx.getStorageSync('databus.'+key)
 			if (value == "" || value == undefined || value == null) {
@@ -155,7 +155,7 @@ export default class DataBus {
 		return {x: track[0], y:track[1]};
 	}
 
-	resetMovementTrack() {
+	async resetMovementTrack() {
 		this.movementTrack.length = 0;
 		const arcHeight = this.screenWidth/2;
 		for (let i=0; i< this.screenHeight; i++) {
