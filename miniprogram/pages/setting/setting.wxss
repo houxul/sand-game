@@ -31,8 +31,8 @@
 
 .movementtrack-item {
 	display: flex;
-	justify-content: space-between;
-	margin: 10px 40px 10px 10px;
+	justify-content: space-around;
+	margin: 10px 60px 10px 60px;
 }
 
 .movementtrack-action {

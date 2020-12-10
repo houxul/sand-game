@@ -27,7 +27,7 @@ export default class DataBus {
 		this.gameOver	 = false
 		this.sandFrame	= 0
 		this.autoDownSandFrame = 0;
-		this.notRepeatColor = true;
+		this.notRepeatColor = false;
 		this.genSandNum = 40;
 		this.overlayAlpha = 0.08;
 		this.pickerRgbs = [];
@@ -129,7 +129,7 @@ export default class DataBus {
 		if (index < this.linearGradientRgbs.length) {
 			this.sandFrame++
 			if (index > this.filledLinearGradientStartIndex && 
-				this.autoDownSandFrame && this.notRepeatColor &&
+				/*this.autoDownSandFrame &&*/ this.notRepeatColor &&
 				equalColor(this.filledLinearGradientRgb, this.pickerRgbs[0])) {
 					this.filledLinearGradientRgb = genUnsimilarColors(this.pickerRgbs, 1, 1)[0];
 					this.setLinearGradientRgbs(this.pickerRgbs[this.pickerRgbs.length-1], this.filledLinearGradientRgb, 
@@ -138,7 +138,7 @@ export default class DataBus {
 		} else {
 			index = 0;
 			this.sandFrame = 0;
-			if (this.autoDownSandFrame && this.notRepeatColor) {
+			if (/*this.autoDownSandFrame &&*/ this.notRepeatColor) {
 				this.resetPickerRgbs([this.filledLinearGradientRgb, ...genUnsimilarColors([this.filledLinearGradientRgb])]);
 			}
 		}
