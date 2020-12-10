@@ -7,7 +7,7 @@
 		<view class="movementtrack-action">
 			<view class="switch-line-item">
 				<view class="mini-text">沙子移动轨迹</view>
-				<button type="warn" size="mini" 
+				<button type="warn" size="mini" plain="true" 
 				bindtap="onClickResetMovementTrack">重置</button>
 			</view>
 			<view class="switch-line-item">
@@ -40,7 +40,7 @@
 			bindtouchmove="onClickColorPicker" >
 		</canvas>
 		<view class="switch-line-item">
-			<button type="warn" size="mini" style="margin: 0px;"
+			<button type="warn" size="mini" plain="true"
 			bindtap="onClickResetBgColor">重置</button>
 			<button type="primary" size="mini" style="margin: 0px;"
 			bindtap="onClickApplyBgColor">应用</button>
