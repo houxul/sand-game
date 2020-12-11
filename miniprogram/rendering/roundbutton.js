@@ -1,13 +1,15 @@
 
-import { rgbToStr } from '../base/utils'
+import { rgbToStr, similarColor } from '../base/utils'
+
+const shadow = 1;
 
 export default class RoundButton {
 	constructor(options) {
 		const canvas = options.canvas;
 		this.ctx = canvas.getContext('2d');
 		const dpr = wx.getSystemInfoSync().pixelRatio
-		canvas.width = 2 * options.radius * dpr
-		canvas.height = 2 * options.radius * dpr
+		canvas.width = (2 * options.radius + shadow) * dpr
+		canvas.height = (2 * options.radius + shadow) * dpr
 		this.ctx.scale(dpr, dpr)
 
 		this.rgbs = options.rgbs;
@@ -16,6 +18,14 @@ export default class RoundButton {
 	}
 
 	draw() {
+		this.ctx.shadowOffsetX = shadow;
+		this.ctx.shadowOffsetY = shadow;
+		this.ctx.shadowColor = 'rgba(0,0,0,0.5)';
+		this.ctx.shadowBlur = shadow;
+		if (similarColor(this.rgbs[0], [0, 0, 0])) {
+			this.ctx.shadowColor = 'rgba(255,255,255,0.5)';
+		}
+
 		const step = this.radius/this.rgbs.length;
 		for (let i = 0 ; i<this.rgbs.length; i++) {
 			this.ctx.beginPath();
