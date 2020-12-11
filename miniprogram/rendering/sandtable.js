@@ -106,9 +106,9 @@ export default class SandTable {
 			this.setImgData(sand.preX, sand.preY, databus.bgRgba);
 		}
 
-		if (sand.crossBorder) {
-			return true
-		}
+		// if (sand.crossBorder) {
+		// 	return true
+		// }
 
 		const sandX = sand.curX;
 		const sandY = sand.curY;

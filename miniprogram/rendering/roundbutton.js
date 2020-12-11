@@ -8,8 +8,8 @@ export default class RoundButton {
 		const canvas = options.canvas;
 		this.ctx = canvas.getContext('2d');
 		const dpr = wx.getSystemInfoSync().pixelRatio
-		canvas.width = (2 * options.radius + shadow) * dpr
-		canvas.height = (2 * options.radius + shadow) * dpr
+		canvas.width = 2 * (options.radius + shadow) * dpr
+		canvas.height = 2 * (options.radius + shadow) * dpr
 		this.ctx.scale(dpr, dpr)
 
 		this.rgbs = options.rgbs;

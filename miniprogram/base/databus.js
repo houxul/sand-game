@@ -155,7 +155,7 @@ export default class DataBus {
 		return {x: track[0], y:track[1]};
 	}
 
-	async resetMovementTrack() {
+	resetMovementTrack() {
 		this.movementTrack.length = 0;
 		const arcHeight = this.screenWidth/2;
 		for (let i=0; i< this.screenHeight; i++) {

@@ -115,6 +115,9 @@ Page({
 	},
 	onClickBgColor: function(event) {
 		this.setData({showColorPicker: !this.data.showColorPicker});
+		if (this.data.bgColor != rgbToStr(databus.bgRgba)) {
+			this.setData({bgColor: rgbToStr(databus.bgRgba)})
+		}
 
 		if (this.data.showColorPicker) {
 			wx.createSelectorQuery()
@@ -214,5 +217,6 @@ Page({
 	onClickResetMovementTrack: function(event) {
 		databus.resetMovementTrack();
 		this.renderMovementTrack(this.movementTrackCanvas);
+		wx.setStorageSync('databus.movementTrack', databus.movementTrack);
 	}
 })

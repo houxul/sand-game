@@ -24,7 +24,7 @@
 		min="{{colorChangeSpeedInterval[0]}}" max="{{colorChangeSpeedInterval[1]}}"></slider>
 	</view>
 	<view class="switch-line-item">
-		<view>颜色不重复</view>
+		<view>自动换色</view>
 		<switch checked="{{notRepeatColor}}" bindchange="notRepeatColorChange"></switch>
 	</view>
 	<view class="switch-line-item">
