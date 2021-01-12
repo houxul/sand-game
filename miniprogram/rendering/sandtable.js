@@ -132,7 +132,7 @@ export default class SandTable {
 
 	setFlowEndIndex(index) {
 		if (this.flowEndIndex == null || this.flowEndIndex < index+1) {
-			this.flowEndIndex = min(index+1, databus.boundary[0]-1);
+			this.flowEndIndex = min(index+1, databus.boundary[0]);
 		}
 	}
 
@@ -286,8 +286,8 @@ export default class SandTable {
 			return;
 		}
 
-		const negatives = this.getPole(this.sandPileSideline, this.flowStartIndex, this.flowEndIndex, 5);
-		negatives.sort((function(m, n) {
+		const poles = this.getPole(this.sandPileSideline, this.flowStartIndex, this.flowEndIndex, 5);
+		poles.sort((function(m, n) {
 			if (this.sandPileSideline[n[0]] == this.sandPileSideline[m[0]]) {
 				return this.sandPileSideline[m[1]] - this.sandPileSideline[n[1]];
 			}
@@ -295,7 +295,7 @@ export default class SandTable {
 		}).bind(this))
 
 		this.resetFlowIndex();
-		for (const item of negatives) {
+		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
 			for (let index=startIndex+dir; index!=endIndex+dir; index+=dir) {
 				if (this.sandPileSideline[index-dir]-2 < this.sandPileSideline[index]) {
