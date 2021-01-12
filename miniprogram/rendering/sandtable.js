@@ -1,6 +1,6 @@
 import DataBus from '../base/databus'
 import Sand from '../base/sand'
-import { tryRun } from '../base/utils'
+import { tryRun, min, max } from '../base/utils'
 
 let databus = new DataBus()
 
@@ -15,12 +15,13 @@ export default class SandTable {
 		this.imgData = this.img.data;
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
 
-		this.imgAlpha = this.alphaOverlay(1, databus.overlayAlpha) * 255
 		this.sands = []
 		this.reset();
 		this.resetSandSourcePnt();
 
+		this.frame = 0;
 		this.bindLoop = (() => {
+			this.frame+=1;
 			this.genSand();
 			this.update();
 			this.draw();
@@ -41,6 +42,8 @@ export default class SandTable {
 			this.imgData[i+2] = databus.bgRgba[2];
 			this.imgData[i+3] = databus.bgRgba[3];
 		}
+
+		this.resetFlowIndex();
 	}
 
 	cancelAnimationFrame() {
@@ -101,6 +104,38 @@ export default class SandTable {
 		return this.sandPileSideline[x] <= y
 	}
 
+	minAdjacentSideline(x, y) {
+		const step = 2
+		const index = databus.horizontal ? y : x;
+		const startIndex = max(index-step, 0);
+		const endIndex = min(index+step, databus.boundary[0]);
+		let minValIndex = index;
+		for (let i=startIndex; i<=endIndex; i++) {
+			const val = this.sandPileSideline[i] || -1
+			if (val > this.sandPileSideline[minValIndex]) {
+				minValIndex =i;
+			}
+		}
+		return minValIndex;
+	}
+
+	resetFlowIndex() {
+		this.flowStartIndex = null;
+		this.flowEndIndex = null;
+	}
+
+	setFlowStartIndex(index) {
+		if (this.flowStartIndex == null || this.flowStartIndex > index-1) {
+			this.flowStartIndex = max(index-1, 0);
+		}
+	}
+
+	setFlowEndIndex(index) {
+		if (this.flowEndIndex == null || this.flowEndIndex < index+1) {
+			this.flowEndIndex = min(index+1, databus.boundary[0]-1);
+		}
+	}
+
 	tryAddSandToSandPile(sand) {
 		if (!this.isCrossSandPileSideline(sand.preX, sand.preY)) {
 			this.setImgData(sand.preX, sand.preY, databus.bgRgba);
@@ -113,54 +148,21 @@ export default class SandTable {
 		const sandX = sand.curX;
 		const sandY = sand.curY;
 		if (this.isCrossSandPileSideline(sandX, sandY)) {
-			this.addSandToSandPile(sandX, sandY, sand.rgb)
+			let index = this.minAdjacentSideline(sandX, sandY);
+			this.sandPileSideline[index]--;
+			if (databus.horizontal) {
+				this.setImgData(this.sandPileSideline[index], index, sand.rgba);
+			} else {
+				this.setImgData(index, this.sandPileSideline[index], sand.rgba);
+			}
+
+			this.setFlowEndIndex(index);
+			this.setFlowStartIndex(index);
 			return true;
 		}
 
-		this.setImgData(sandX, sandY, [sand.rgb[0],sand.rgb[1],sand.rgb[2], 255]);
+		this.setImgData(sandX, sandY, sand.rgba);
 		return false;
-	}
-
-	addSandToSandPile(x,y, rgb) {
-		let index = x;
-		let boundary = [0, this.img.width-1]
-		if (databus.horizontal) {
-			index = y;
-			boundary = [0, this.img.height-1]
-		}
-
-		let xLeft = index-1 >= boundary[0] && this.sandPileSideline[index-1] > this.sandPileSideline[index];
-		let xRight = index+1 <=  boundary[1] && this.sandPileSideline[index+1] > this.sandPileSideline[index];
-		if (!xLeft && !xRight) {
-			this.sandToSandPile(x, y, rgb);
-			return;
-		}
-
-		if (xLeft && xRight) {
-			Math.random() > 0.5 ? xLeft = false : xRight = false;
-		}
-		const inc = xRight ? 1 : -1;
-		let nextIndex = index+inc;
-		while (nextIndex >= boundary[0] && nextIndex <= boundary[1] && this.sandPileSideline[nextIndex] > this.sandPileSideline[index]) {
-			index = nextIndex;
-			nextIndex += inc;
-		}
-		this.sandToSandPile(index, index, rgb);
-	}
-
-	sandToSandPile(x, y, rgb) {
-		const overlayRgb = Math.floor( Math.random() * 256 );
-		const rgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha),
-		this.rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha),
-		this.rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), this.imgAlpha]
-
-		const index = databus.horizontal ? y : x;
-		this.sandPileSideline[index] -= 1;
-		if (this.sandPileSideline[index] == 0) {
-			this.corssZeroLineNum++;
-		}
-		databus.horizontal ? x = this.sandPileSideline[index] : y = this.sandPileSideline[index];
-		this.setImgData(x, y, rgba);
 	}
 
 	setImgData(x, y, rgba) {
@@ -175,6 +177,9 @@ export default class SandTable {
 	}
 
 	genSand() {
+		if (this.frame%3!=0) {
+			return
+		}
 		if (this.fullSandPile) {
 			this.resetSandSourcePnt();
 			tryRun(this.genSandEndCallback);
@@ -211,6 +216,62 @@ export default class SandTable {
 		}
 	}
 
+	getPole(nums, start, end, threshold) {
+		if (start >= end) {
+			return []
+		}
+		let minIndex = start;
+		for (let i=start+1; i<end; i++) {
+			if (nums[i] > nums[minIndex]) {
+				minIndex = i;
+			}
+		}
+
+		let leftPoleIndex = minIndex;
+		let leftPoleVal = -1;
+		for (let i=minIndex-1; i>=start; i--) {
+			const tmp = (nums[minIndex]-nums[i])*threshold - (minIndex-i)
+			if (tmp > leftPoleVal) {
+				leftPoleIndex = i;
+				leftPoleVal = tmp
+			}
+		}
+		if (leftPoleIndex-start < 2) {
+			leftPoleIndex = start;
+		}
+
+		let rightPoleIndex = minIndex;
+		let rightPoleVal = -1;
+		for (let i=minIndex+1; i<end; i++) {
+			const tmp = (nums[minIndex]-nums[i])*threshold - (i - minIndex)
+			if (tmp > rightPoleVal) {
+				rightPoleIndex = i;
+				rightPoleVal = tmp
+			}
+		}
+		if (end - rightPoleIndex -1 < 2) {
+			rightPoleIndex = end-1
+		}
+
+		const poles = new Array();
+		if (leftPoleIndex != minIndex) {
+			poles.push([minIndex, leftPoleIndex, -1])
+		}
+		if (minIndex != rightPoleIndex) {
+			poles.push([minIndex, rightPoleIndex, 1])
+		}
+
+		if (leftPoleIndex != start && leftPoleIndex != minIndex) {
+			poles.push(...this.getPole(nums, start, leftPoleIndex+1, threshold))
+		}
+
+		if (rightPoleIndex != end-1 && rightPoleIndex != minIndex) {
+			poles.push(...this.getPole(nums, rightPoleIndex, end, threshold))
+		}
+
+		return poles;
+	}
+
 	update() {
 		for (let i = this.sands.length-1; i >= 0; i--) {
 			const item = this.sands[i]
@@ -220,18 +281,54 @@ export default class SandTable {
 				databus.pool.recover('sand', item)
 			}
 		}
+
+		if (this.flowEndIndex == null || this.flowEndIndex == null) {
+			return;
+		}
+
+		const negatives = this.getPole(this.sandPileSideline, this.flowStartIndex, this.flowEndIndex, 5);
+		negatives.sort((function(m, n) {
+			if (this.sandPileSideline[n[0]] == this.sandPileSideline[m[0]]) {
+				return this.sandPileSideline[m[1]] - this.sandPileSideline[n[1]];
+			}
+			return this.sandPileSideline[n[0]] - this.sandPileSideline[m[0]];
+		}).bind(this))
+
+		this.resetFlowIndex();
+		for (const item of negatives) {
+			const [startIndex, endIndex, dir] = item;
+			for (let index=startIndex+dir; index!=endIndex+dir; index+=dir) {
+				if (this.sandPileSideline[index-dir]-2 < this.sandPileSideline[index]) {
+					continue;
+				}
+				for (let indexV=this.sandPileSideline[index-dir]-2; indexV>=this.sandPileSideline[index]; indexV--) {
+					this.exchange(index, indexV, index-dir, indexV+1)
+				}
+
+				const distance = this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1;
+				this.sandPileSideline[index] += distance;
+				this.sandPileSideline[index-dir] -= distance;
+			}
+
+			this.setFlowStartIndex(startIndex-dir);
+			this.setFlowEndIndex(startIndex-dir);
+
+			this.setFlowStartIndex(endIndex+dir);
+			this.setFlowEndIndex(endIndex+dir);
+		}
+	}
+
+	exchange(x1, y1, x2, y2) {
+		const dataIndex1 = 4 * (y1 * this.img.width	+ x1);
+		const dataIndex2 = 4 * (y2 * this.img.width	+ x2);
+		for (let i=0; i<4; i++) {
+			this.imgData[dataIndex2+i] = this.imgData[dataIndex1+i];
+			this.imgData[dataIndex1+i] = databus.bgRgba[i];
+		}
 	}
 
 	draw() {
 		this.ctx.putImageData(this.img, 0, 0);
-	}
-
-	rgbOverlay(c1, c2, a1, a2) {
-		return (c1*a1 + c2*a2 -c1*a1*a2)/(a1+a2-a1*a2)
-	}
-
-	alphaOverlay(a1, a2) {
-		return a1+a2-a1*a2;
 	}
 
 	touchStartHandler(x, y) {

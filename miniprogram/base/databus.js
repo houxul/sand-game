@@ -1,5 +1,5 @@
 import Pool from './pool'
-import { tryRun, equalColor, genUnsimilarColors } from './utils'
+import { tryRun, equalColor, genUnsimilarColors, alphaOverlay } from './utils'
 
 let instance
 
@@ -30,6 +30,7 @@ export default class DataBus {
 		this.notRepeatColor = false;
 		this.genSandNum = 40;
 		this.overlayAlpha = 0.08;
+		this.rgbAlpha = alphaOverlay(1, this.overlayAlpha) * 255
 		this.pickerRgbs = [];
 		this.linearGradientRgbs = [];
 		this.linearGradientLen = 500;
@@ -40,6 +41,7 @@ export default class DataBus {
 		this.bgRgba = [214, 214, 214, 214];
 		this.movementTrack = [];
 		this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
+
 		this.resetMovementTrack();
 
 		this.default = {
@@ -162,5 +164,12 @@ export default class DataBus {
 			this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i, 1]);
 		}
 		this.movementTrack[0].push(0);
+	}
+
+	get boundary() {
+		if (this.horizontal) {
+			[this.screenHeight, this.screenWidth]
+		}
+		return [this.screenWidth, this.screenHeight]
 	}
 }
