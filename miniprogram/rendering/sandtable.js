@@ -13,6 +13,7 @@ export default class SandTable {
 
 		this.img = this.ctx.createImageData(databus.screenWidth, databus.screenHeight);
 		this.imgData = this.img.data;
+		this.extendImgData = new Map();
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
 
 		this.sands = []
@@ -42,6 +43,7 @@ export default class SandTable {
 			this.imgData[i+2] = databus.bgRgba[2];
 			this.imgData[i+3] = databus.bgRgba[3];
 		}
+		this.extendImgData.clear();
 
 		this.resetFlowIndex();
 	}
@@ -122,7 +124,7 @@ export default class SandTable {
 	}
 
 	tryAddSandToSandPile(sand) {
-		if (!this.isCrossSandPileSideline(sand.preX, sand.preY)) {
+		if (!this.isCrossSandPileSideline(sand.preX, sand.preY) && sand.preX >= 0 && sand.preY>=0) {
 			this.setImgData(sand.preX, sand.preY, databus.bgRgba);
 		}
 
@@ -139,23 +141,37 @@ export default class SandTable {
 
 			this.setFlowEndIndex(index);
 			this.setFlowStartIndex(index);
-
 			return true;
 		}
 
-		this.setImgData(sandX, sandY, sand.rgba);
+		if (sandX>=0 && sandY>=0) {
+			this.setImgData(sandX, sandY, sand.rgba);
+		}
 		return false;
 	}
 
 	setImgData(x, y, rgba) {
-		if (x<0 || y < 0) {
+		if (x >= 0 && y >= 0) {
+			const dataIndex = 4 * (y * this.img.width + x)
+			this.imgData[dataIndex] = rgba[0]
+			this.imgData[dataIndex + 1] = rgba[1]
+			this.imgData[dataIndex + 2] = rgba[2]
+			this.imgData[dataIndex + 3] = rgba[3]
 			return
 		}
-		const dataIndex = 4 * (y * this.img.width	+ x)
-		this.imgData[dataIndex] = rgba[0]
-		this.imgData[dataIndex + 1] = rgba[1]
-		this.imgData[dataIndex + 2] = rgba[2]
-		this.imgData[dataIndex + 3] = rgba[3]
+
+		this.extendImgData.set(`${x}_${y}`, [rgba[0],rgba[1],rgba[2],rgba[3]]);
+	}
+
+	getImgData(x, y) {
+		if (x >= 0 && y >= 0) {
+			return {imgData: this.imgData, startIndex: 4 * (y * this.img.width + x)};
+		}
+
+		if (!this.extendImgData.has(`${x}_${y}`)) {
+			this.extendImgData.set(`${x}_${y}`, [databus.bgRgba[0],databus.bgRgba[1],databus.bgRgba[2],databus.bgRgba[3]]);
+		}
+		return {imgData: this.extendImgData.get(`${x}_${y}`), startIndex: 0};
 	}
 
 	genSand() {
@@ -198,7 +214,7 @@ export default class SandTable {
 		}
 
 		let leftPoleIndex = minIndex;
-		let leftPoleVal = -1;
+		let leftPoleVal = -9999;
 		for (let i=minIndex-1; i>=start; i--) {
 			const tmp = (nums[minIndex]-nums[i])*threshold - (minIndex-i)
 			if (tmp > leftPoleVal) {
@@ -211,7 +227,7 @@ export default class SandTable {
 		}
 
 		let rightPoleIndex = minIndex;
-		let rightPoleVal = -1;
+		let rightPoleVal = -9999;
 		for (let i=minIndex+1; i<end; i++) {
 			const tmp = (nums[minIndex]-nums[i])*threshold - (i - minIndex)
 			if (tmp > rightPoleVal) {
@@ -295,11 +311,11 @@ export default class SandTable {
 	}
 
 	exchange(x1, y1, x2, y2) {
-		const dataIndex1 = 4 * (y1 * this.img.width	+ x1);
-		const dataIndex2 = 4 * (y2 * this.img.width	+ x2);
+		const {imgData: imgData1, startIndex: startIndex1} = this.getImgData(x1, y1);
+		const {imgData: imgData2, startIndex: startIndex2} = this.getImgData(x2, y2);
 		for (let i=0; i<4; i++) {
-			this.imgData[dataIndex2+i] = this.imgData[dataIndex1+i];
-			this.imgData[dataIndex1+i] = databus.bgRgba[i];
+			imgData2[startIndex2+i] = imgData1[startIndex1+i];
+			imgData1[startIndex1+i] = databus.bgRgba[i];
 		}
 	}
 

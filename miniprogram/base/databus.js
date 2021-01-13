@@ -30,7 +30,7 @@ export default class DataBus {
 		this.notRepeatColor = false;
 		this.genSandNum = 20;
 		this.overlayAlpha = 0.08;
-		this.rgbAlpha = alphaOverlay(1, this.overlayAlpha) * 255
+		this.rgbAlpha = 255;//alphaOverlay(1, this.overlayAlpha) * 255
 		this.pickerRgbs = [];
 		this.linearGradientRgbs = [];
 		this.linearGradientLen = 500;

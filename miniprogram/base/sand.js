@@ -6,9 +6,9 @@ let databus = new DataBus()
 export default class Sand {
 	init(x, y, rgb, down) {
 		const overlayRgb = Math.floor( Math.random() * 256 );
-		this.rgba = [rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha),
-		rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha),
-		rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha), databus.rgbAlpha]
+		this.rgba = [Math.round(rgbOverlay(rgb[0], overlayRgb, 1, databus.overlayAlpha)),
+		Math.round(rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha)),
+		Math.round(rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha)), databus.rgbAlpha]
 
 		if (databus.horizontal) {
 			const yRandom = Math.random() * 10 - 5
