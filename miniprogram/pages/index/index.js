@@ -347,7 +347,7 @@ Page({
     horizontalScreenRestartActionHandler: function() {
 		databus.horizontal = !databus.horizontal;
 		databus.reset()
-		this.sandTable.reset();
+		this.sandTable.switchScreen(databus.horizontal)
 
 		this.data.menuActions[2].key = databus.horizontal ? '竖屏开始' : '横屏开始';
 		this.setData({

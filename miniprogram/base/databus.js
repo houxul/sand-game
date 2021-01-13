@@ -165,11 +165,4 @@ export default class DataBus {
 		}
 		this.movementTrack[0].push(0);
 	}
-
-	get boundary() {
-		if (this.horizontal) {
-			[this.screenHeight, this.screenWidth]
-		}
-		return [this.screenWidth, this.screenHeight]
-	}
 }

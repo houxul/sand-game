@@ -16,7 +16,7 @@ export default class SandTable {
 		this.sandPileSideline = new Array(this.img.height > this.img.width ? this.img.height : this.img.width);
 
 		this.sands = []
-		this.reset();
+		this.switchScreen(databus.horizontal);
 		this.resetSandSourcePnt();
 
 		this.frame = 0;
@@ -90,25 +90,14 @@ export default class SandTable {
 	// }
 
 	get fullSandPile() {
-		if (databus.horizontal) {
-			return (this.corssZeroLineNum == this.img.height)
-		} else {
-			return (this.corssZeroLineNum == this.img.width)
-		}
-	}
-
-	isCrossSandPileSideline(x,y) {
-		if (databus.horizontal) {
-			return this.sandPileSideline[y] <= x
-		}
-		return this.sandPileSideline[x] <= y
+		return this.corssZeroLineNum == this.boundary[0];
 	}
 
 	minAdjacentSideline(x, y) {
 		const step = 2
 		const index = databus.horizontal ? y : x;
 		const startIndex = max(index-step, 0);
-		const endIndex = min(index+step, databus.boundary[0]);
+		const endIndex = min(index+step, this.boundary[0]);
 		let minValIndex = index;
 		for (let i=startIndex; i<=endIndex; i++) {
 			const val = this.sandPileSideline[i] || -1
@@ -132,7 +121,7 @@ export default class SandTable {
 
 	setFlowEndIndex(index) {
 		if (this.flowEndIndex == null || this.flowEndIndex < index+1) {
-			this.flowEndIndex = min(index+1, databus.boundary[0]);
+			this.flowEndIndex = min(index+1, this.boundary[0]);
 		}
 	}
 
@@ -150,11 +139,7 @@ export default class SandTable {
 		if (this.isCrossSandPileSideline(sandX, sandY)) {
 			let index = this.minAdjacentSideline(sandX, sandY);
 			this.sandPileSideline[index]--;
-			if (databus.horizontal) {
-				this.setImgData(this.sandPileSideline[index], index, sand.rgba);
-			} else {
-				this.setImgData(index, this.sandPileSideline[index], sand.rgba);
-			}
+			this.setPileSideImgData(index, sand.rgba);
 
 			this.setFlowEndIndex(index);
 			this.setFlowStartIndex(index);
@@ -302,7 +287,7 @@ export default class SandTable {
 					continue;
 				}
 				for (let indexV=this.sandPileSideline[index-dir]-2; indexV>=this.sandPileSideline[index]; indexV--) {
-					this.exchange(index, indexV, index-dir, indexV+1)
+					this.exchangeImgData(index, indexV, index-dir, indexV+1)
 				}
 
 				const distance = this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1;
@@ -407,5 +392,56 @@ export default class SandTable {
 		this.movePnts = [];
 		this.sandSourcePnt = undefined;
 		this.autoGenSand = false;
+	}
+
+	switchScreen(horizontal) {
+		this.isCrossSandPileSideline = this.isCrossSandPileSidelineBuilder(horizontal).bind(this);
+		this.setPileSideImgData = this.setPileSideImgDataBuilder(horizontal).bind(this);
+		this.boundary = this.boundaryBuilder(horizontal);
+		this.exchangeImgData = this.exchangeImgDataBuilder(horizontal).bind(this);
+
+		this.reset();
+	}
+
+	isCrossSandPileSidelineBuilder(horizontal) {
+		if (horizontal) {
+			return function(x, y) {
+				return this.sandPileSideline[y] <= x;
+			}
+		}
+		return function(x, y) {
+			return this.sandPileSideline[x] <= y;
+		}
+	}
+
+	setPileSideImgDataBuilder(horizontal) {
+		if (horizontal) {
+			return function(index, rgba) {
+				this.setImgData(this.sandPileSideline[index], index, rgba);
+			}
+		}
+
+		return function(index, rgba) {
+			this.setImgData(index, this.sandPileSideline[index], rgba);
+		}
+	}
+
+	exchangeImgDataBuilder(horizontal) {
+		if (horizontal) {
+			return function(index1, indexVal1, index2, indexVal2) {
+				this.exchange(indexVal1, index1, indexVal2, index2);
+			}
+		}
+
+		return function(index1, indexVal1, index2, indexVal2) {
+			this.exchange(index1, indexVal1, index2, indexVal2);
+		}
+	}
+
+	boundaryBuilder(horizontal) {
+		if (horizontal) {
+			return [this.img.height, this.img.width];
+		}
+		return [this.img.width, this.img.height];
 	}
 }
