@@ -11,7 +11,7 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		sandNumInterval: [5, 140],
+		sandNumInterval: [5, 40],
 		colorChangeSpeedInterval: [1, 200],
 		movementTrackCanvasSize: [150* databus.screenWidth/databus.screenHeight, 150]
 	},
