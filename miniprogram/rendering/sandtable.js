@@ -180,19 +180,10 @@ export default class SandTable {
 			sandSourcePnt = this.movePnts.shift();
 		}
 		let {x, y} = sandSourcePnt;
-		x = Math.floor(x)
-		y = Math.floor(y)
-		let cross = false;
-		if (databus.horizontal) {
-			cross = this.sandPileSideline[y] <= x
-			x = cross ? this.sandPileSideline[y] -1 : x
-		} else {
-			cross = this.sandPileSideline[x] <= y
-			y = cross ? this.sandPileSideline[x] -1 : y
-		}
+		const res = this.adjustGenSandPnt(x, y)
 		for (let i=0; i<databus.genSandNum; i++) {
 			const sand = databus.pool.getItemByClass('sand', Sand)
-			sand.init(x, y, databus.sandFrameColor, !cross)
+			sand.init(res[0], res[1], databus.sandFrameColor, !res[2])
 			this.sands.push(sand)
 		}
 
@@ -399,6 +390,7 @@ export default class SandTable {
 		this.setPileSideImgData = this.setPileSideImgDataBuilder(horizontal).bind(this);
 		this.boundary = this.boundaryBuilder(horizontal);
 		this.exchangeImgData = this.exchangeImgDataBuilder(horizontal).bind(this);
+		this.adjustGenSandPnt = this.adjustGenSandPntBuilder(horizontal).bind(this);
 
 		this.reset();
 	}
@@ -443,5 +435,21 @@ export default class SandTable {
 			return [this.img.height, this.img.width];
 		}
 		return [this.img.width, this.img.height];
+	}
+
+	adjustGenSandPntBuilder(horizontal) {
+		if (horizontal) {
+			return function(x, y) {
+				const cross = this.sandPileSideline[y] - 30 < x;
+				x = cross ? this.sandPileSideline[y] - 30 : Math.floor(x);
+				return [x, Math.floor(y), cross];
+			}
+		}
+
+		return function(x, y) {
+			const cross = this.sandPileSideline[x] -30 < y;
+			y = cross ? this.sandPileSideline[x] -30 : Math.floor(y);
+			return [Math.floor(x), y, cross];
+		}
 	}
 }

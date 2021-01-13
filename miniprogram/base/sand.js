@@ -20,7 +20,7 @@ export default class Sand {
 			}
 	
 			this.vx = (down ? 7 : -7) * Math.random();
-			this.acceleration = 0.65
+			this.acceleration = 0.4
 		} else {
 			const xRandom = Math.random() * 10 - 5
 			this.x = x + xRandom
