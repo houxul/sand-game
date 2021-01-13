@@ -93,7 +93,7 @@ export default class SandTable {
 		const step = 2
 		const index = databus.horizontal ? y : x;
 		const startIndex = max(index-step, 0);
-		const endIndex = min(index+step, this.coordinateBoundary[0]);
+		const endIndex = min(index+step, this.coordinateBoundary[0]-1);
 		let minValIndex = index;
 		for (let i=startIndex; i<=endIndex; i++) {
 			const val = this.sandPileSideline[i] || -1
