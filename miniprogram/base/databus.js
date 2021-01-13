@@ -28,7 +28,7 @@ export default class DataBus {
 		this.sandFrame	= 0
 		this.autoDownSandFrame = 0;
 		this.notRepeatColor = false;
-		this.genSandNum = 40;
+		this.genSandNum = 20;
 		this.overlayAlpha = 0.08;
 		this.rgbAlpha = alphaOverlay(1, this.overlayAlpha) * 255
 		this.pickerRgbs = [];

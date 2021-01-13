@@ -19,7 +19,6 @@ export default class SandTable {
 		this.switchScreen(databus.horizontal);
 		this.resetSandSourcePnt();
 
-		this.frame = 0;
 		this.bindLoop = (() => {
 			this.frame+=1;
 			this.genSand();
@@ -36,6 +35,7 @@ export default class SandTable {
 		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
 		this.sandPileSideline.fill(defaultValue);
 		this.fullSandPile = false;
+		this.frame = 0;
 		for (let i=0; i< this.imgData.length; i+=4) {
 			this.imgData[i] = databus.bgRgba[0];
 			this.imgData[i+1] = databus.bgRgba[1];
@@ -126,9 +126,9 @@ export default class SandTable {
 			this.setImgData(sand.preX, sand.preY, databus.bgRgba);
 		}
 
-		// if (sand.crossBorder) {
-		// 	return true
-		// }
+		if (sand.crossBorder) {
+			return true
+		}
 
 		const sandX = sand.curX;
 		const sandY = sand.curY;
@@ -159,17 +159,14 @@ export default class SandTable {
 	}
 
 	genSand() {
-		if (this.frame%3!=0) {
+		if (!this.movePnts.length && !this.sandSourcePnt) {
 			return
 		}
+
 		if (this.fullSandPile) {
 			this.resetSandSourcePnt();
 			tryRun(this.genSandEndCallback);
 			return;
-		}
-
-		if (!this.movePnts.length && !this.sandSourcePnt) {
-			return
 		}
 
 		let sandSourcePnt = this.sandSourcePnt;
@@ -443,16 +440,20 @@ export default class SandTable {
 	adjustGenSandPntBuilder(horizontal) {
 		if (horizontal) {
 			return function(x, y) {
+				x = Math.floor(y)
+				y = Math.floor(y)
 				const cross = this.sandPileSideline[y] - 30 < x;
-				x = cross ? this.sandPileSideline[y] - 30 : Math.floor(x);
-				return [x, Math.floor(y), cross];
+				x = cross ? this.sandPileSideline[y] - 30 : x;
+				return [x, y, cross];
 			}
 		}
 
 		return function(x, y) {
+			x = Math.floor(x)
+			y = Math.floor(y)
 			const cross = this.sandPileSideline[x] -30 < y;
-			y = cross ? this.sandPileSideline[x] -30 : Math.floor(y);
-			return [Math.floor(x), y, cross];
+			y = cross ? this.sandPileSideline[x] -30 : y;
+			return [x, y, cross];
 		}
 	}
 }
