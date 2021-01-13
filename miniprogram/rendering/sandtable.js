@@ -35,7 +35,7 @@ export default class SandTable {
 	async reset() {
 		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
 		this.sandPileSideline.fill(defaultValue);
-		this.corssZeroLineNum = 0;
+		this.fullSandPile = false;
 		for (let i=0; i< this.imgData.length; i+=4) {
 			this.imgData[i] = databus.bgRgba[0];
 			this.imgData[i+1] = databus.bgRgba[1];
@@ -89,15 +89,11 @@ export default class SandTable {
 	//	 }
 	// }
 
-	get fullSandPile() {
-		return this.corssZeroLineNum == this.boundary[0];
-	}
-
 	minAdjacentSideline(x, y) {
 		const step = 2
 		const index = databus.horizontal ? y : x;
 		const startIndex = max(index-step, 0);
-		const endIndex = min(index+step, this.boundary[0]);
+		const endIndex = min(index+step, this.coordinateBoundary[0]);
 		let minValIndex = index;
 		for (let i=startIndex; i<=endIndex; i++) {
 			const val = this.sandPileSideline[i] || -1
@@ -121,7 +117,7 @@ export default class SandTable {
 
 	setFlowEndIndex(index) {
 		if (this.flowEndIndex == null || this.flowEndIndex < index+1) {
-			this.flowEndIndex = min(index+1, this.boundary[0]);
+			this.flowEndIndex = min(index+1, this.coordinateBoundary[0]);
 		}
 	}
 
@@ -143,6 +139,7 @@ export default class SandTable {
 
 			this.setFlowEndIndex(index);
 			this.setFlowStartIndex(index);
+
 			return true;
 		}
 
@@ -263,14 +260,20 @@ export default class SandTable {
 		}
 
 		const poles = this.getPole(this.sandPileSideline, this.flowStartIndex, this.flowEndIndex, 5);
+		this.resetFlowIndex();
 		poles.sort((function(m, n) {
 			if (this.sandPileSideline[n[0]] == this.sandPileSideline[m[0]]) {
 				return this.sandPileSideline[m[1]] - this.sandPileSideline[n[1]];
 			}
 			return this.sandPileSideline[n[0]] - this.sandPileSideline[m[0]];
 		}).bind(this))
+		if (poles.length == 0) {
+			return;
+		}
+		if (this.sandPileSideline[poles[0][0]] <= 0) {
+			this.fullSandPile = true;
+		}
 
-		this.resetFlowIndex();
 		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
 			for (let index=startIndex+dir; index!=endIndex+dir; index+=dir) {
@@ -388,7 +391,7 @@ export default class SandTable {
 	switchScreen(horizontal) {
 		this.isCrossSandPileSideline = this.isCrossSandPileSidelineBuilder(horizontal).bind(this);
 		this.setPileSideImgData = this.setPileSideImgDataBuilder(horizontal).bind(this);
-		this.boundary = this.boundaryBuilder(horizontal);
+		this.coordinateBoundary = this.coordinateBoundaryBuilder(horizontal);
 		this.exchangeImgData = this.exchangeImgDataBuilder(horizontal).bind(this);
 		this.adjustGenSandPnt = this.adjustGenSandPntBuilder(horizontal).bind(this);
 
@@ -430,7 +433,7 @@ export default class SandTable {
 		}
 	}
 
-	boundaryBuilder(horizontal) {
+	coordinateBoundaryBuilder(horizontal) {
 		if (horizontal) {
 			return [this.img.height, this.img.width];
 		}
