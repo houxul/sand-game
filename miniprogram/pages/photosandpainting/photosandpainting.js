@@ -1,7 +1,5 @@
 // miniprogram/pages/photosandpainting/photosandpainting.js
-import DataBus from '../../base/databus'
-
-let databus = new DataBus()
+import SandPhoto from '../../rendering/sandphoto'
 
 Page({
 
@@ -14,24 +12,8 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		this.overlayAlpha = 0.1
-		this.file = options.file;//'../../images/unnamed.jpg';
-		wx.getImageInfo({
-			src: this.file,
-			success: ((res) => {
-				this.oriImgWidth = res.width;
-				this.oriImgHeight = res.height;
-				this.setData({
-					imgWidth: databus.screenWidth,
-					imgHeight: res.height * databus.screenWidth/res.width,
-				})
-			}).bind(this),
-			fail(err) {
-				console.log(err)
-				wx.showToast({title: '获取照片尺寸失败，请重试', icon: 'none'})
-			}
-		})
-
+		this.file = options.file;
+		// this.file = '../../images/unnamed7.jpg';
 		this.setData({img: this.file, showMask: true});
 	},
 
@@ -39,8 +21,6 @@ Page({
 	 * 生命周期函数--监听页面初次渲染完成
 	 */
 	onReady: function () {
-		this.imgAlpha = this.alphaOverlay(1, this.overlayAlpha) * 255;
-
 		wx.createSelectorQuery()
 		.select('#img').fields({
 			rect: true,
@@ -54,60 +34,24 @@ Page({
 			})
 		}).exec();
 
-
 		wx.createSelectorQuery()
 		.select('#canvas')
 		.node(((res) => {
-			const canvas = res.node;
-			this.canvas = canvas;
-			canvas.width = this.oriImgWidth;
-			canvas.height = this.oriImgHeight;
+			const sandPhoto = new SandPhoto();
+			sandPhoto.progress = (function(val) {
+				this.setData({ progress:val });
+			}).bind(this);
 
-			const ctx = canvas.getContext('2d');
-			const img = canvas.createImage();
-			img.onload = (res) => {
-				ctx.drawImage(img, 0, 0);
-				const oldImgData = ctx.getImageData(0, 0, this.oriImgWidth, this.oriImgHeight).data;
-				const newImg = ctx.createImageData(this.oriImgWidth, this.oriImgHeight);
-				// const newImgData = newImg.data;
-				const radius = 3;
-				for (let x=radius; x<this.oriImgWidth-radius; x++) {
-					for (let y=radius; y<this.oriImgHeight-radius; y++) {
-						let randomX = x - Math.floor( Math.random() * 2 * radius) - radius
-						let randomY = y - Math.floor( Math.random() * 2 * radius) - radius
-						
-						const dataIndex = 4 * (randomY * newImg.width  + randomX)
-						const rgb = [oldImgData[dataIndex], oldImgData[dataIndex+1], oldImgData[dataIndex+2]]
-						const overlayRgb = Math.floor( Math.random() * 256 );
-						const newRgba = [this.rgbOverlay(rgb[0], overlayRgb, 1, this.overlayAlpha), 
-							this.rgbOverlay(rgb[1], overlayRgb, 1, this.overlayAlpha), 
-							this.rgbOverlay(rgb[2], overlayRgb, 1, this.overlayAlpha), this.imgAlpha]
-						  this.setImgData(newImg, x, y, newRgba);
-					}
-
-					this.setData({progressPercent: x*100/this.oriImgWidth});
+			sandPhoto.done = (function(res) {
+				if (res.filePath) {
+					this.setData({img: res.filePath, showMask:false});
+					wx.showToast({title: '成功'});
+				} else {
+					wx.showToast({title: '失败', icon: 'none'});
+					console.log(res.err);
 				}
-
-				ctx.clearRect(0, 0, this.oriImgWidth, this.oriImgHeight);
-				ctx.putImageData(newImg, 0, 0);
-				wx.canvasToTempFilePath({
-					canvas,
-					success: ((res) => {
-						const tempFilePath = res.tempFilePath;
-						this.setData({img: tempFilePath, showMask:false});
-						wx.showToast({title: '成功'})
-					}).bind(this),
-					fail(err) {
-						console.log(err)
-						wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
-					}
-				}, this)
-			}
-			img.onerror = (res) => {
-				wx.showToast({title:'加载图片失败，请重试', icon: 'none'})
-			}
-			img.src = this.file;
-
+			}).bind(this);
+			sandPhoto.exec({canvas: res.node, imgPath: this.file});
 		}).bind(this)).exec();
 	},
 
@@ -151,22 +95,6 @@ Page({
 	 */
 	onShareAppMessage: function () {
 
-	},
-
-	rgbOverlay: function(c1, c2, a1, a2) {
-		return (c1*a1 + c2*a2 -c1*a1*a2)/(a1+a2-a1*a2)
-	},
-	
-	alphaOverlay: function(a1, a2) {
-		return a1+a2-a1*a2;
-	},
-
-	setImgData: function(img, x, y, rgba) {
-		const dataIndex = 4 * (y * img.width  + x)
-		img.data[dataIndex] = rgba[0]
-		img.data[dataIndex + 1] = rgba[1]
-		img.data[dataIndex + 2] = rgba[2]
-		img.data[dataIndex + 3] = rgba[3]
 	},
 
 	onClickImg: function() {

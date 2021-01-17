@@ -28,6 +28,7 @@
 					wx:for="{{menuActions}}" 
 					wx:key="key"
 					data-index="{{index}}"
+					data-key="{{item.key}}"
 					bindtap="onMenuAction">
 					<cover-image class="menu-action-item-icon" src="{{item.icon}}"/>
 					<cover-view class="menu-action-item-key">{{item.key}}</cover-view>
