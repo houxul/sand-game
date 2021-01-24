@@ -66,13 +66,6 @@ Page({
 		this.loadSandpaintings();
 	},
 
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
-
-	},
-
 	loadSandpaintings: function() {
 		const sandpaintings = this.data.sandpaintings;
 		let count = 0

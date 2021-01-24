@@ -268,7 +268,7 @@ export default class SandTable {
 			}
 		}
 
-		if (this.flowEndIndex == null || this.flowEndIndex == null) {
+		if (this.flowStartIndex == null || this.flowEndIndex == null) {
 			return;
 		}
 
@@ -289,6 +289,7 @@ export default class SandTable {
 
 		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
+			const fillIn = dir > 0 ? 0 : 1;
 			for (let index=startIndex+dir; index!=endIndex+dir; index+=dir) {
 				if (this.sandPileSideline[index-dir]-2 < this.sandPileSideline[index]) {
 					continue;
@@ -300,13 +301,10 @@ export default class SandTable {
 				const distance = this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1;
 				this.sandPileSideline[index] += distance;
 				this.sandPileSideline[index-dir] -= distance;
+
+				this.setFlowStartIndex(index-1 + fillIn);
+				this.setFlowEndIndex(index+1 + fillIn);
 			}
-
-			this.setFlowStartIndex(startIndex-dir);
-			this.setFlowEndIndex(startIndex-dir);
-
-			this.setFlowStartIndex(endIndex+dir);
-			this.setFlowEndIndex(endIndex+dir);
 		}
 	}
 
