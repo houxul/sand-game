@@ -199,3 +199,7 @@ export function rgbOverlay(c1, c2, a1, a2) {
 export function alphaOverlay(a1, a2) {
 	return a1+a2-a1*a2;
 }
+
+export function envVersion() {
+	return wx.getAccountInfoSync().miniProgram.envVersion;
+}
