@@ -122,13 +122,6 @@ Page({
 
 	},
 
-	/**
-	 * 用户点击右上角分享
-	 */
-	onShareAppMessage: function () {
-
-	},
-
 	initRotateImage: function(res) {
 		const canvas = res.node;
 		this.rotateImage = new RotateImage({canvas});
