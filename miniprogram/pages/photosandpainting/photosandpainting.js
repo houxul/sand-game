@@ -6,7 +6,9 @@ Page({
 	/**
 	 * 页面的初始数据
 	 */
-	data: {},
+	data: {
+		disabled: false,
+	},
 
 	/**
 	 * 生命周期函数--监听页面加载
@@ -37,12 +39,16 @@ Page({
 		.node(((res) => {
 			const sandPhoto = new SandPhoto(res.node);
 			sandPhoto.progress = (function(val) {
+				if (val >= 90) {
+					this.setData({ progress:val, disabled: true});
+					return;
+				}
 				this.setData({ progress:val });
 			}).bind(this);
 
 			sandPhoto.done = (function(res) {
 				if (res.filePath) {
-					this.setData({img: res.filePath, showMask:false});
+					this.setData({img: res.filePath, showMask:false, disabled: false});
 					wx.showToast({title: '成功'});
 				} else {
 					wx.showToast({title: '失败', icon: 'none'});
@@ -101,18 +107,18 @@ Page({
 		})
 	},
 
-	cancelSelect: function() {
-		// TODO 
-		this.setData({showMask: false});
+	onCancel: function() {
+		this.sandPhoto.abort();
+		this.setData({showMask: false, disabled: false});
 	},
 
-	selectIamge: function() {
+	onSelectIamge: function() {
 		wx.chooseImage({
 			count: 1,
 			sizeType: ['original', 'compressed'],
 			sourceType: ['album', 'camera'],
 			success: (function(res) {
-				this.setData({img:res.tempFilePaths[0], showMask: true});
+				this.setData({img:res.tempFilePaths[0], showMask: true, progress: 0});
 				this.sandPhoto.exec(res.tempFilePaths[0]);
 			}).bind(this),
 		})

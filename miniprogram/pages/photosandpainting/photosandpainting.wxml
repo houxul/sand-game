@@ -3,8 +3,8 @@
 <view class="img-view">
 	<image id="img" src="{{img}}" mode="aspectFit" style="width: 96%; margin: 0 auto;"
 	bindtap="onClickImg"/>
-	<button plain="true" type="warn" wx:if="{{showMask}}" bindtap="cancelSelect" style="margin-top: 16px;">取消</button>
-	<button plain="true" type="primary" wx:else bindtap="selectIamge" style="margin-top: 16px;">选择照片</button>
+	<button plain="true" disabled="{{disabled}}" type="warn" wx:if="{{showMask}}" bindtap="onCancel" style="margin-top: 16px;">取消</button>
+	<button plain="true" type="primary" wx:else bindtap="onSelectIamge" style="margin-top: 16px;">选择照片</button>
 </view>
 <view wx:if="{{showMask}}" class="progress-view" 
 	style="top:{{imgTop}}px; left:{{imgLeft}}px; width:{{imgWidth}}px; height:{{imgHeight}}px">
