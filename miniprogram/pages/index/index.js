@@ -38,7 +38,7 @@ Page({
 			{icon: "../../images/restart.png", key:"重新开始"},
 			{icon: "../../images/landscape.png", key:"横屏开始"},
 			{icon: "../../images/my.png", key:"我的作品"},
-			// {icon: "../../images/picture.png", key:"照片沙绘"},
+			{icon: "../../images/picture.png", key:"照片沙绘"},
 			{icon: "../../images/newest.png", key:"最新沙绘"},
 			{icon: "../../images/fire.png", key:"热门沙绘"},
 			{icon: "../../images/setting.png", key:"设置"},
@@ -232,31 +232,34 @@ Page({
 	},
 
 	onMenuAction: function(event) {
-		const index = event.currentTarget.dataset.index;
-		switch(index) {
-			case 0:
+		//const index = event.currentTarget.dataset.index;
+		const key = event.currentTarget.dataset.key;
+		switch(key) {
+			case '完成绘制':
 				this.finishActionHandler();
 				break;
-			case 1:
+			case '重新开始':
 				this.restartActionHandler();
 				break;
-			case 2:
+			case '横屏开始':
 				this.horizontalScreenRestartActionHandler();
 				break;
-			case 3:
+			case '我的作品':
 				this.mySandPaintingActionHandler();
 				break;
-			case 4:
-				// this.photoSandPaintingActionHandler();
+			case '照片沙绘':
+				this.photoSandPaintingActionHandler();
+				break;
+			case '最新沙绘':
 				this.newestSandPaintingActionHandler();
 				break;
-			case 5:
+			case '热门沙绘':
 				this.hotActionHandler();
 				break;
-			case 6:
+			case '设置':
 				this.settingActionHandler();
 				break;
-			case 7:
+			case '帮助':
 				this.helpActionHandler();
 				break;
 		}
@@ -369,15 +372,7 @@ Page({
 
     photoSandPaintingActionHandler: function() {
 		this.setData({menuLeft: databus.screenWidth});
-		wx.chooseImage({
-			count: 1,
-			sizeType: ['original', 'compressed'],
-			sourceType: ['album', 'camera'],
-			success (res) {
-				const tempFilePath = res.tempFilePaths[0];
-				wx.navigateTo({url: '/pages/photosandpainting/photosandpainting?file='+tempFilePath})
-			}
-		})
+		wx.navigateTo({url: '/pages/photosandpainting/photosandpainting'})
 	},
 
 	newestSandPaintingActionHandler: function() {
