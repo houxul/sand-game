@@ -372,15 +372,7 @@ Page({
 
     photoSandPaintingActionHandler: function() {
 		this.setData({menuLeft: databus.screenWidth});
-		wx.chooseImage({
-			count: 1,
-			sizeType: ['original', 'compressed'],
-			sourceType: ['album', 'camera'],
-			success (res) {
-				const tempFilePath = res.tempFilePaths[0];
-				wx.navigateTo({url: '/pages/photosandpainting/photosandpainting?file='+tempFilePath})
-			}
-		})
+		wx.navigateTo({url: '/pages/photosandpainting/photosandpainting'})
 	},
 
 	newestSandPaintingActionHandler: function() {

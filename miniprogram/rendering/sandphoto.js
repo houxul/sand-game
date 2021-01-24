@@ -5,17 +5,18 @@ import {min, max, rgbOverlay} from '../base/utils'
 let databus = new DataBus()
 
 export default class SandPhoto {
-	async exec(options) {
-		this.canvas = options.canvas;
-		this.imgPath = options.imgPath;
+	constructor(canvas) {
+		this.canvas = canvas;
+		this.ctx = this.canvas.getContext('2d');
 		this.xStep = 12;
 		this.yStep = 12;
-		this.frame = 0;
+	}
 
-		const res = await this.getImageInfo(this.imgPath);
-		this.initCanvas(res);
+	async exec(imgPath) {
+		const res = await this.getImageInfo(imgPath);
+		this.setCanvasSize(res);
 
-		this.img = await this.getOriginImage(this.canvas, this.imgPath);
+		this.img = await this.getOriginImage(this.canvas, imgPath);
 		this.fillRgbs = this.genFillRgbs(this.img);
 		this.photoSand();
 	}
@@ -51,12 +52,11 @@ export default class SandPhoto {
 		});
 	}
 
-	initCanvas(res) {
+	setCanvasSize(res) {
 		this.imgWidth = Math.floor(res.width/this.xStep)*this.xStep;
 		this.imgHeight = Math.floor(res.height/this.yStep)*this.yStep;
 		this.canvas.width = this.imgWidth;
 		this.canvas.height = this.imgHeight;
-		this.ctx = this.canvas.getContext('2d');
 		this.sandPileSideline = new Array(this.imgWidth).fill(this.imgHeight);
 	}
 

@@ -12,9 +12,7 @@ Page({
 	 * 生命周期函数--监听页面加载
 	 */
 	onLoad: function (options) {
-		this.file = options.file;
-		// this.file = '../../images/unnamed7.jpg';
-		this.setData({img: this.file, showMask: true});
+		this.setData({img: '../../images/placeholder.jpg', showMask: false});
 	},
 
 	/**
@@ -37,7 +35,7 @@ Page({
 		wx.createSelectorQuery()
 		.select('#canvas')
 		.node(((res) => {
-			const sandPhoto = new SandPhoto();
+			const sandPhoto = new SandPhoto(res.node);
 			sandPhoto.progress = (function(val) {
 				this.setData({ progress:val });
 			}).bind(this);
@@ -51,7 +49,7 @@ Page({
 					console.log(res.err);
 				}
 			}).bind(this);
-			sandPhoto.exec({canvas: res.node, imgPath: this.file});
+			this.sandPhoto = sandPhoto;
 		}).bind(this)).exec();
 	},
 
@@ -101,5 +99,22 @@ Page({
 		wx.previewImage({
 		  urls: [this.data.img],
 		})
-	}
+	},
+
+	cancelSelect: function() {
+		// TODO 
+		this.setData({showMask: false});
+	},
+
+	selectIamge: function() {
+		wx.chooseImage({
+			count: 1,
+			sizeType: ['original', 'compressed'],
+			sourceType: ['album', 'camera'],
+			success: (function(res) {
+				this.setData({img:res.tempFilePaths[0], showMask: true});
+				this.sandPhoto.exec(res.tempFilePaths[0]);
+			}).bind(this),
+		})
+	},
 })
