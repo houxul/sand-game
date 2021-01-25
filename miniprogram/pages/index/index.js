@@ -4,7 +4,7 @@ import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
 import ColorBoard from '../../rendering/colorboard'
-import { guid, rgbToStr, hasColors, colorsId } from '../../base/utils'
+import { guid, rgbToStr, hasColors, colorsId, wrapReject } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -274,15 +274,8 @@ Page({
 		this.finishSandTable();		
 	},
 
-	finishSandTable: function() {
+	finishSandTable: async function() {
 		wx.showLoading({title: '正在保存'});
-		const finishCallback = (function() {
-			databus.reset()
-			this.sandTable.reset();
-			this.data.menuActions[3].tip = '../../images/new-msg.png';
-			this.setData({menuActions: this.data.menuActions});
-			wx.hideLoading();
-		}).bind(this);
 	
 		let canvas = this.sandTable.canvas;
 		if (databus.horizontal) {
@@ -290,39 +283,40 @@ Page({
 			canvas = this.rotateImage.canvas;
 		}
 
-		wx.canvasToTempFilePath({
-			canvas,
-			success(res) {
-				const tempFilePath = res.tempFilePath;
-				const fs = wx.getFileSystemManager()
-				fs.saveFile({
-					tempFilePath: tempFilePath,
-					success(res) {
-						const savedFilePath = res.savedFilePath;
-						const sandpaintings = wx.getStorageSync('sandpaintings') || [];
-						sandpaintings.push({
-							id: guid(),
-							localPath: savedFilePath,
-							horizontal: databus.horizontal,
-							upload: false,
-							width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
-							height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
-							createdAt: new Date().getTime(),
-						})
-						wx.setStorageSync('sandpaintings', sandpaintings);
-						finishCallback();
-					},
-					fail(err) {
-						console.log(err)
-						wx.showToast({title:'保存本地失败，请重试', icon: 'none'})		
-					}
-				});
-			},
-			fail(err) {
-				console.log(err)
-				wx.showToast({title:'生成图片失败，请重试', icon: 'none'})
-			}
-		}, this)
+		const { tempFilePath } = await new Promise((resolve, reject) => {
+			wx.canvasToTempFilePath({
+				canvas,
+				success: resolve,
+				fail: wrapReject(reject, '生成图片失败，请重试'),
+			}, this)
+		});
+		
+		const { savedFilePath } = await new Promise((resolve, reject) => {
+			const fs = wx.getFileSystemManager()
+			fs.saveFile({
+				tempFilePath,
+				success: resolve,
+				fail: wrapReject(reject, '保存本地失败，请重试'),
+			});
+		});
+
+		const sandpaintings = wx.getStorageSync('sandpaintings') || [];
+		sandpaintings.push({
+			id: guid(),
+			localPath: savedFilePath,
+			horizontal: databus.horizontal,
+			upload: false,
+			width: databus.horizontal ? databus.screenHeight : databus.screenWidth,
+			height: databus.horizontal ? databus.screenWidth : databus.screenHeight,
+			createdAt: new Date().getTime(),
+		})
+		wx.setStorageSync('sandpaintings', sandpaintings);
+
+		databus.reset()
+		this.sandTable.reset();
+		this.data.menuActions[3].tip = '../../images/new-msg.png';
+		this.setData({menuActions: this.data.menuActions});
+		wx.hideLoading();
 	},
 
     restartActionHandler: function() {
