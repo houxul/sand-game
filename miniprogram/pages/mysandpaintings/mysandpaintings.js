@@ -1,5 +1,6 @@
 // miniprogram/pages/mysandpaintings/mysandpaintings.js
 import DataBus from '../../base/databus'
+import { wrapReject } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -88,68 +89,70 @@ Page({
 		}, true);
 	},
 
-	onUploadClick: function(event) {
-		wx.showModal({
-			title: '提示',
-			content: '上传后其他用户可以看到此作品',
-			success: ((res) => {
-				if (!res.confirm) {
-					return
-				}
-				const userInfo = wx.getStorageSync('userInfo');
-				if (!userInfo) {
-					wx.showToast({icon: 'none',title: '需要回到首页，点击 菜单-头像 获取头像做展示用'})
-					return
-				}
+	onUploadClick: async function(event) {
+		const { confirm } = await new Promise((resolve, reject) => {
+			wx.showModal({
+				title: '提示',
+				content: '上传后其他用户可以看到此作品',
+				success: resolve,
+				fail: wrapReject(reject, '上传文件失败，请重试'),
+			})
+		});
 
-				wx.showLoading({title: '上传中...'})
-				const index = event.currentTarget.dataset.index;
-				const item = this.data.sandpaintings[index];
-				wx.cloud.uploadFile({
-					cloudPath: item.id + '.png',
-					filePath: item.localPath,
-					success: (res) => {
-						const db = wx.cloud.database()
-						db.collection('sandpaintings').add({
-							data: {
-								_id: item.id,
-								fileId: res.fileID,
-								userAvatarUrl: userInfo.avatarUrl,
-								userNickName: userInfo.nickName,
-								horizontal: item.horizontal,
-								width: item.width,
-								height: item.height,
-								likes: 0,
-								createdAt: new Date().getTime(),
-							},
-							success: (res) => {
-								const sandpaintings = wx.getStorageSync('sandpaintings');
-								for (let i=0; i<sandpaintings.length; i++) {
-									if (sandpaintings[i].id == item.id) {
-										sandpaintings[i].upload = true;
-										break;
-									}
-								}
-								wx.setStorageSync('sandpaintings', sandpaintings);
+		if (!confirm) {
+			return
+		}
 
-								this.data.sandpaintings[index].upload = true;
-								this.setData({sandpaintings: this.data.sandpaintings});
+		const userInfo = wx.getStorageSync('userInfo');
+		if (!userInfo) {
+			wx.showToast({icon: 'none',title: '需要回到首页，点击 菜单-头像 获取头像做展示用'})
+			return
+		}
 
-								wx.showToast({title: '成功'})
-							},
-							fail: (err) => {
-								console.log(err)
-								wx.showToast({icon: 'none',title: '新增记录失败，请重试'})
-							}
-						})
-					},
-					fail: (err) => {
-						console.log(err)
-						wx.showToast({icon: 'none',title: '上传文件失败，请重试'})
-					}
-				})
-			}).bind(this),
-		})
+		wx.showLoading({title: '上传中...'})
+		const index = event.currentTarget.dataset.index;
+		const item = this.data.sandpaintings[index];
+		const { fileID } = await new Promise((resolve, reject) => {
+			wx.cloud.uploadFile({
+				cloudPath: item.id + '.png',
+				filePath: item.localPath,
+				success: resolve,
+				fail: wrapReject(reject, '新增记录失败，请重试')
+			})
+		});
+
+		const db = wx.cloud.database()
+		await new Promise((resolve, reject) => {
+			db.collection('sandpaintings').add({
+				data: {
+					_id: item.id,
+					fileId: fileID,
+					userAvatarUrl: userInfo.avatarUrl,
+					userNickName: userInfo.nickName,
+					horizontal: item.horizontal,
+					width: item.width,
+					height: item.height,
+					likes: 0,
+					createdAt: new Date().getTime(),
+				},
+				success: resolve,
+				fail: wrapReject(reject, '新增记录失败，请重试')
+			});
+		});
+
+		const sandpaintings = wx.getStorageSync('sandpaintings');
+		for (let i=0; i<sandpaintings.length; i++) {
+			if (sandpaintings[i].id == item.id) {
+				sandpaintings[i].upload = true;
+				break;
+			}
+		}
+		wx.setStorageSync('sandpaintings', sandpaintings);
+
+		this.data.sandpaintings[index].upload = true;
+		this.setData({sandpaintings: this.data.sandpaintings});
+
+		wx.showToast({title: '成功'})
 	},
 
 	onShareAppMessage: function (res) {
@@ -168,59 +171,63 @@ Page({
 		}
 	},
 
-	onDeleteClick: function(event) {
-		wx.showModal({
-			title: '提示',
-			content: '删除后将作品将无法恢复，是否删除',
-			success: ((res) => {
-				if (!res.confirm) {
-					return
-				}			  
+	onDeleteClick: async function(event) {
+		const {confirm} = await new Promise((resolve, reject) => {
+			wx.showModal({
+				title: '提示',
+				content: '删除后将作品将无法恢复，是否删除',
+				success: resolve,
+				fail: wrapReject(reject, '删除文件失败，请重试'),
+			});
+		});
+		if (!confirm) {
+			return
+		}
 
-				const index = event.target.dataset.index;
-				const item = this.data.sandpaintings[index];
+		const index = event.target.dataset.index;
+		const item = this.data.sandpaintings[index];
 
-				this.data.sandpaintings.splice(index, 1);
-				this.setData({sandpaintings: this.data.sandpaintings});
+		this.data.sandpaintings.splice(index, 1);
+		this.setData({sandpaintings: this.data.sandpaintings});
 
-				const sandpaintings = wx.getStorageSync('sandpaintings');
-				for (let i=0; i<sandpaintings.length; i++) {
-					if (sandpaintings[i].id == item.id) {
-						sandpaintings.splice(i, 1);
-						break;
-					}
-				}
-				wx.setStorageSync('sandpaintings', sandpaintings);
+		const sandpaintings = wx.getStorageSync('sandpaintings');
+		for (let i=0; i<sandpaintings.length; i++) {
+			if (sandpaintings[i].id == item.id) {
+				sandpaintings.splice(i, 1);
+				break;
+			}
+		}
+		wx.setStorageSync('sandpaintings', sandpaintings);
+		if (!item.upload) {
+			return
+		}
 
-				if (!item.upload) {
-					return
-				}
-				wx.showModal({
-					title: '提示',
-					content: '本地已删除，是否删除已上传的此作品',
-					success: function(res) {
-						if (!res.confirm) {
-							return
-						}
-						const collection = wx.cloud.database().collection('sandpaintings');
-						collection.doc(item.id).get()
-  						.then((res) => {
-							const fileId = res.data.fileId;
-							collection.doc(item.id).remove().then(
-								function(res) {
-									wx.cloud.deleteFile({
-										fileList: [fileId],
-										success: res => {
-											wx.showToast({title: '成功'})
-										},
-										fail: console.error
-									})
-								}
-							).catch(console.error);
-						}).catch(console.error);
-					}
-				});
-			}).bind(this)
+		let {confirm: confirm1} = await new Promise((resolve, reject) => {
+			wx.showModal({
+				title: '提示',
+				content: '本地已删除，是否删除已上传的此作品',
+				success: resolve,
+				fail: wrapReject(reject, '删除文件失败，请重试'),
+			});
+		});
+		if (!confirm1) {
+			return
+		}
+
+		const collection = wx.cloud.database().collection('sandpaintings');
+		const { data: {fileId}} = await new Promise((resolve, reject) => {
+			collection.doc(item.id).get().then(resolve).catch(wrapReject(reject, '查询记录失败'));
+		});
+		await new Promise((resolve, reject) => {
+			collection.doc(item.id).remove().then(resolve).catch(wrapReject(reject, '删除记录失败'));
+		});
+
+		wx.cloud.deleteFile({
+			fileList: [fileId],
+			success: res => {
+				wx.showToast({title: '成功'})
+			},
+			fail: console.error
 		})
-	}
+	},
 })
