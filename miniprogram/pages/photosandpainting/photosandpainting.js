@@ -1,5 +1,6 @@
 // miniprogram/pages/photosandpainting/photosandpainting.js
 import SandPhoto from '../../rendering/sandphoto'
+import { guid } from '../../base/utils'
 
 Page({
 
@@ -8,6 +9,7 @@ Page({
 	 */
 	data: {
 		disabled: false,
+		showUpload: false,
 	},
 
 	/**
@@ -48,7 +50,8 @@ Page({
 
 			sandPhoto.done = (function(res) {
 				if (res.filePath) {
-					this.setData({img: res.filePath, showMask:false, disabled: false});
+					this.genImg = res;
+					this.setData({img: res.filePath, showMask:false, disabled: false, showUpload: true});
 					wx.showToast({title: '成功'});
 				} else {
 					wx.showToast({title: '失败', icon: 'none'});
@@ -111,9 +114,47 @@ Page({
 			sizeType: ['original', 'compressed'],
 			sourceType: ['album', 'camera'],
 			success: (function(res) {
-				this.setData({img:res.tempFilePaths[0], showMask: true, progress: 0});
+				this.setData({img:res.tempFilePaths[0], showMask: true, progress: 0, showUpload: false});
 				this.sandPhoto.exec(res.tempFilePaths[0]);
 			}).bind(this),
 		})
 	},
+
+	onUploadIamge: async function() {
+		this.setData({showUpload: false});
+		const id = guid();
+		console.log('id:', id);
+		const { fileID } = await new Promise((resolve, reject) => {
+			wx.cloud.uploadFile({
+				cloudPath:  id + '.png',
+				filePath: this.genImg.filePath,
+				success: resolve,
+				fail: reject,
+			});
+		});
+		console.log('fileId:', fileID);
+
+		const { names } = require('../../resources/name');
+		const { avatars } = require('../../resources/avatar');
+		const data = {
+			_id: id,
+			fileId: fileID,
+			userAvatarUrl: avatars[Math.floor(Math.random()*avatars.length)],
+			userNickName: names[Math.floor(Math.random()*names.length)],
+			horizontal: this.genImg.imgWidth > this.genImg.imgHeight,
+			width: this.genImg.imgWidth,
+			height: this.genImg.imgHeight,
+			likes: Math.floor(Math.random()*999),
+			createdAt: new Date().getTime() - Math.floor(Math.random() * 30*24*60*60*1000),
+		};
+		const db = wx.cloud.database()
+		await new Promise((resolve, reject) => {
+			db.collection('sandpaintings').add({
+				data,
+				success: resolve,
+				fail: reject,
+			});
+		});
+		wx.showToast({title: '成功'})
+	}
 })

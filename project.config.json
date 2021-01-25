@@ -4,7 +4,7 @@
     "setting": {
         "urlCheck": false,
         "es6": true,
-        "enhance": true,
+        "enhance": false,
         "postcss": true,
         "preloadBackgroundData": false,
         "minified": true,
@@ -26,7 +26,6 @@
             "disablePlugins": [],
             "outputPath": ""
         },
-        "enableEngineNative": false,
         "useIsolateContext": true,
         "useCompilerModule": true,
         "userConfirmedUseCompilerModuleSwitch": false,
@@ -36,7 +35,7 @@
     },
     "appid": "wx6ef03566572bbdc6",
     "projectname": "sand-game",
-    "libVersion": "2.14.0",
+    "libVersion": "2.13.0",
     "simulatorType": "wechat",
     "simulatorPluginLibVersion": {},
     "condition": {
@@ -60,6 +59,25 @@
                 {
                     "name": "pages/setting/setting",
                     "pathName": "pages/setting/setting",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/photosandpainting/photosandpainting",
+                    "pathName": "pages/photosandpainting/photosandpainting",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/hotsandpaintings/hotsandpaintings",
+                    "pathName": "pages/hotsandpaintings/hotsandpaintings",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/photosandpainting/photosandpainting",
+                    "pathName": "pages/photosandpainting/photosandpainting",
+                    "query": "",
                     "scene": null
                 }
             ]
