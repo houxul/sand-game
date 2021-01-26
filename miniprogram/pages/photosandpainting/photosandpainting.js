@@ -126,7 +126,7 @@ Page({
 		console.log('id:', id);
 		const { fileID } = await new Promise((resolve, reject) => {
 			wx.cloud.uploadFile({
-				cloudPath:  id + '.png',
+				cloudPath:  id + '.jpg',
 				filePath: this.genImg.filePath,
 				success: resolve,
 				fail: reject,
