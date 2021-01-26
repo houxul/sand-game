@@ -40,6 +40,8 @@ export default class ColorBoard {
 	toImage() {
 		wx.canvasToTempFilePath({
 			canvas: this.canvas,
+			fileType: 'jpg',
+			quality: 0.25,
 			success(res) {
 				const tempFilePath = res.tempFilePath;
 				const fs = wx.getFileSystemManager()

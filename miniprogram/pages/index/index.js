@@ -286,6 +286,8 @@ Page({
 		const { tempFilePath } = await new Promise((resolve, reject) => {
 			wx.canvasToTempFilePath({
 				canvas,
+				fileType: 'jpg',
+				quality: 0.25,
 				success: resolve,
 				fail: wrapReject(reject, '生成图片失败，请重试'),
 			}, this)

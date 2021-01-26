@@ -114,7 +114,7 @@ Page({
 		const item = this.data.sandpaintings[index];
 		const { fileID } = await new Promise((resolve, reject) => {
 			wx.cloud.uploadFile({
-				cloudPath: item.id + '.png',
+				cloudPath: item.id + '.jpg',
 				filePath: item.localPath,
 				success: resolve,
 				fail: wrapReject(reject, '新增记录失败，请重试')
