@@ -203,3 +203,11 @@ export function alphaOverlay(a1, a2) {
 export function envVersion() {
 	return wx.getAccountInfoSync().miniProgram.envVersion;
 }
+
+export function wrapReject(reject, msg)  {
+	return function(err) {
+		console.log(err)
+		wx.showToast({icon: 'none',title: msg})
+		reject(err);
+	}
+}
