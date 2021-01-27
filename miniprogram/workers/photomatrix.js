@@ -138,6 +138,7 @@ export class PhotoMatrix {
 
 		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
+			const fillIn = dir > 0 ? 0 : 1;
 			for (let index=startIndex+dir; index!=endIndex+dir; index+=dir) {
 				if (this.sideline[index-dir]-2 < this.sideline[index]) {
 					continue;
@@ -151,13 +152,10 @@ export class PhotoMatrix {
 				const distance = this.sideline[index-dir] - this.sideline[index] - 1;
 				this.sideline[index] += distance;
 				this.sideline[index-dir] -= distance;
+
+				this.setFlowStartIndex(index-1 + fillIn);
+				this.setFlowEndIndex(index+1 + fillIn);
 			}
-
-			this.setFlowStartIndex(startIndex-dir);
-			this.setFlowEndIndex(startIndex-dir);
-
-			this.setFlowStartIndex(endIndex+dir);
-			this.setFlowEndIndex(endIndex+dir);
 		}
 	}
 }

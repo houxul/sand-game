@@ -35,7 +35,7 @@ export default class SandTable {
 	async reset() {
 		const defaultValue = databus.horizontal ? this.img.width : this.img.height;
 		this.sandPileSideline.fill(defaultValue);
-		this.fullSandPile = false;
+		this.crossZeroSidelineNum = 0;
 		this.frame = 0;
 		for (let i=0; i< this.imgData.length; i+=4) {
 			this.imgData[i] = databus.bgRgba[0];
@@ -141,6 +141,10 @@ export default class SandTable {
 
 			this.setFlowEndIndex(index);
 			this.setFlowStartIndex(index);
+
+			if (this.sandPileSideline[index] == 0) {
+				this.crossZeroSidelineNum++
+			}
 			return true;
 		}
 
@@ -172,6 +176,10 @@ export default class SandTable {
 			this.extendImgData.set(`${x}_${y}`, [databus.bgRgba[0],databus.bgRgba[1],databus.bgRgba[2],databus.bgRgba[3]]);
 		}
 		return {imgData: this.extendImgData.get(`${x}_${y}`), startIndex: 0};
+	}
+
+	get fullSandPile() {
+		return this.crossZeroSidelineNum === this.coordinateBoundary[0];
 	}
 
 	genSand() {
@@ -283,9 +291,6 @@ export default class SandTable {
 		if (poles.length == 0) {
 			return;
 		}
-		if (this.sandPileSideline[poles[0][0]] <= 0) {
-			this.fullSandPile = true;
-		}
 
 		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
@@ -304,6 +309,13 @@ export default class SandTable {
 
 				this.setFlowStartIndex(index-1 + fillIn);
 				this.setFlowEndIndex(index+1 + fillIn);
+
+				if (this.sandPileSideline[index] - distance <=0 && this.sandPileSideline[index] > 0) {
+					this.crossZeroSidelineNum--
+				}
+				if (this.sandPileSideline[index-dir] <= 0 && this.sandPileSideline[index-dir] + distance > 0) {
+					this.crossZeroSidelineNum++
+				}
 			}
 		}
 	}
