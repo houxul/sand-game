@@ -235,6 +235,7 @@ Page({
 				this.restartActionHandler();
 				break;
 			case '横屏开始':
+			case '竖屏开始':
 				this.horizontalScreenRestartActionHandler();
 				break;
 			case '我的作品':
