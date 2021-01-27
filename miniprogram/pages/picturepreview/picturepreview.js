@@ -1,5 +1,8 @@
 // miniprogram/pages/picturepreview/picturepreview.js
 import { wrapReject } from '../../base/utils'
+import DataBus from '../../base/databus'
+
+let databus = new DataBus()
 Page({
 
 	/**
@@ -14,18 +17,33 @@ Page({
 	 */
 	onLoad: async function (options) {
 		const collection = wx.cloud.database().collection('sandpaintings');
-		const { data } = await new Promise((resolve, reject) => {
+		const { data: item } = await new Promise((resolve, reject) => {
 			collection.doc(options.id).get().then(resolve).catch(wrapReject(reject, '查询记录失败'));
 		});
 
+		const imgWidth = item.horizontal ? databus.screenWidth-40 : 320*item.width/item.height;
+		const imgHeight = item.horizontal ? (databus.screenWidth -40) * item.height/item.width : 320;
+		const marginTop = (databus.screenHeight - imgHeight-200)/2;
+		this.setData({item, imgWidth, imgHeight, marginTop});
+	},
+
+	onImageClick: function() {
 		wx.previewImage({
-			urls: [data.fileId],
-			current: data.fileId,
+			urls: [this.data.item.fileId],
+			current: this.data.item.fileId,
 			fail: function(err) {
 				console.log(err)
 				wx.showToast({title: '预览失败',})
 			}
-		  }, true);
+		}, true);
+	},
+
+	toMainPage: function() {
+		wx.navigateTo({url: '/pages/index/index'});
+	},
+
+	toSandpaintingsPage: function() {
+		wx.navigateTo({url: '/pages/hotsandpaintings/hotsandpaintings'});
 	},
 
 	/**

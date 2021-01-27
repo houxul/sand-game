@@ -1,1 +1,22 @@
-<!--miniprogram/pages/picturepreview/picturepreview.wxml-->
+
+<view style="margin-top:{{marginTop}}px">
+	<view class="sandpainting-item">
+		<image class="sandpainting-item-img" src="{{item.fileId}}" 
+			style="width:{{imgWidth}}px; height:{{imgHeight}}px;"
+			data-url="{{item.fileId}}" bindtap="onImageClick"/>
+	</view>
+	<view class="sandpainting-item-bottom">
+		<view class="sandpainting-item-bottom-left">
+			<image class="avatar" src="{{item.userAvatarUrl}}" />
+			{{item.userNickName}}
+		</view>
+		<view class="sandpainting-item-bottom-right">
+			<!-- <image class='image-action' src="../../images/home.png"
+				data-index="{{index}}" bindtap="toMainPage">
+			</image> -->
+			<image class='image-action' src="../../images/to-more.png"
+				data-index="{{index}}" bindtap="toSandpaintingsPage">
+			</image>
+		</view>
+	</view>
+</view>
