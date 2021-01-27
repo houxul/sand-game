@@ -168,9 +168,10 @@ Page({
 			}
 		}
 		const imgUrl = res.target.dataset.url;
+		const id = res.target.dataset.id;
 		return {
 			title: '彩色沙子',
-			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
+			path: '/pages/picturepreview/picturepreview?id='+id,
 			imageUrl: imgUrl,
 		}
 	}

@@ -38,7 +38,7 @@
 				<view wx:if="{{item.likes != 0}}" style="margin-left:5px;">{{item.likes}}</view>
 			</view>
 			<view class="sandpainting-item-bottom-right">
-				<button open-type="share" size="mini" class="button-image-action" data-url="{{item.fileId}}">
+				<button open-type="share" size="mini" class="button-image-action" data-id="{{item._id}}" data-url="{{item.fileId}}">
 					<image class='image-action' src="../../images/share-to.png"></image>
 				</button>
 			</view>

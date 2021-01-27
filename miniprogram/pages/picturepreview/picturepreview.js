@@ -1,4 +1,5 @@
 // miniprogram/pages/picturepreview/picturepreview.js
+import { wrapReject } from '../../base/utils'
 Page({
 
 	/**
@@ -11,11 +12,15 @@ Page({
 	/**
 	 * 生命周期函数--监听页面加载
 	 */
-	onLoad: function (options) {
-		// TODO 通过id预览
+	onLoad: async function (options) {
+		const collection = wx.cloud.database().collection('sandpaintings');
+		const { data } = await new Promise((resolve, reject) => {
+			collection.doc(options.id).get().then(resolve).catch(wrapReject(reject, '查询记录失败'));
+		});
+
 		wx.previewImage({
-			urls: [options.imgUrl],
-			current: options.imgUrl,
+			urls: [data.fileId],
+			current: data.fileId,
 			fail: function(err) {
 				console.log(err)
 				wx.showToast({title: '预览失败',})
