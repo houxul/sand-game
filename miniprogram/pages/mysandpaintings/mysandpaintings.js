@@ -1,6 +1,6 @@
 // miniprogram/pages/mysandpaintings/mysandpaintings.js
 import DataBus from '../../base/databus'
-import { wrapReject } from '../../base/utils'
+import { wrapReject, confirmMessage } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -90,16 +90,7 @@ Page({
 	},
 
 	onUploadClick: async function(event) {
-		const { confirm } = await new Promise((resolve, reject) => {
-			wx.showModal({
-				title: '提示',
-				content: '上传后其他用户可以看到此作品',
-				success: resolve,
-				fail: wrapReject(reject, '上传文件失败，请重试'),
-			})
-		});
-
-		if (!confirm) {
+		if (!confirmMessage('提示', '上传后其他用户可以看到此作品')) {
 			return
 		}
 
@@ -172,15 +163,7 @@ Page({
 	},
 
 	onDeleteClick: async function(event) {
-		const {confirm} = await new Promise((resolve, reject) => {
-			wx.showModal({
-				title: '提示',
-				content: '删除后将作品将无法恢复，是否删除',
-				success: resolve,
-				fail: wrapReject(reject, '删除文件失败，请重试'),
-			});
-		});
-		if (!confirm) {
+		if (!confirmMessage('提示', '删除后将作品将无法恢复，是否删除？')) {
 			return
 		}
 
@@ -198,19 +181,7 @@ Page({
 			}
 		}
 		wx.setStorageSync('sandpaintings', sandpaintings);
-		if (!item.upload) {
-			return
-		}
-
-		let {confirm: confirm1} = await new Promise((resolve, reject) => {
-			wx.showModal({
-				title: '提示',
-				content: '本地已删除，是否删除已上传的此作品',
-				success: resolve,
-				fail: wrapReject(reject, '删除文件失败，请重试'),
-			});
-		});
-		if (!confirm1) {
+		if (!item.upload || !confirmMessage('提示', '本地已删除，是否删除已上传的此作品?')) {
 			return
 		}
 
