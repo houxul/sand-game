@@ -1,1 +1,55 @@
-/* miniprogram/pages/picturepreview/picturepreview.wxss */
+page{
+	background-color: rgb(246, 246, 246);
+}
+
+.sandpaintings {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.sandpainting-item {
+	width: 100%;
+}
+
+.sandpainting-item-img {
+    margin-left: auto;
+    margin-right:auto;
+	display:block;
+	border-radius: 5px;
+}
+
+.sandpainting-item-bottom {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin: 15px;
+}
+
+.sandpainting-item-bottom-left {
+	display: flex;
+	align-items: center;
+	font-size: 14px;
+	color: #888888;
+}
+
+.sandpainting-item-bottom-right {
+	display: flex;
+	justify-content: flex-end;
+	font-size: 14px;
+	color: #888888;
+}
+
+.avatar {
+	width: 28px;
+	height: 28px;
+	margin-right: 5px;
+	border-radius: 50%;
+}
+
+.image-action {
+	width: 27px;
+	height: 27px;
+}

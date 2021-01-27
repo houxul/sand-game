@@ -12,6 +12,7 @@ Page({
 		sandpaintings: [],
 		screenWidth: databus.screenWidth,
 		screenHeight: databus.screenHeight,
+		showLoading: true,
 	},
 
 	/**
@@ -83,7 +84,7 @@ Page({
 				item.ilike = this.ilikeSet.has(item._id)
 				sandpaintings.push(item);
 			});
-			this.setData({sandpaintings: sandpaintings})
+			this.setData({sandpaintings: sandpaintings, showLoading: false});
 		}).bind(this))
 		.catch(err => {
 			wx.showToast({title: '获取数据失败，请重试', icon:"none"});
@@ -167,9 +168,10 @@ Page({
 			}
 		}
 		const imgUrl = res.target.dataset.url;
+		const id = res.target.dataset.id;
 		return {
 			title: '彩色沙子',
-			path: '/pages/picturepreview/picturepreview?imgUrl='+imgUrl,
+			path: '/pages/picturepreview/picturepreview?id='+id,
 			imageUrl: imgUrl,
 		}
 	}

@@ -4,7 +4,7 @@ import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
 import ColorBoard from '../../rendering/colorboard'
-import { guid, rgbToStr, hasColors, colorsId, wrapReject } from '../../base/utils'
+import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -259,17 +259,8 @@ Page({
 		}
 	},
 
-	finishActionHandler: function() {
-		if (!this.sandTable.fullSandPile) {
-			wx.showModal({
-				content: '确认绘制结束?',
-				success: (res) => {
-					if (!res.confirm) {
-						return
-					}
-					this.finishSandTable();
-				}
-			});
+	finishActionHandler: async function() {
+		if (!this.sandTable.fullSandPile && !confirmMessage(undefined, '确认绘制结束?')) {
 			return;
 		}
 		this.finishSandTable();		
@@ -322,19 +313,13 @@ Page({
 		wx.hideLoading();
 	},
 
-    restartActionHandler: function() {
-		wx.showModal({
-			content: '确认重新开始?',
-			success: ((res) => {
-				if (!res.confirm) {
-					return
-				}
-				
-				databus.reset()
-				this.sandTable.reset();
-				this.setData({menuLeft: databus.screenWidth});
-			}).bind(this)
-		});
+    restartActionHandler: async function() {
+		if (!confirmMessage(undefined, '确认重新开始?')) {
+			return;
+		}
+		databus.reset()
+		this.sandTable.reset();
+		this.setData({menuLeft: databus.screenWidth});
     },
 
     horizontalScreenRestartActionHandler: function() {

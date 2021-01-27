@@ -1,6 +1,9 @@
 <!--miniprogram/pages/mysandpaintings/mysandpaintings.wxml-->
 
-<view class="empty-view" wx:if="{{!!!sandpaintings.length}}">
+<view class="empty-view" wx:if="{{showLoading}}">
+	<image style="width:50px; height:50px;" src="../../images/loading.gif"></image>
+</view>
+<view class="empty-view" wx:elif="{{!!!sandpaintings.length}}">
 	<image mode="aspectFit" src="../../images/empty.png"></image>
 	<view>没有任何作品，赶快上传一个吧！</view>
 </view>
@@ -35,7 +38,7 @@
 				<view wx:if="{{item.likes != 0}}" style="margin-left:5px;">{{item.likes}}</view>
 			</view>
 			<view class="sandpainting-item-bottom-right">
-				<button open-type="share" size="mini" class="button-image-action" data-url="{{item.fileId}}">
+				<button open-type="share" size="mini" class="button-image-action" data-id="{{item._id}}" data-url="{{item.fileId}}">
 					<image class='image-action' src="../../images/share-to.png"></image>
 				</button>
 			</view>
