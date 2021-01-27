@@ -13,6 +13,7 @@ Page({
 		sandpaintings: [],
 		screenWidth: databus.screenWidth,
 		screenHeight: databus.screenHeight,
+		showLoading: true,
 	},
 
 	/**
@@ -75,7 +76,7 @@ Page({
 			sandpaintings.push(this.sandPaintingSource[i]);
 		}
 		this.offset += count;
-		this.setData({sandpaintings: sandpaintings})
+		this.setData({sandpaintings: sandpaintings, showLoading: false});
 	},
 
 	onImageClick: function(event) {

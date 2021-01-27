@@ -1,6 +1,9 @@
 <!--miniprogram/pages/mysandpaintings/mysandpaintings.wxml-->
 
-<view class="empty-view" wx:if="{{!!!sandpaintings.length}}">
+<view class="empty-view" wx:if="{{showLoading}}">
+	<image style="width:50px; height:50px;" src="../../images/loading.gif"></image>
+</view>
+<view class="empty-view" wx:elif="{{!!!sandpaintings.length}}">
 	<image mode="aspectFit" src="../../images/empty.png"></image>
 	<view>没有任何作品，赶快上传一个吧！</view>
 </view>
