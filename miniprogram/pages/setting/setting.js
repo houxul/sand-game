@@ -12,7 +12,7 @@ Page({
 	 */
 	data: {
 		sandNumInterval: [5, 40],
-		colorChangeSpeedInterval: [1, 200],
+		colorChangeSpeedInterval: [10, 2000],
 		movementTrackCanvasSize: [150* databus.screenWidth/databus.screenHeight, 150]
 	},
 

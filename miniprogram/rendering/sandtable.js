@@ -198,10 +198,11 @@ export default class SandTable {
 			sandSourcePnt = this.movePnts.shift();
 		}
 		let {x, y} = sandSourcePnt;
-		const res = this.adjustGenSandPnt(x, y)
+		const res = this.adjustGenSandPnt(x, y);
+		const rgb = databus.sandFrameColor;
 		for (let i=0; i<databus.genSandNum; i++) {
 			const sand = databus.pool.getItemByClass('sand', Sand)
-			sand.init(res[0], res[1], databus.sandFrameColor, !res[2])
+			sand.init(res[0], res[1], rgb, !res[2])
 			this.sands.push(sand)
 		}
 
