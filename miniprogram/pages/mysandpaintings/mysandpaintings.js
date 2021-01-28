@@ -91,7 +91,8 @@ Page({
 	},
 
 	onUploadClick: async function(event) {
-		if (!confirmMessage('提示', '上传后其他用户可以看到此作品')) {
+		const confirm = await confirmMessage('提示', '上传后其他用户可以看到此作品')
+		if (!confirm) {
 			return
 		}
 
@@ -164,7 +165,8 @@ Page({
 	},
 
 	onDeleteClick: async function(event) {
-		if (!confirmMessage('提示', '删除后将作品将无法恢复，是否删除？')) {
+		let confirm = await confirmMessage('提示', '删除后将作品将无法恢复，是否删除？');
+		if (!confirm) {
 			return
 		}
 
@@ -182,8 +184,13 @@ Page({
 			}
 		}
 		wx.setStorageSync('sandpaintings', sandpaintings);
-		if (!item.upload || !confirmMessage('提示', '本地已删除，是否删除已上传的此作品?')) {
+		if (!item.upload) {
 			return
+		}
+
+		confirm = await confirmMessage('提示', '本地已删除，是否删除已上传的此作品?');
+		if (!confirm) {
+			return;
 		}
 
 		const collection = wx.cloud.database().collection('sandpaintings');
