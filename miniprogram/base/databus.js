@@ -42,13 +42,15 @@ export default class DataBus {
 		this.movementTrack = [];
 		this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
 
-		this.resetMovementTrack();
-
 		this.default = {
 			bgRgba: this.bgRgba,
 		}
 
 		this.loadSetting();
+
+		if (this.movementTrack.length == 0) {
+			this.resetMovementTrack();
+		}
 	}
 
 	reset(){

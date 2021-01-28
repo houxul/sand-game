@@ -203,8 +203,8 @@ Page({
 		})
 	},
 	onLongPressColorPicker: function(event) {
-		this.setData({showMyColors: true});
 		this.resetMyColorsRect();
+		this.setData({showMyColors: true});
 	},
 	onClickMenu: function(event) {
 		this.sandTable.resetSandSourcePnt();
