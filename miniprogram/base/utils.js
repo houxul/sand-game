@@ -220,7 +220,7 @@ export function wrapReject(reject, msg)  {
 	}
 }
 
-export async function confirmMessage(title, content) {
+export function confirmMessage(title, content) {
 	return new Promise((resolve, reject) => {
 		wx.showModal({
 			title,

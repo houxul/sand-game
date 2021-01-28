@@ -260,10 +260,13 @@ Page({
 	},
 
 	finishActionHandler: async function() {
-		if (!this.sandTable.fullSandPile && !confirmMessage(undefined, '确认绘制结束?')) {
-			return;
+		if (!this.sandTable.fullSandPile) {
+			const confirm = await confirmMessage('提示', '确认绘制结束?')
+			if (!confirm) {
+				return;
+			}
 		}
-		this.finishSandTable();		
+		this.finishSandTable();
 	},
 
 	finishSandTable: async function() {
@@ -314,7 +317,8 @@ Page({
 	},
 
     restartActionHandler: async function() {
-		if (!confirmMessage(undefined, '确认重新开始?')) {
+		const confirm = await confirmMessage('提示', '确认重新开始?')
+		if (!confirm) {
 			return;
 		}
 		databus.reset()
