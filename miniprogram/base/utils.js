@@ -22,6 +22,10 @@ export function strToRgb(str) {
 	return str.split('(')[1].split(')')[0].split(',').map(item => parseInt(item));
 }
 
+export function hexToRgb(hex) {
+	return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)];
+}
+
 export function hslToRgb(h,s,l){
 	h=h/360;
 	s=s/100;
@@ -168,6 +172,10 @@ export function existSimilarColor(rgbs, rgb) {
 
 export function genUnsimilarColors(colors = [], minNum = 1, maxNum = 5) {
 	const colorNum = Math.floor(Math.random()*(maxNum-minNum+1)) + minNum;
+	if (colorNum == 2 || colorNum == 4) {
+		return gradient(colorNum == 4)
+	}
+
 	const diffList = [...colors];
 	const newColors = [];
 
@@ -223,4 +231,20 @@ export async function confirmMessage(title, content) {
 			fail: reject,
 		});
 	});
+}
+
+export function gradient(more) {
+	const { colors } = require('../resources/color')
+	const list = [];
+	list.push(...colors[Math.floor(Math.random() * colors.length)]);
+	if (more) {
+		list.push(...colors[Math.floor(Math.random() * colors.length)]);
+	}
+
+	const rgbs = [];
+	for (const item of list) {
+		rgbs.push(hexToRgb(item));
+	}
+
+	return rgbs;
 }
