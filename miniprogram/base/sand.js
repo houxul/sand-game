@@ -10,31 +10,20 @@ export default class Sand {
 		Math.round(rgbOverlay(rgb[1], overlayRgb, 1, databus.overlayAlpha)),
 		Math.round(rgbOverlay(rgb[2], overlayRgb, 1, databus.overlayAlpha)), databus.rgbAlpha]
 
+		this.x = x;
+		this.y = y;
+		this.preX = this.curX;
+		this.preY = this.curY;
 		if (databus.horizontal) {
-			const yRandom = Math.random() * 10 - 5
-			this.y = y + yRandom
-			this.x= x + Math.random() * 20 - 6
-			this.vy = Math.random() * 1.5;
-			if (yRandom > 0)	{
-				this.vy	= - this.vy
-			}
-	
+			this.vy = Math.random() * 2 - 1;
 			this.vx = (down ? 7 : -7) * Math.random();
 			this.acceleration = 0.4
 		} else {
-			const xRandom = Math.random() * 10 - 5
-			this.x = x + xRandom
-			this.y= y + Math.random() * 20 - 6
-			this.vx = Math.random() * 1.5;
-			if (xRandom > 0)	{
-				this.vx	= - this.vx
-			}
-	
+			this.vx = Math.random() * 2 -1;
 			this.vy = (down ? 7 : -7) * Math.random();
 			this.acceleration = 0.5
 		}
 
-		this.update();
 		this.crossBorder = false
 	}
 
