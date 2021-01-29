@@ -300,11 +300,11 @@ export default class SandTable {
 				if (this.sandPileSideline[index-dir]-2 < this.sandPileSideline[index]) {
 					continue;
 				}
-				for (let indexV=this.sandPileSideline[index-dir]-2; indexV>=this.sandPileSideline[index]; indexV--) {
-					this.exchangeImgData(index, indexV, index-dir, indexV+1)
-				}
 
-				const distance = this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1;
+				const distance = (dir * (index - endIndex + 4*dir)) > 0 ? Math.round((this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1)/2) : this.sandPileSideline[index-dir] - this.sandPileSideline[index] - 1;
+				for (let i=1; i <= distance; i++) {
+					this.exchangeImgData(index, this.sandPileSideline[index] + distance - i, index-dir, this.sandPileSideline[index-dir] - i)
+				}
 				this.sandPileSideline[index] += distance;
 				this.sandPileSideline[index-dir] -= distance;
 
@@ -467,19 +467,17 @@ export default class SandTable {
 	adjustGenSandPntBuilder(horizontal) {
 		if (horizontal) {
 			return function(x, y) {
-				x = Math.floor(y)
 				y = Math.floor(y)
-				const cross = this.sandPileSideline[y] - 30 < x;
-				x = cross ? this.sandPileSideline[y] - 30 : x;
+				const cross = this.sandPileSideline[y] - 10 < x;
+				x = cross ? this.sandPileSideline[y] - 10 : x;
 				return [x, y, cross];
 			}
 		}
 
 		return function(x, y) {
 			x = Math.floor(x)
-			y = Math.floor(y)
-			const cross = this.sandPileSideline[x] -30 < y;
-			y = cross ? this.sandPileSideline[x] -30 : y;
+			const cross = this.sandPileSideline[x] - 10 < y;
+			y = cross ? this.sandPileSideline[x] - 10 : y;
 			return [x, y, cross];
 		}
 	}
