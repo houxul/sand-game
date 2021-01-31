@@ -36,7 +36,7 @@ export default class DataBus {
 		this.linearGradientLen = 500;
 		this.resetPickerRgbs(genUnsimilarColors([], 2))
 		this.horizontal = false;
-		this.colorChangeSpeed = 50;
+		this.colorChangeSpeed = 1000;
 		this.autoDownSand = false;
 		this.bgRgba = [214, 214, 214, 214];
 		this.movementTrack = [];
@@ -129,7 +129,7 @@ export default class DataBus {
 	}
 
 	get sandFrameColor() {
-		let index = Math.floor(this.sandFrame * this.colorChangeSpeed/1600);
+		let index = Math.floor(this.sandFrame * this.colorChangeSpeed/2000);
 		if (index < this.linearGradientRgbs.length) {
 			this.sandFrame++
 			if (index > this.filledLinearGradientStartIndex && 
