@@ -41,12 +41,15 @@ export default class DataBus {
 		this.bgRgba = [214, 214, 214, 214];
 		this.movementTrack = [];
 		this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
+		this.sandNumInterval = [5, 40];
+		this.colorChangeSpeedInterval =[10, 2000];
 
 		this.default = {
 			bgRgba: this.bgRgba,
 		}
 
 		this.loadSetting();
+		this.resetSpeedTthreshold();
 
 		if (this.movementTrack.length == 0) {
 			this.resetMovementTrack();
@@ -166,5 +169,9 @@ export default class DataBus {
 			this.movementTrack.push([arcHeight * (Math.sin(4*i/arcHeight)+1), i, 1]);
 		}
 		this.movementTrack[0].push(0);
+	}
+
+	resetSpeedTthreshold() {
+		this.speedTthreshold = (2*this.genSandNum/this.sandNumInterval[1]);
 	}
 }

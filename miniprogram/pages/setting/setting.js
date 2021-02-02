@@ -1,7 +1,7 @@
 // miniprogram/pages/setting/setting.js
 
 import DataBus from '../../base/databus'
-import {hslToRgb, strToAb, abToStr, rgbToStr, strToRgb} from '../../base/utils'
+import {hslToRgb, rgbToStr, strToRgb} from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -11,8 +11,8 @@ Page({
 	 * 页面的初始数据
 	 */
 	data: {
-		sandNumInterval: [5, 40],
-		colorChangeSpeedInterval: [10, 2000],
+		sandNumInterval: databus.sandNumInterval,
+		colorChangeSpeedInterval: databus.colorChangeSpeedInterval,
 		movementTrackCanvasSize: [150* databus.screenWidth/databus.screenHeight, 150]
 	},
 
@@ -106,6 +106,7 @@ Page({
 	},
 	sandNumChange: function(res) {
 		databus.updateSetting({genSandNum: res.detail.value});
+		databus.resetSpeedTthreshold();
 	},
 	colorChangeSpeedChange: function(res) {
 		databus.updateSetting({colorChangeSpeed: res.detail.value});

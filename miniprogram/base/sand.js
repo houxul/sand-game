@@ -15,11 +15,11 @@ export default class Sand {
 		this.preX = this.curX;
 		this.preY = this.curY;
 		if (databus.horizontal) {
-			this.vy = Math.random() * 2 - 1;
+			this.vy = (Math.random() - 0.5) * databus.speedTthreshold;
 			this.vx = (down ? 7 : -7) * Math.random();
 			this.acceleration = 0.4
 		} else {
-			this.vx = Math.random() * 2 -1;
+			this.vx = (Math.random() - 0.5) * databus.speedTthreshold;
 			this.vy = (down ? 7 : -7) * Math.random();
 			this.acceleration = 0.5
 		}
