@@ -122,12 +122,55 @@ Page({
 
 	onUploadIamge: async function() {
 		this.setData({showUpload: false});
+
+		await this.uploadImage(this.data.img);
+
+		wx.showToast({title: '成功'})
+	},
+
+	onBatchUpload: async function() {
+		const res = await new Promise((resolve, reject) => {
+			wx.chooseImage({
+				sizeType: ['original', 'compressed'],
+				sourceType: ['album', 'camera'],
+				success: resolve,
+				fail: reject,
+			})
+		});
+
+		for (const item of res.tempFilePaths) {
+			await this.uploadImage(item);
+		}
+		wx.showToast({title: '成功'})
+	},
+
+	async uploadImage(filePath) {
+		const { size } = await new Promise((resolve, reject) => {
+			wx.getFileInfo({
+				filePath,
+				success: resolve,
+				fail: reject,
+			});
+		});
+		console.log('size:', size)
+		if (size > 500 * 1024) {
+			throw new Error('图片尺寸过大');
+		}
+
+		const { width, height } = await new Promise((resolve, reject) => {
+			wx.getImageInfo({
+				src: filePath,
+				success: resolve,
+				fail: reject,
+			});
+		});
+
 		const id = guid();
 		console.log('id:', id);
 		const { fileID } = await new Promise((resolve, reject) => {
 			wx.cloud.uploadFile({
 				cloudPath:  id + '.jpg',
-				filePath: this.genImg.filePath,
+				filePath,
 				success: resolve,
 				fail: reject,
 			});
@@ -141,9 +184,9 @@ Page({
 			fileId: fileID,
 			userAvatarUrl: avatars[Math.floor(Math.random()*avatars.length)],
 			userNickName: names[Math.floor(Math.random()*names.length)],
-			horizontal: this.genImg.imgWidth > this.genImg.imgHeight,
-			width: this.genImg.imgWidth,
-			height: this.genImg.imgHeight,
+			horizontal: width > height,
+			width: width,
+			height: height,
 			likes: Math.floor(Math.random()*999),
 			createdAt: new Date().getTime() - Math.floor(Math.random() * 30*24*60*60*1000),
 		};
@@ -155,6 +198,5 @@ Page({
 				fail: reject,
 			});
 		});
-		wx.showToast({title: '成功'})
 	}
 })
