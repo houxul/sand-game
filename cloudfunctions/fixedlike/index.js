@@ -1,6 +1,9 @@
 const cloud = require('wx-server-sdk')
 
-cloud.init()
+cloud.init({
+	env: cloud.DYNAMIC_CURRENT_ENV,
+	traceUser: true,
+})
 
 exports.main = async (event, context) => {
 	const sandpaintings = cloud.database().collection('sandpaintings');
