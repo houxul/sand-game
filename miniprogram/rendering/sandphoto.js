@@ -141,7 +141,7 @@ export default class SandPhoto {
 			fileType: 'jpg',
 			quality: 0.25,
 			success: ((res) => {
-				this.done({filePath: res.tempFilePath});
+				this.done({filePath: res.tempFilePath, imgWidth: this.imgWidth, imgHeight: this.imgHeight});
 			}).bind(this),
 			fail: ((err) => {
 				this.done({err: err});

@@ -1,5 +1,6 @@
 // miniprogram/pages/photosandpainting/photosandpainting.js
 import SandPhoto from '../../rendering/sandphoto'
+import { guid, wrapReject } from '../../base/utils'
 
 Page({
 
@@ -8,6 +9,7 @@ Page({
 	 */
 	data: {
 		disabled: false,
+		showSave: false,
 	},
 
 	/**
@@ -48,7 +50,8 @@ Page({
 
 			sandPhoto.done = (function(res) {
 				if (res.filePath) {
-					this.setData({img: res.filePath, showMask:false, disabled: false});
+					this.genImg = res;
+					this.setData({img: res.filePath, showMask:false, showSave: true});
 					wx.showToast({title: '成功'});
 				} else {
 					wx.showToast({title: '失败', icon: 'none'});
@@ -111,9 +114,41 @@ Page({
 			sizeType: ['original', 'compressed'],
 			sourceType: ['album', 'camera'],
 			success: (function(res) {
-				this.setData({img:res.tempFilePaths[0], showMask: true, progress: 0});
+				this.setData({img:res.tempFilePaths[0], showMask: true, progress: 0, disabled: false, showSave: false});
 				this.sandPhoto.exec(res.tempFilePaths[0]);
 			}).bind(this),
 		})
 	},
+
+	async onSaveIamge() {
+		if (!this.genImg) {
+			return;
+		}
+
+		const { filePath: tempFilePath, imgWidth, imgHeight } = this.genImg;
+		this.genImg = null;
+		const { savedFilePath } = await new Promise((resolve, reject) => {
+			const fs = wx.getFileSystemManager()
+			fs.saveFile({
+				tempFilePath,
+				success: resolve,
+				fail: wrapReject(reject, '保存本地失败，请重试'),
+			});
+		});
+
+		this.setData({showSave: false, img: savedFilePath});
+
+		const sandpaintings = wx.getStorageSync('sandpaintings') || [];
+		sandpaintings.push({
+			id: guid(),
+			localPath: savedFilePath,
+			horizontal: imgWidth > imgHeight,
+			width: imgWidth,
+			height: imgHeight,
+			upload: false,
+			createdAt: new Date().getTime(),
+		})
+		wx.setStorageSync('sandpaintings', sandpaintings);
+		wx.showToast({title: '成功'});
+	}
 })
