@@ -1,5 +1,6 @@
 // miniprogram/pages/mysandpaintings/mysandpaintings.js
 import DataBus from '../../base/databus'
+import { wrapReject } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -157,6 +158,25 @@ Page({
 				this.likeSandPainting(index, !like);
 				wx.showToast({title: '操作失败', icon:"none"})
 			}).bind(this),
+		})
+	},
+
+	onDeleteClick: async function(event) {
+		const id = event.target.dataset.id;
+		const collection = wx.cloud.database().collection('sandpaintings');
+		const { data: {fileId}} = await new Promise((resolve, reject) => {
+			collection.doc(id).get().then(resolve).catch(wrapReject(reject, '查询记录失败'));
+		});
+		await new Promise((resolve, reject) => {
+			collection.doc(id).remove().then(resolve).catch(wrapReject(reject, '删除记录失败'));
+		});
+
+		wx.cloud.deleteFile({
+			fileList: [fileId],
+			success: res => {
+				wx.showToast({title: '成功'})
+			},
+			fail: console.error
 		})
 	},
 
