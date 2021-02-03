@@ -34,7 +34,7 @@ Page({
 	 */
 	onShow: function () {
 		wx.showToast({
-		  title: '按下屏幕移动手指，开始画沙子移动轨迹',
+		  title: '按下屏幕移动手指，开始绘制沙子移动轨迹',
 		  icon: "none",
 		  duration: 3500,
 		})
