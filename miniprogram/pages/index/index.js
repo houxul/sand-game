@@ -4,7 +4,7 @@ import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
 import ColorBoard from '../../rendering/colorboard'
-import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage } from '../../base/utils'
+import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage, defaultShareImage } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -429,6 +429,20 @@ Page({
 					height, width, top, left, layout
 				}
 			})
+		}
+	},
+
+	onShareAppMessage: function (res) {
+		return {
+			title: '用沙子绘出多彩美图',
+			imageUrl: defaultShareImage(),
+		}
+	},
+
+	onShareTimeline: function (res) {
+		return {
+			title: '用沙子绘出多彩美图',
+			imageUrl: defaultShareImage(),
 		}
 	}
 })

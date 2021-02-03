@@ -1,5 +1,6 @@
 // miniprogram/pages/mysandpaintings/mysandpaintings.js
 import DataBus from '../../base/databus'
+import { defaultShareImage } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -163,16 +164,23 @@ Page({
 	onShareAppMessage: function (res) {
 		if (res.from !== 'button') {
 			return {
-				title: '彩色沙子',
-				path: '/pages/hotsandpaintings/hotsandpaintings',
+				title: '用沙子绘出多彩美图',
+				imageUrl: defaultShareImage(),
 			}
 		}
 		const imgUrl = res.target.dataset.url;
 		const id = res.target.dataset.id;
 		return {
-			title: '彩色沙子',
+			title: '用沙子绘出多彩美图',
 			path: '/pages/picturepreview/picturepreview?id='+id,
 			imageUrl: imgUrl,
+		}
+	},
+
+	onShareTimeline: function (res) {
+		return {
+			title: '用沙子绘出多彩美图',
+			imageUrl: defaultShareImage(),
 		}
 	}
 })
