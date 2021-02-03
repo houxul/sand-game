@@ -59,6 +59,10 @@ Page({
 			return {rgbs: item, radius: 25, id: colorsId(item)};
 		})
 		this.setData({myColors, useColorBoard: !wx.getStorageSync('colorboard')})
+
+		if (databus.horizontal) {
+			databus.horizontal = false;
+		}
 	},
 
 	/**
@@ -236,7 +240,7 @@ Page({
 				break;
 			case '横屏开始':
 			case '竖屏开始':
-				this.horizontalScreenRestartActionHandler();
+				this.switchScreenActionHandler();
 				break;
 			case '我的作品':
 				this.mySandPaintingActionHandler();
@@ -326,7 +330,7 @@ Page({
 		this.setData({menuLeft: databus.screenWidth});
     },
 
-    horizontalScreenRestartActionHandler: function() {
+    switchScreenActionHandler: function() {
 		databus.horizontal = !databus.horizontal;
 		databus.reset()
 		this.sandTable.switchScreen(databus.horizontal)
