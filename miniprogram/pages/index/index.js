@@ -4,7 +4,7 @@ import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
 import ColorBoard from '../../rendering/colorboard'
-import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage } from '../../base/utils'
+import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage, defaultShareImage } from '../../base/utils'
 
 let databus = new DataBus()
 
@@ -38,9 +38,9 @@ Page({
 			{icon: "../../images/restart.png", key:"重新开始"},
 			{icon: "../../images/landscape.png", key:"横屏开始"},
 			{icon: "../../images/my.png", key:"我的作品"},
-			{icon: "../../images/picture.png", key:"照片沙绘"},
-			{icon: "../../images/newest.png", key:"最新沙绘"},
-			{icon: "../../images/fire.png", key:"热门沙绘"},
+			{icon: "../../images/newest.png", key:"最新作品"},
+			{icon: "../../images/fire.png", key:"热门作品"},
+			{icon: "../../images/picture.png", key:"沙子照片"},
 			{icon: "../../images/setting.png", key:"设置"},
 			{icon: "../../images/help.png", key:"帮助"},
 		],
@@ -59,6 +59,10 @@ Page({
 			return {rgbs: item, radius: 25, id: colorsId(item)};
 		})
 		this.setData({myColors, useColorBoard: !wx.getStorageSync('colorboard')})
+
+		if (databus.horizontal) {
+			databus.horizontal = false;
+		}
 	},
 
 	/**
@@ -236,18 +240,18 @@ Page({
 				break;
 			case '横屏开始':
 			case '竖屏开始':
-				this.horizontalScreenRestartActionHandler();
+				this.switchScreenActionHandler();
 				break;
 			case '我的作品':
 				this.mySandPaintingActionHandler();
 				break;
-			case '照片沙绘':
+			case '沙子照片':
 				this.photoSandPaintingActionHandler();
 				break;
-			case '最新沙绘':
+			case '最新作品':
 				this.newestSandPaintingActionHandler();
 				break;
-			case '热门沙绘':
+			case '热门作品':
 				this.hotActionHandler();
 				break;
 			case '设置':
@@ -326,7 +330,7 @@ Page({
 		this.setData({menuLeft: databus.screenWidth});
     },
 
-    horizontalScreenRestartActionHandler: function() {
+    switchScreenActionHandler: function() {
 		databus.horizontal = !databus.horizontal;
 		databus.reset()
 		this.sandTable.switchScreen(databus.horizontal)
@@ -429,6 +433,20 @@ Page({
 					height, width, top, left, layout
 				}
 			})
+		}
+	},
+
+	onShareAppMessage: function (res) {
+		return {
+			title: '用沙子绘出多彩美图',
+			imageUrl: defaultShareImage(),
+		}
+	},
+
+	onShareTimeline: function (res) {
+		return {
+			title: '用沙子绘出多彩美图',
+			imageUrl: defaultShareImage(),
 		}
 	}
 })
