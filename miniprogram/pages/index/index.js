@@ -38,9 +38,9 @@ Page({
 			{icon: "../../images/restart.png", key:"重新开始"},
 			{icon: "../../images/landscape.png", key:"横屏开始"},
 			{icon: "../../images/my.png", key:"我的作品"},
-			{icon: "../../images/picture.png", key:"照片沙绘"},
-			{icon: "../../images/newest.png", key:"最新沙绘"},
-			{icon: "../../images/fire.png", key:"热门沙绘"},
+			{icon: "../../images/picture.png", key:"照片作品"},
+			{icon: "../../images/newest.png", key:"最新作品"},
+			{icon: "../../images/fire.png", key:"热门作品"},
 			{icon: "../../images/setting.png", key:"设置"},
 			{icon: "../../images/help.png", key:"帮助"},
 		],
@@ -241,13 +241,13 @@ Page({
 			case '我的作品':
 				this.mySandPaintingActionHandler();
 				break;
-			case '照片沙绘':
+			case '照片作品':
 				this.photoSandPaintingActionHandler();
 				break;
-			case '最新沙绘':
+			case '最新作品':
 				this.newestSandPaintingActionHandler();
 				break;
-			case '热门沙绘':
+			case '热门作品':
 				this.hotActionHandler();
 				break;
 			case '设置':
