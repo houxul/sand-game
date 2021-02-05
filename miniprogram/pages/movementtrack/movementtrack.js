@@ -11,6 +11,7 @@ Page({
 	 */
 	data: {
 		showAction: true,
+		straight: false,
 	},
 
 	/**
@@ -81,6 +82,10 @@ Page({
 
 	touchMoveHandler: function(event) {
 		const {clientX:x, clientY:y} = event.touches[0];
+		if (this.data.straight) {
+			this.movementTrack.setTerminalPoint([x, y]);
+			return;
+		}
 		this.movementTrack.update([x, y]);
 	},
 
@@ -93,6 +98,12 @@ Page({
 	},
 	onClickClean: function() {
 		this.movementTrack.clean();
+	},
+	onClickStraight() {
+		this.setData({straight: true});
+	},
+	onClickCurved() {
+		this.setData({straight: false});
 	},
 	onClickApply: function() {
 		if (!this.movementTrack.pnts.length) {

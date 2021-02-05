@@ -7,5 +7,7 @@
 <cover-view wx:if="{{showAction}}" class="action-view">
 	<cover-image class="img" src="../../images/back.png" bindtap="onClickBack"/>
 	<cover-image class="img" src="../../images/clean.png" bindtap="onClickClean"/>
+	<cover-image wx:if="{{!straight}}" class="img" src="../../images/straight.png" bindtap="onClickStraight"/>
+	<cover-image wx:else class="img" src="../../images/curved.png" bindtap="onClickCurved"/>
 	<cover-image class="img" src="../../images/apply.png" bindtap="onClickApply"/>
 </cover-view>
