@@ -195,7 +195,7 @@ Page({
 		ctx.save();
 
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillStyle = 'rgb(245, 245, 245)';
+		ctx.fillStyle = 'rgb(255, 255, 255)';
 		ctx.strokeStyle = 'rgb(255, 0, 0)';
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
