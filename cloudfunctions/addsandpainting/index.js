@@ -1,6 +1,8 @@
 const cloud = require('wx-server-sdk')
 const request = require('request')
-var sizeOf = require('image-size');
+const sizeOf = require('image-size');
+const names = require('./name.json');
+const avatars = require('./avatar.json');
 
 cloud.init({
 	env: cloud.DYNAMIC_CURRENT_ENV,
@@ -34,15 +36,14 @@ exports.main = async (event, context) => {
 			fileContent: buffer,
 		});
 
-		// TODO 宽高
-		// 头像和昵称
+		const nameIndex = Math.floor(Math.random()*names.length);
+		const avatarIndex = nameIndex % avatars.length;
 		const {width, height} = sizeOf(buffer);
-		const [avatar, name] = ['https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqPQXcT48ZKCSkicuaSicXKsfRGujkackNJofdNLiavA24ySjslQxgK3iaicYmBcGsib6n3xCia6Gpy4KeBQ/132', '侯']
 		const data = {
 			_id: id,
 			fileId: fileID,
-			userAvatarUrl: avatar,
-			userNickName: name,
+			userAvatarUrl: avatars[avatarIndex],
+			userNickName: names[nameIndex],
 			horizontal: width > height,
 			width: width,
 			height: height,
