@@ -179,11 +179,13 @@ Page({
 
 		const { names } = require('../../resources/name');
 		const { avatars } = require('../../resources/avatar');
+		const nameIndex = Math.floor(Math.random()*names.length);
+		const avatarIndex = nameIndex % avatars.length;
 		const data = {
 			_id: id,
 			fileId: fileID,
-			userAvatarUrl: avatars[Math.floor(Math.random()*avatars.length)],
-			userNickName: names[Math.floor(Math.random()*names.length)],
+			userAvatarUrl: avatars[avatarIndex],
+			userNickName: names[nameIndex],
 			horizontal: width > height,
 			width: width,
 			height: height,
