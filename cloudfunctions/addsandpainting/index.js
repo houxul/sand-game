@@ -1,5 +1,6 @@
 const cloud = require('wx-server-sdk')
 const request = require('request')
+var sizeOf = require('image-size');
 
 cloud.init({
 	env: cloud.DYNAMIC_CURRENT_ENV,
@@ -15,14 +16,14 @@ exports.main = async (event, context) => {
 	for (let i=1; i<=count; i++) {
 		const tmpAutoIndex = autoIndex + i;
 		const url = `https://api.thisissand.com/v2/files/${tmpAutoIndex}/download`;
-		const buf = await new Promise(function (resolve, reject) {
-			let b = [];
+		const buffer = await new Promise(function (resolve, reject) {
+			let chunks = [];
 			const res = request(url);
-			res.on('data', function (c) {
-				b.push(c);
+			res.on('data', function (chunk) {
+				chunks.push(chunk);
 			});
 			res.on('end', function () {
-				  resolve(b);
+				  resolve(Buffer.concat(chunks));
 			});
 		})
 
@@ -30,12 +31,13 @@ exports.main = async (event, context) => {
 		const cloudPath = id + '.jpg';
 		const { fileID } = await cloud.uploadFile({
 			cloudPath,
-			fileContent: Buffer.concat(buf),
+			fileContent: buffer,
 		});
 
 		// TODO 宽高
 		// 头像和昵称
-		const [width, height, avatar, name] = [1000, 200, 'https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqPQXcT48ZKCSkicuaSicXKsfRGujkackNJofdNLiavA24ySjslQxgK3iaicYmBcGsib6n3xCia6Gpy4KeBQ/132', '侯']
+		const {width, height} = sizeOf(buffer);
+		const [avatar, name] = ['https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eqPQXcT48ZKCSkicuaSicXKsfRGujkackNJofdNLiavA24ySjslQxgK3iaicYmBcGsib6n3xCia6Gpy4KeBQ/132', '侯']
 		const data = {
 			_id: id,
 			fileId: fileID,
