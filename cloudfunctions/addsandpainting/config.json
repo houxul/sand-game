@@ -7,7 +7,7 @@
     {
       "name": "addsandpainting",
       "type": "timer",
-      "config": "0 19 * * * * *"
+      "config": "0 */40 * * * * *"
     }
   ]
 }

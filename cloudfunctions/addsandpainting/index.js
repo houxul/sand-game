@@ -14,7 +14,7 @@ exports.main = async (event, context) => {
 	const cmd = cloud.database().command
 	const {data: [{autoIndex}]} = await sandpaintings.where({autoIndex: cmd.neq(null)}).field({autoIndex: true}).orderBy('autoIndex', 'desc').limit(1).get();
 
-	const count = 3;
+	const count = 2;
 	for (let i=1; i<=count; i++) {
 		const tmpAutoIndex = autoIndex + i;
 		const url = `https://api.thisissand.com/v2/files/${tmpAutoIndex}/download`;
