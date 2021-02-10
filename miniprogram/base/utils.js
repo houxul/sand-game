@@ -251,7 +251,7 @@ export function gradient(more) {
 
 export function defaultShareImage() {
 	if (envVersion() == 'release') {
-		return 'cloud://online-4gbvdd8wdd64ce2f.6f6e-online-4gbvdd8wdd64ce2f-1304113081/default-share-image.jpg	'
+		return 'cloud://online-4gbvdd8wdd64ce2f.6f6e-online-4gbvdd8wdd64ce2f-1304113081/default-share-image.jpg'
 	}
 	return 'cloud://dev-9gvi7hhi3a969b2f.6465-dev-9gvi7hhi3a969b2f-1304113081/default-share-image.jpg';
 }
