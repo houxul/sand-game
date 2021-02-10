@@ -4,9 +4,11 @@ import DataBus from '../../base/databus'
 import RoundButton from '../../rendering/roundbutton'
 import RotateImage from '../../rendering/rotateimage'
 import ColorBoard from '../../rendering/colorboard'
+import Autio from '../../base/audio';
 import { guid, rgbToStr, hasColors, colorsId, wrapReject, confirmMessage, defaultShareImage } from '../../base/utils'
 
 let databus = new DataBus()
+let autio = new Autio();
 
 Page({
 
@@ -137,12 +139,16 @@ Page({
 
 		this.sandTable.genSandStartCallback = (function() {
 			this.setData({showMenuButton: false, showMyColors: false});
+			if (databus.voice) {
+				autio.play();
+			}
 		}).bind(this)
 
 		this.sandTable.genSandEndCallback = (function() {
 			if (!this.data.showMenuButton) {
 				this.setData({showMenuButton: true});
 			}
+			setTimeout(function() { autio.pause(); }, 1000);
 		}).bind(this)
 
 		databus.bgRgbaChangeCallback = ((bgRgba) => {

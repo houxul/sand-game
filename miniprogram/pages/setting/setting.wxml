@@ -1,5 +1,9 @@
 <view class="page-view">
 	<view class="switch-line-item">
+		<view>声音</view>
+		<switch checked="{{voice}}" bindchange="changeVoice"></switch>
+	</view>
+	<view class="switch-line-item">
 		<view>双击自动落沙</view>
 		<switch checked="{{autoDownSand}}" bindchange="changeAutoDownSand"></switch>
 	</view>

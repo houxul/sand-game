@@ -43,6 +43,7 @@ export default class DataBus {
 		this.myColors = [[[255,0,0]],[[0,255,0]],[[0,0,255]]];
 		this.sandNumInterval = [5, 40];
 		this.colorChangeSpeedInterval =[10, 2000];
+		this.voice = false;
 
 		this.default = {
 			bgRgba: this.bgRgba,
@@ -88,6 +89,7 @@ export default class DataBus {
 		load('movementTrack');
 		load('myColors');
 		load('notRepeatColor');
+		load('voice');
 
 		// const info = wx.getStorageInfoSync();
 		// console.log('-------------', info);

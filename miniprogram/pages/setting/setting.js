@@ -28,6 +28,7 @@ Page({
 			bgColor,
 			showColorPicker: false,
 			notRepeatColor: databus.notRepeatColor,
+			voice: databus.voice,
 		});
 	},
 
@@ -92,6 +93,10 @@ Page({
 			this.movementTrackCanvas = canvas;
 			this.renderMovementTrack(this.movementTrackCanvas);
 		}).bind(this)).exec();
+	},
+	changeVoice: function(res) {
+		this.setData({voice: res.detail.value});
+		databus.updateSetting({voice: res.detail.value});
 	},
 	changeAutoDownSand: function(res) {
 		this.setData({autoDownSand: res.detail.value});
