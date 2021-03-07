@@ -65,6 +65,8 @@ Page({
 		if (databus.horizontal) {
 			databus.horizontal = false;
 		}
+
+		this.promptDisplayed = wx.getStorageSync('prompt-displayed') || false;
 	},
 
 	/**
@@ -97,6 +99,23 @@ Page({
 		if (this.sandTable) {
 			this.sandTable.cancelAnimationFrame();
 			this.sandTable.requestAnimationFrame();
+		}
+
+		if (!this.promptDisplayed) {
+			setTimeout((function() {
+				wx.showModal({
+					showCancel: false,
+					content: '按下屏幕，移动手指，开始使用彩色沙子绘制图形吧！',
+					confirmText: '知道了',
+					success: (function(res) {
+						if (!res.confirm) {
+							return;
+						}
+						this.promptDisplayed = true;
+						wx.setStorageSync('prompt-displayed', true);
+					}).bind(this)
+				})
+			}).bind(this), 1000);
 		}
 	},
 
