@@ -13,7 +13,7 @@
 ### 绘制的图片
 
 ![雪山](https://github.com/houxul/sand-game/blob/master/readme-imgs/snowmountain.png)![彩虹](https://github.com/houxul/sand-game/blob/master/readme-imgs/rainbow.jpg)
-![心](https://github.com/houxul/sand-game/blob/master/readme-imgs/love.png)
+<!-- ![心](https://github.com/houxul/sand-game/blob/master/readme-imgs/love.png) -->
 ![黑夜](https://github.com/houxul/sand-game/blob/master/readme-imgs/darknight.png)
 ![棱角](https://github.com/houxul/sand-game/blob/master/readme-imgs/edge.png)
 ![白云](https://github.com/houxul/sand-game/blob/master/readme-imgs/baiyun.jpg)
