@@ -1,10 +1,12 @@
 ## 彩色沙子
 微信小程序
 
+![小程序码](https://github.com/houxul/sand-game/blob/master/readme-imgs/mpcode.jpg)
+
 ### 微信搜索小程序: 彩色沙子
 
 ### 游戏介绍
-- 类型: 消闲、治愈类小游戏
+- 类型: 休闲、治愈类小游戏
 - 玩法: 手指按下屏幕，移动手指，降落沙子
 
 ![游戏](https://github.com/houxul/sand-game/blob/master/readme-imgs/game.gif)
