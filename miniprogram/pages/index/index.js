@@ -159,7 +159,6 @@ Page({
 		this.sandTable.genSandStartCallback = (function() {
 			this.setData({showMenuButton: false, showMyColors: false});
 			if (databus.voice) {
-				autio.play();
 			}
 		}).bind(this)
 
@@ -167,7 +166,18 @@ Page({
 			if (!this.data.showMenuButton) {
 				this.setData({showMenuButton: true});
 			}
-			setTimeout(function() { autio.pause(); }, 1000);
+		}).bind(this)
+
+		this.sandTable.sandFlowStartCallback = (function() {
+			if (databus.voice) {
+				autio.play();
+			}
+		}).bind(this)
+
+		this.sandTable.sandFlowEndCallback = (function() {
+			if (databus.voice) {
+				autio.pause();
+			}
 		}).bind(this)
 
 		databus.bgRgbaChangeCallback = ((bgRgba) => {
