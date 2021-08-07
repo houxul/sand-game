@@ -253,14 +253,17 @@ Page({
 	onClickMenuShadow: function(event) {
 		this.setData({menuLeft: databus.screenWidth});
 	},
-	onClickAvatar: function(res) {
-		if (res.detail.userInfo) {
-			const userInfo = res.detail.userInfo;
-			const nickName = userInfo.nickName;
-			const avatarUrl = userInfo.avatarUrl;
-			wx.setStorageSync('userInfo', { nickName, avatarUrl});
-			this.setData({avatarUrl});
-		}
+	onClickAvatar: function() {
+		wx.getUserProfile({
+      desc: '展示作者头像昵称',
+      success: (res) => {
+				const userInfo = res.userInfo;
+				const nickName = userInfo.nickName;
+				const avatarUrl = userInfo.avatarUrl;
+				wx.setStorageSync('userInfo', { nickName, avatarUrl});
+				this.setData({avatarUrl});
+      }
+    })
 	},
 
 	onMenuAction: function(event) {
