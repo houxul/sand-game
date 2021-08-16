@@ -18,10 +18,8 @@
 	<cover-view style="left:{{menuLeft}}px;" class="menu-view">
 		<cover-view class="menu-area">
 			<cover-view class="menu-userinfo">
-				<button open-type="getUserInfo" class="get-userinfo-button" bindgetuserinfo="onClickAvatar">
-					<cover-image src="{{avatarUrl}}" class="userinfo-avatar">
-					</cover-image>
-				</button>
+				<cover-image src="{{avatarUrl}}" class="userinfo-avatar" bindtap="onClickAvatar">
+				</cover-image>
 			</cover-view>
 			<cover-view class="menu-actions">
 				<cover-view class="menu-action-item" 

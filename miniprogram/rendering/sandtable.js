@@ -282,6 +282,7 @@ export default class SandTable {
 		}
 
 		if (this.flowStartIndex == null || this.flowEndIndex == null) {
+			tryRun(this.sandFlowEndCallback);
 			return;
 		}
 
@@ -297,6 +298,7 @@ export default class SandTable {
 			return;
 		}
 
+		tryRun(this.sandFlowStartCallback);
 		for (const item of poles) {
 			const [startIndex, endIndex, dir] = item;
 			const fillIn = dir > 0 ? 0 : 1;

@@ -159,7 +159,6 @@ Page({
 		this.sandTable.genSandStartCallback = (function() {
 			this.setData({showMenuButton: false, showMyColors: false});
 			if (databus.voice) {
-				autio.play();
 			}
 		}).bind(this)
 
@@ -167,7 +166,18 @@ Page({
 			if (!this.data.showMenuButton) {
 				this.setData({showMenuButton: true});
 			}
-			setTimeout(function() { autio.pause(); }, 1000);
+		}).bind(this)
+
+		this.sandTable.sandFlowStartCallback = (function() {
+			if (databus.voice) {
+				autio.play();
+			}
+		}).bind(this)
+
+		this.sandTable.sandFlowEndCallback = (function() {
+			if (databus.voice) {
+				autio.pause();
+			}
 		}).bind(this)
 
 		databus.bgRgbaChangeCallback = ((bgRgba) => {
@@ -243,14 +253,17 @@ Page({
 	onClickMenuShadow: function(event) {
 		this.setData({menuLeft: databus.screenWidth});
 	},
-	onClickAvatar: function(res) {
-		if (res.detail.userInfo) {
-			const userInfo = res.detail.userInfo;
-			const nickName = userInfo.nickName;
-			const avatarUrl = userInfo.avatarUrl;
-			wx.setStorageSync('userInfo', { nickName, avatarUrl});
-			this.setData({avatarUrl});
-		}
+	onClickAvatar: function() {
+		wx.getUserProfile({
+      desc: '展示作者头像昵称',
+      success: (res) => {
+				const userInfo = res.userInfo;
+				const nickName = userInfo.nickName;
+				const avatarUrl = userInfo.avatarUrl;
+				wx.setStorageSync('userInfo', { nickName, avatarUrl});
+				this.setData({avatarUrl});
+      }
+    })
 	},
 
 	onMenuAction: function(event) {
