@@ -44,6 +44,7 @@ export default class DataBus {
 		this.sandNumInterval = [5, 40];
 		this.colorChangeSpeedInterval =[10, 2000];
 		this.voice = false;
+		this.uploadConfirm = true;
 
 		this.default = {
 			bgRgba: this.bgRgba,
@@ -90,6 +91,7 @@ export default class DataBus {
 		load('myColors');
 		load('notRepeatColor');
 		load('voice');
+		load('uploadConfirm');
 
 		// const info = wx.getStorageInfoSync();
 		// console.log('-------------', info);
