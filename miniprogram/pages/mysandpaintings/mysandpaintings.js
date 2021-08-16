@@ -68,43 +68,60 @@ Page({
 		this.loadSandpaintings();
 	},
 
-	loadSandpaintings: function() {
+	loadSandpaintings: function () {
 		const sandpaintings = this.data.sandpaintings;
 		let count = 0
-		for (let i=this.sandPaintingSource.length -1 - this.offset; i >= 0 && count < this.limit; i--) {
+		for (let i = this.sandPaintingSource.length - 1 - this.offset; i >= 0 && count < this.limit; i--) {
 			count += 1
 			sandpaintings.push(this.sandPaintingSource[i]);
 		}
 		this.offset += count;
-		this.setData({sandpaintings: sandpaintings, showLoading: false});
+		this.setData({ sandpaintings: sandpaintings, showLoading: false });
 	},
 
-	onImageClick: function(event) {
+	onImageClick: function (event) {
 		wx.previewImage({
-		  urls: this.data.sandpaintings.map(item=> item.localPath),
-		  current: event.target.dataset.url,
-		  fail: function(err) {
-			  console.log(err)
-			  wx.showToast({title: '预览失败',})
-		  }
+			urls: this.data.sandpaintings.map(item => item.localPath),
+			current: event.target.dataset.url,
+			fail: function (err) {
+				console.log(err)
+				wx.showToast({ title: '预览失败', })
+			}
 		}, true);
 	},
 
-	onUploadClick: async function(event) {
-		const confirm = await confirmMessage('提示', '上传后其他用户可以看到此作品')
-		if (!confirm) {
-			return
-		}
-
+	onUploadClick: async function (event) {
 		const userInfo = wx.getStorageSync('userInfo');
 		if (!userInfo) {
-			wx.showToast({icon: 'none',title: '需要回到首页，点击 菜单-头像 获取头像做展示用'})
+			wx.showToast({ icon: 'none', title: '需要回到首页，点击 菜单-头像 获取头像做展示用' })
 			return
 		}
 
-		wx.showLoading({title: '上传中...'})
+		if (databus.uploadConfirm) {
+			databus.updateSetting({ uploadConfirm: false });
+			const confirm = await confirmMessage('提示', '上传后其他用户可以看到此作品')
+			if (!confirm) {
+				return
+			}
+		}
+
 		const index = event.currentTarget.dataset.index;
 		const item = this.data.sandpaintings[index];
+
+		const { size } = await new Promise((resolve, reject) => {
+			wx.getFileInfo({
+				filePath: item.localPath,
+				success: resolve,
+				fail: wrapReject(reject, '获取文件信息失败，请重试')
+			})
+		});
+
+		if (size > 1024 * 800) {
+			wx.showToast({ icon: 'error', title: '图片尺寸过大' })
+			return;
+		}
+
+		wx.showLoading({ title: '上传中...' })
 		const { fileID } = await new Promise((resolve, reject) => {
 			wx.cloud.uploadFile({
 				cloudPath: item.id + '.jpg',
@@ -134,7 +151,7 @@ Page({
 		});
 
 		const sandpaintings = wx.getStorageSync('sandpaintings');
-		for (let i=0; i<sandpaintings.length; i++) {
+		for (let i = 0; i < sandpaintings.length; i++) {
 			if (sandpaintings[i].id == item.id) {
 				sandpaintings[i].upload = true;
 				break;
@@ -143,9 +160,9 @@ Page({
 		wx.setStorageSync('sandpaintings', sandpaintings);
 
 		this.data.sandpaintings[index].upload = true;
-		this.setData({sandpaintings: this.data.sandpaintings});
+		this.setData({ sandpaintings: this.data.sandpaintings });
 
-		wx.showToast({title: '成功'})
+		wx.showToast({ title: '成功' })
 	},
 
 	onShareAppMessage: function (res) {
@@ -160,12 +177,12 @@ Page({
 		const imgUrl = item.localPath;
 		return {
 			title: '用沙子绘出多彩美图',
-			path: '/pages/picturepreview/picturepreview?id='+item.id,
+			path: '/pages/picturepreview/picturepreview?id=' + item.id,
 			imageUrl: imgUrl,
 		}
 	},
 
-	onDeleteClick: async function(event) {
+	onDeleteClick: async function (event) {
 		let confirm = await confirmMessage('提示', '删除后将作品将无法恢复，是否删除？');
 		if (!confirm) {
 			return
@@ -175,10 +192,10 @@ Page({
 		const item = this.data.sandpaintings[index];
 
 		this.data.sandpaintings.splice(index, 1);
-		this.setData({sandpaintings: this.data.sandpaintings});
+		this.setData({ sandpaintings: this.data.sandpaintings });
 
 		const sandpaintings = wx.getStorageSync('sandpaintings');
-		for (let i=0; i<sandpaintings.length; i++) {
+		for (let i = 0; i < sandpaintings.length; i++) {
 			if (sandpaintings[i].id == item.id) {
 				sandpaintings.splice(i, 1);
 				break;
@@ -195,7 +212,7 @@ Page({
 		}
 
 		const collection = wx.cloud.database().collection('sandpaintings');
-		const { data: {fileId}} = await new Promise((resolve, reject) => {
+		const { data: { fileId } } = await new Promise((resolve, reject) => {
 			collection.doc(item.id).get().then(resolve).catch(wrapReject(reject, '查询记录失败'));
 		});
 		await new Promise((resolve, reject) => {
@@ -205,7 +222,7 @@ Page({
 		wx.cloud.deleteFile({
 			fileList: [fileId],
 			success: res => {
-				wx.showToast({title: '成功'})
+				wx.showToast({ title: '成功' })
 			},
 			fail: console.error
 		})

@@ -139,7 +139,7 @@ export default class SandPhoto {
 		wx.canvasToTempFilePath({
 			canvas: this.canvas,
 			fileType: 'jpg',
-			quality: 0.25,
+			quality: 1,
 			success: ((res) => {
 				this.done({filePath: res.tempFilePath, imgWidth: this.imgWidth, imgHeight: this.imgHeight});
 			}).bind(this),

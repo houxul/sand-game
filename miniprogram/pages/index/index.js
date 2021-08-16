@@ -324,7 +324,7 @@ Page({
 			wx.canvasToTempFilePath({
 				canvas,
 				fileType: 'jpg',
-				quality: 0.5,
+				quality: 1,
 				success: resolve,
 				fail: wrapReject(reject, '生成图片失败，请重试'),
 			}, this)
