@@ -54,7 +54,7 @@ exports.main = async (event, context) => {
 			horizontal: width > height,
 			width: width,
 			height: height,
-			likes: Math.floor(Math.random() * 999),
+			likes: likes(),
 			createdAt: new Date().getTime() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000),
 			autoIndex: tmpAutoIndex,
 		};
@@ -71,4 +71,8 @@ function guid() {
 		return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 	}
 	return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+}
+
+function likes() {
+	return Math.floor(Math.asin(Math.random()) * 700);
 }
