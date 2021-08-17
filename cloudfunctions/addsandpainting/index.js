@@ -67,7 +67,7 @@ function likes() {
 
 async function getPopulars() {
 	const now = new Date();
-	now.setDate(now.getDate() - 5)
+	now.setDate(now.getDate() - 30)
 	const endDate = now.toISOString();
 	now.setDate(now.getDate() - 1)
 	const beginDate = now.toISOString();
