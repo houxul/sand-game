@@ -19,7 +19,7 @@
         "checkSiteMap": true,
         "uploadWithSourceMap": true,
         "compileHotReLoad": false,
-        "useMultiFrameRuntime": false,
+        "useMultiFrameRuntime": true,
         "useApiHook": true,
         "useApiHostProcess": true,
         "babelSetting": {
@@ -27,14 +27,12 @@
             "disablePlugins": [],
             "outputPath": ""
         },
-        "bundle": false,
         "useIsolateContext": true,
-        "useCompilerModule": true,
-        "userConfirmedUseCompilerModuleSwitch": false,
         "userConfirmedBundleSwitch": false,
         "packNpmManually": false,
         "packNpmRelationList": [],
-        "minifyWXSS": true
+        "minifyWXSS": true,
+        "showES6CompileOption": false
     },
     "appid": "wx6ef03566572bbdc6",
     "projectname": "sand-game",

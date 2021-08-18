@@ -9,7 +9,8 @@
 		"pages/hotsandpaintings/hotsandpaintings",
 		"pages/newestsandpaintings/newestsandpaintings",
 		"pages/help/help",
-		"pages/movementtrack/movementtrack"
+		"pages/movementtrack/movementtrack",
+		"pages/opinion/opinion"
 	],
 	"window": {
 		"backgroundColor": "#F6F6F6",

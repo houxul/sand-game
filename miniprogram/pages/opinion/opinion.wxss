@@ -1,0 +1,27 @@
+/* miniprogram/pages/help/help.wxss */
+
+.page-view {
+	width: 100%;
+	margin-bottom: 60px;
+}
+
+
+.textarea {
+	margin: 30px 15px 5px 15px;
+	height: 160px;
+	width: calc(100% - 30px);
+	border: solid 1px rgb(211, 211, 211);
+}
+
+.textarea-tip {
+	font-size: 28rpx;
+	color: #999999;
+	margin-bottom: 10rpx;
+	padding-left: 30rpx;
+	padding-right: 30rpx;
+}
+
+.submit-button {
+	margin-top: 40px;
+	width: auto;
+}
