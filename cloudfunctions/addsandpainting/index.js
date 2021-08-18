@@ -62,7 +62,7 @@ function guid() {
 }
 
 function likes() {
-	return Math.floor(Math.asin(Math.random()) * 1000);
+	return Math.floor(Math.asin(Math.random()) * 800);
 }
 
 async function getPopulars() {
