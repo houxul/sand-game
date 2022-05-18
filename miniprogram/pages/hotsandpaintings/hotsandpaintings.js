@@ -23,6 +23,8 @@ Page({
 		this.ilikeSet = new Set();
 		this.offset = 0;
 		this.limit = 4;
+		this.endTime = new Date().getTime() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000);
+		this.startTime = this.endTime -  60 * 24 * 60 * 60 * 1000;
 		this.loadData();
 	},
 
@@ -70,7 +72,13 @@ Page({
 
 	loadSandpaintings: function() {
 		const db = wx.cloud.database();
-		db.collection('sandpaintings').orderBy('likes', 'desc')
+		const cmd = db.command;
+		db.collection('sandpaintings')
+		.where({
+			createdAt: cmd.gt(this.startTime),
+			createdAt: cmd.lt(this.endTime),
+		})
+		.orderBy('likes', 'desc')
 		.skip(this.offset) 
 		.limit(this.limit)
 		.get()
