@@ -10,7 +10,7 @@ module.exports = {
 			return Math.ceil(interval/3600) + "小时前";
 		}
 
-		var date = getDate(t + 8*3600*100);
+		var date = getDate(t + 8*3600*1000);
 		return date.toJSON().substring(0, 19).replace('T', ' ');
 	}
 }

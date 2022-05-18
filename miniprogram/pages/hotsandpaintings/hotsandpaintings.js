@@ -23,8 +23,9 @@ Page({
 		this.ilikeSet = new Set();
 		this.offset = 0;
 		this.limit = 4;
-		this.endTime = new Date().getTime() - Math.floor(Math.random() * 2 * 365 * 24 * 60 * 60 * 1000);
-		this.startTime = this.endTime -  60 * 24 * 60 * 60 * 1000;
+		const random = Math.random()
+		this.endTime = new Date().getTime() - Math.floor(random * 365 * 24 * 60 * 60 * 1000);
+		this.startTime = this.endTime -  6 * 30 * 24 * 60 * 60 * 1000;
 		this.loadData();
 	},
 
@@ -75,8 +76,7 @@ Page({
 		const cmd = db.command;
 		db.collection('sandpaintings')
 		.where({
-			createdAt: cmd.gt(this.startTime),
-			createdAt: cmd.lt(this.endTime),
+			createdAt: cmd.and(cmd.gt(this.startTime),cmd.lt(this.endTime))
 		})
 		.orderBy('likes', 'desc')
 		.skip(this.offset) 
@@ -88,7 +88,7 @@ Page({
 			}
 			this.offset += res.data.length;
 			const sandpaintings = this.data.sandpaintings;
-			
+
 			res.data.forEach(item => {
 				item.ilike = this.ilikeSet.has(item._id)
 				sandpaintings.push(item);
